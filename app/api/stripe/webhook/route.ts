@@ -156,8 +156,14 @@ async function handleSubscriptionEvent(
   }
   const status = event === "deleted" ? "canceled" : (statusMap[sub.status] ?? sub.status)
 
-  const periodStart = sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null
-  const periodEnd = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null
+  // Stripe SDK 18+ a mutat current_period_* pe items; fallback la sub-level pentru compat.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const subAny = sub as any
+  const itemAny = sub.items?.data?.[0] as unknown as { current_period_start?: number; current_period_end?: number } | undefined
+  const periodStartTs = itemAny?.current_period_start ?? subAny.current_period_start
+  const periodEndTs   = itemAny?.current_period_end   ?? subAny.current_period_end
+  const periodStart = periodStartTs ? new Date(periodStartTs * 1000).toISOString() : null
+  const periodEnd   = periodEndTs   ? new Date(periodEndTs * 1000).toISOString()   : null
   const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null
   const canceledAt = sub.canceled_at ? new Date(sub.canceled_at * 1000).toISOString() : null
 
