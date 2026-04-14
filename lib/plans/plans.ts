@@ -84,7 +84,7 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
     stripePriceIdEnv: "STRIPE_PRICE_PLUS_YEARLY",
     highlights: [
       "Tot ce e în Start +",
-      "Badge „Recomandat" pe card",
+      'Badge „Recomandat" pe card',
       "Featured placement în rezultate (top 3)",
       "Magazin cu produse nelimitate",
       "Dashboard analytics complet",

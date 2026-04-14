@@ -1,36 +1,155 @@
 @import "./tokens.css";
-
-/* reset + base html elements */
 @import "./base.css";
-
-/* primitives: card/pill/input/btn/icon-btn */
-@import "./components.css";
-
-/* global site shell: container/nav/footer/modals only */
 @import "./layout.css";
+@import "./cookie-banner.css";
 
-/* typography utilities (h1/h2/p etc) */
-@import "./base/typography.css";
+/* Reset minimal pentru container + componente lipsă din scaffold-ul ghidulfunerar */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.container.container--narrow { max-width: 880px; }
 
-/* scoped components */
-@import "./components/reco.css";
-@import "./components/results.css";
-@import "./components/sv.css";
-@import "./admin-kit.css";
-@import "./firma.css";
-@import "./markdown.css";
-@import "./components/articles.css";
-@import "./components/static-pages.css";
-@import "./components/partner-pitch.css";
-@import "./components/plan.css";
-@import "./contact.css";
-@import "./termeni.css";
-@import "./servicii-funerare.css";
-@import "./comemorari.css";
-@import "./psiholog.css";
-@import "./shop.css";
-@import "./verificare-firme.css";
-@import "./components/search.css";
-@import "./components/sf-geo.css";
-@import "./components/leads.css";
-@import "./components/firma-offer-modal.css";
+/* Buttons primitive */
+.dash-btn, .shop-btn, .booking-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: 1px solid var(--border, rgba(15,23,42,.12));
+  border-radius: 10px;
+  background: var(--surface-strong, #fff);
+  color: var(--text-900, #0c1424);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+  transition: filter .15s, transform .05s;
+}
+.dash-btn:hover, .shop-btn:hover, .booking-btn:hover { filter: brightness(.97); }
+.dash-btn:active, .shop-btn:active, .booking-btn:active { transform: translateY(1px); }
+.dash-btn:disabled, .shop-btn:disabled, .booking-btn:disabled { opacity: .5; cursor: not-allowed; }
+.dash-btn--primary, .shop-btn--primary, .booking-btn--primary {
+  background: var(--accent-600, #2f7a71);
+  color: #fff;
+  border-color: var(--accent-700, #2b6b63);
+}
+.dash-btn--ghost, .shop-btn--ghost { background: transparent; }
+.shop-btn--buy { background: var(--gold-600, #b07a2a); color: #fff; border-color: var(--gold-600, #b07a2a); }
+
+/* Status / badge */
+.dash-status, .dash-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(47,122,113,.14);
+  color: var(--accent-700, #2b6b63);
+  margin-left: 8px;
+}
+.dash-status--pending, .dash-status--queued { background: rgba(176,122,42,.18); color: #8a6a1f; }
+.dash-status--rejected, .dash-status--canceled, .dash-status--failed, .dash-status--revoked { background: rgba(220,38,38,.12); color: #991b1b; }
+.dash-status--active, .dash-status--paid, .dash-status--approved, .dash-status--converted { background: rgba(22,163,74,.14); color: #166534; }
+
+/* Bullet pentru reminder status */
+.bullet { display: inline-block; padding: 2px 6px; border-radius: 50%; font-size: 14px; line-height: 1; }
+.bullet--sent { color: #f59e0b; background: rgba(245,158,11,.15); }
+.bullet--done { color: #16a34a; background: rgba(22,163,74,.15); }
+.bullet--overdue { color: #dc2626; background: rgba(220,38,38,.15); }
+
+/* Common dash layout */
+.dash-page { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+.dash-title { font-size: 28px; font-weight: 800; margin: 0 0 12px; }
+.dash-subtle { color: var(--text-500, #6b7688); font-size: 13px; }
+.dash-card {
+  background: var(--surface-strong, #fff);
+  border: 1px solid var(--border, rgba(15,23,42,.10));
+  border-radius: 14px;
+  padding: 20px;
+  margin: 16px 0;
+}
+.dash-actions-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
+.dash-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; border-bottom: 1px solid var(--border); }
+.dash-tab { padding: 8px 14px; text-decoration: none; color: var(--text-700, #2a3444); border-radius: 8px 8px 0 0; }
+.dash-tab--active { background: var(--accent-600, #2f7a71); color: #fff; }
+
+/* Forms */
+.dash-form, .booking-form, .auth-form { display: grid; gap: 14px; max-width: 720px; }
+.dash-field, .booking-field, .auth-field { display: grid; gap: 4px; }
+.dash-field span, .booking-field span, .auth-field span { font-size: 13px; font-weight: 600; color: var(--text-700, #2a3444); }
+.dash-field input, .dash-field select, .dash-field textarea,
+.booking-field input, .booking-field select, .booking-field textarea,
+.auth-field input, .auth-field select {
+  padding: 10px 12px;
+  border: 1px solid var(--border, rgba(15,23,42,.12));
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+}
+.dash-fieldset { border: 1px solid var(--border-soft, rgba(15,23,42,.07)); border-radius: 12px; padding: 16px; }
+.dash-fieldset legend { padding: 0 8px; font-weight: 700; color: var(--accent-700, #2b6b63); }
+.booking-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.booking-checkbox, .auth-checkbox { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+
+/* Tables */
+.dash-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.dash-table th, .dash-table td { padding: 10px; border-bottom: 1px solid var(--border-soft, rgba(15,23,42,.07)); text-align: left; vertical-align: top; }
+.dash-table th { font-size: 13px; color: var(--text-500, #6b7688); font-weight: 600; }
+.dash-row--inactive, .dash-row--revoked { opacity: .55; }
+
+/* Errors / notices */
+.auth-error { background: rgba(220,38,38,.08); border: 1px solid rgba(220,38,38,.25); color: #991b1b; padding: 10px 14px; border-radius: 8px; }
+.auth-notice { background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.25); color: #166534; padding: 10px 14px; border-radius: 8px; }
+.dash-note { color: var(--text-500, #6b7688); font-style: italic; margin: 12px 0; }
+
+/* Reports */
+.report-page .report-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+.report-actions { display: flex; gap: 8px; }
+.report-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; padding: 14px; background: var(--surface-2, rgba(255,255,255,.62)); border-radius: 12px; margin: 14px 0; }
+.report-search { flex: 1; min-width: 280px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); }
+.report-table { width: 100%; border-collapse: collapse; }
+.report-table th, .report-table td { padding: 8px 10px; vertical-align: top; border-bottom: 1px solid var(--border-soft); }
+.report-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+.report-badge--soon { background: rgba(245,158,11,.18); color: #92400e; }
+.report-badge--expired { background: rgba(220,38,38,.18); color: #991b1b; }
+.report-badge--revoked { background: rgba(107,114,128,.18); color: #374151; }
+
+/* Print */
+@media print {
+  .no-print, .dash-nav, .dash-actions-row, .report-filters, .report-actions { display: none !important; }
+  body { background: #fff; }
+  .dash-card { border: 1px solid #ddd; box-shadow: none; }
+}
+
+/* Search bar global */
+.dash-search-bar { display: flex; gap: 12px; align-items: center; margin: 16px 0; padding: 12px; background: var(--surface-2); border-radius: 10px; }
+
+/* Pricing */
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+.pricing-card { padding: 20px; border: 1px solid var(--border); border-radius: 14px; background: #fff; }
+.pricing-card--highlight { border-color: var(--gold-600, #b07a2a); background: rgba(176,122,42,.06); }
+
+/* Shop / catalog grid */
+.sv-cat-grid, .sv-judete-grid, .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; list-style: none; padding: 0; }
+.sv-cat, .sv-judet { display: block; padding: 14px; border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text-900); background: #fff; }
+.sv-cat:hover, .sv-judet:hover { border-color: var(--accent-600); }
+
+/* Home */
+.home-page section { margin: 32px 0; }
+.home-hero__title { font-size: 42px; font-weight: 800; line-height: 1.1; margin: 0 0 12px; }
+.home-hero__sub { font-size: 18px; color: var(--text-700); }
+.home-search { display: flex; gap: 8px; margin: 20px 0; }
+.home-search__input { flex: 1; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 16px; }
+.home-search__btn { padding: 12px 24px; background: var(--accent-600); color: #fff; border: 0; border-radius: 12px; font-weight: 700; cursor: pointer; }
+.home-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.home-value { padding: 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-strong); }
+.home-value h3 { margin: 0 0 8px; color: var(--accent-700); }
+
+/* Listing firms */
+.sv-firms { list-style: none; padding: 0; display: grid; gap: 14px; }
+.sv-firm { display: grid; grid-template-columns: 200px 1fr 200px; gap: 14px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.sv-firm__name, .sv-name { font-weight: 700; font-size: 17px; color: var(--text-900); text-decoration: none; }
+.sv-mediaImg, .sv-logoImg { max-width: 100%; height: auto; border-radius: 8px; }
+.sv-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.sv-chip { padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid var(--border); background: #fff; color: var(--text-900); }
+.sv-chip.sv-disabled { opacity: .4; cursor: not-allowed; }
+@media (max-width: 720px) { .sv-firm { grid-template-columns: 1fr; } }

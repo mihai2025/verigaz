@@ -53,11 +53,15 @@ async function applyStatus(
   return { ok: true }
 }
 
-export const approveFirm = (firmId: string) => applyStatus(firmId, "approved", null)
-export const rejectFirm = (firmId: string, reason: string) =>
-  applyStatus(firmId, "rejected", reason.trim() || null)
-export const suspendFirm = (firmId: string, reason: string) =>
-  applyStatus(firmId, "suspended", reason.trim() || null)
+export async function approveFirm(firmId: string): Promise<Result> {
+  return applyStatus(firmId, "approved", null)
+}
+export async function rejectFirm(firmId: string, reason: string): Promise<Result> {
+  return applyStatus(firmId, "rejected", reason.trim() || null)
+}
+export async function suspendFirm(firmId: string, reason: string): Promise<Result> {
+  return applyStatus(firmId, "suspended", reason.trim() || null)
+}
 
 export async function toggleFirmActive(firmId: string, isActive: boolean): Promise<Result> {
   const ctx = await requireAdmin()
