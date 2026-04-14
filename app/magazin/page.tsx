@@ -44,8 +44,8 @@ export default async function Page({ searchParams }: Props) {
     })(),
   ])
 
-  const categories = (catsRes.data ?? []) as { id: number; slug: string; nume: string; descriere: string | null }[]
-  const products = (productsRes.data ?? []) as Array<{
+  const categories = (catsRes.data ?? []) as unknown as { id: number; slug: string; nume: string; descriere: string | null }[]
+  const products = (productsRes.data ?? []) as unknown as Array<{
     id: string; slug: string; nume: string; descriere_scurta: string | null
     price: number; price_old: number | null; image_url: string | null
     stock: number; manage_stock: boolean; is_featured: boolean

@@ -42,12 +42,12 @@ export async function getFirmEquipmentCatalog(firmId: string): Promise<Equipment
       .eq("firm_id", firmId),
   ])
 
-  const defaults = (defRes.data ?? []) as Array<{
+  const defaults = (defRes.data ?? []) as unknown as Array<{
     id: number; slug: string; nume: string; descriere: string | null
     verificare_months: number | null; revizie_months: number | null
     service_category_slug: string | null; sort_order: number; is_active: boolean
   }>
-  const overrides = (firmRes.data ?? []) as Array<{
+  const overrides = (firmRes.data ?? []) as unknown as Array<{
     id: string; equipment_type_id: number | null; nume: string; descriere: string | null
     verificare_months: number | null; revizie_months: number | null
     service_category_slug: string | null; is_active: boolean
@@ -125,7 +125,7 @@ export async function getDefaultEquipmentCatalog() {
     .from("equipment_types")
     .select("id, slug, nume, descriere, verificare_months, revizie_months, service_category_slug, sort_order, is_active")
     .order("sort_order")
-  return (data ?? []) as Array<{
+  return (data ?? []) as unknown as Array<{
     id: number; slug: string; nume: string; descriere: string | null
     verificare_months: number | null; revizie_months: number | null
     service_category_slug: string | null; sort_order: number; is_active: boolean

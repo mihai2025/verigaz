@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: Props) {
   if (sp.entity) query = query.eq("entity_type", sp.entity)
 
   const { data } = await query
-  const rows = (data ?? []) as Array<{
+  const rows = (data ?? []) as unknown as Array<{
     id: string
     actor_user_id: string | null
     actor_role: string | null

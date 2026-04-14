@@ -63,8 +63,8 @@ export default async function Page({ searchParams }: Props) {
         activeOnly: sp.active === "1",
         docType: (["all", "gaz", "centrala"].includes(sp.type ?? "") ? sp.type : "all") as "all" | "gaz" | "centrala",
       }}
-      employees={(empRes.data ?? []) as { id: string; full_name: string }[]}
-      judete={(judeteRes.data ?? []) as { id: number; nume: string }[]}
+      employees={(empRes.data ?? []) as unknown as { id: string; full_name: string }[]}
+      judete={(judeteRes.data ?? []) as unknown as { id: number; nume: string }[]}
       catalog={catalog}
     />
   )

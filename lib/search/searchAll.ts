@@ -101,7 +101,7 @@ export async function searchAll(q: string): Promise<SearchResults> {
   if (judetRes.error)      console.error("[searchAll] judete:", judetRes.error)
   if (localitateRes.error) console.error("[searchAll] localitati:", localitateRes.error)
 
-  const judetRows     = (judetRes.data ?? []) as { id: number; nume: string }[]
+  const judetRows     = (judetRes.data ?? []) as unknown as { id: number; nume: string }[]
   const judetIds      = judetRows.map((r) => r.id)
   const judetMap      = new Map(judetRows.map((r) => [r.id, r.nume]))
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

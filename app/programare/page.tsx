@@ -41,8 +41,8 @@ export default async function Page({ searchParams }: Props) {
   const firm = firmRes.data as
     | { id: string; slug: string; brand_name: string | null; legal_name: string; short_description: string | null; sediu_judet_id: number | null; sediu_localitate_id: number | null }
     | null
-  const categories = (categoriesRes.data ?? []) as { id: number; slug: string; nume: string }[]
-  const judete = (judeteRes.data ?? []) as { id: number; nume: string }[]
+  const categories = (categoriesRes.data ?? []) as unknown as { id: number; slug: string; nume: string }[]
+  const judete = (judeteRes.data ?? []) as unknown as { id: number; nume: string }[]
 
   return (
     <div className="booking-page container">

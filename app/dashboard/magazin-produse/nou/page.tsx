@@ -27,7 +27,7 @@ export default async function Page() {
         <span aria-current="page">Adaugă produs</span>
       </nav>
       <h1 className="dash-title">Adaugă produs nou</h1>
-      <ProductFormClient mode="create" categories={(cats ?? []) as { id: number; nume: string }[]} />
+      <ProductFormClient mode="create" categories={(cats ?? []) as unknown as { id: number; nume: string }[]} />
     </div>
   )
 }

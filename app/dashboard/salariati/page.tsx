@@ -38,7 +38,7 @@ export default async function Page({ searchParams }: Props) {
   if (!showInactive) query = query.eq("is_active", true)
 
   const { data: emps } = await query
-  const rows = (emps ?? []) as Array<{
+  const rows = (emps ?? []) as unknown as Array<{
     id: string
     full_name: string
     employee_code: string | null

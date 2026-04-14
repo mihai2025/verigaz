@@ -36,7 +36,7 @@ export default async function AdminFirmsPage({ searchParams }: Props) {
     .order("created_at", { ascending: false })
     .limit(100)
 
-  const rows = (firms ?? []) as Array<{
+  const rows = (firms ?? []) as unknown as Array<{
     id: string
     slug: string
     brand_name: string | null

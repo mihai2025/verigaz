@@ -112,7 +112,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         initialScheduled={b.scheduled_start ?? null}
         initialPriceFinal={b.price_final ?? null}
         initialTechnicianId={b.assigned_team_member_id ?? null}
-        employees={(employees ?? []) as { id: string; full_name: string }[]}
+        employees={(employees ?? []) as unknown as { id: string; full_name: string }[]}
       />
     </div>
   )

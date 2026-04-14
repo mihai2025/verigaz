@@ -50,7 +50,7 @@ export default async function Page({ searchParams }: Props) {
   return (
     <TehnicieniReport
       bookings={bookings}
-      employees={(empRes.data ?? []) as { id: string; full_name: string; role: string | null }[]}
+      employees={(empRes.data ?? []) as unknown as { id: string; full_name: string; role: string | null }[]}
       initialFilters={{
         tech: sp.tech ?? "",
         dateFrom: sp.from ?? "",

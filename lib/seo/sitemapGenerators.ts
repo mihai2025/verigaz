@@ -73,7 +73,7 @@ export function categoryEntries(): SitemapEntry[] {
 export async function judetEntries(): Promise<SitemapEntry[]> {
   const supabase = getPublicServerSupabase()
   const { data } = await supabase.from("judete").select("nume").order("nume")
-  const judete = (data ?? []) as { nume: string }[]
+  const judete = (data ?? []) as unknown as { nume: string }[]
 
   const now = new Date()
   const entries: SitemapEntry[] = []

@@ -47,7 +47,7 @@ export default async function Page({ searchParams }: Props) {
     .order("created_at", { ascending: false })
     .limit(100)
 
-  const rows = (bookings ?? []) as Array<{
+  const rows = (bookings ?? []) as unknown as Array<{
     id: string
     public_ref: string
     status: string

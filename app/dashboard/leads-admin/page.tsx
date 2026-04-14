@@ -48,7 +48,7 @@ export default async function Page({ searchParams }: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const leads = (leadsRes.data ?? []) as any[]
-  const firms = (firmsRes.data ?? []) as Array<{ id: string; brand_name: string | null; legal_name: string }>
+  const firms = (firmsRes.data ?? []) as unknown as Array<{ id: string; brand_name: string | null; legal_name: string }>
 
   return (
     <div className="dash-page">

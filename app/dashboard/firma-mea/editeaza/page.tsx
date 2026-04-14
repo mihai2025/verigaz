@@ -40,7 +40,7 @@ export default async function Page() {
         Denumirea legală, CUI-ul și autorizația ANRE sunt gestionate de admin — contactează
         suportul dacă trebuie modificate.
       </p>
-      <EditFirmaClient initial={firm} />
+      <EditFirmaClient initial={firm as unknown as Record<string, string | null>} />
     </div>
   )
 }

@@ -19,7 +19,7 @@ export default async function Page() {
     .select("id, nume, slug")
     .order("nume")
 
-  const list = (judete ?? []) as { id: number; nume: string; slug: string }[]
+  const list = (judete ?? []) as unknown as { id: number; nume: string; slug: string }[]
 
   return (
     <div className="sv-page container">

@@ -53,7 +53,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const j = (Array.isArray(firm.judete) ? firm.judete[0] : firm.judete) as { nume: string } | null
   const l = (Array.isArray(firm.localitati) ? firm.localitati[0] : firm.localitati) as { nume: string } | null
 
-  const docs = (docsRes.data ?? []) as Array<{
+  const docs = (docsRes.data ?? []) as unknown as Array<{
     id: string
     document_type: string
     file_url: string
@@ -62,7 +62,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     uploaded_at: string
     verified_at: string | null
   }>
-  const audits = (auditRes.data ?? []) as Array<{
+  const audits = (auditRes.data ?? []) as unknown as Array<{
     id: string
     action: string
     summary: string | null

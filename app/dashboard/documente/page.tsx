@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: Props) {
   if (typeFilter) query = query.eq("document_type", typeFilter)
 
   const { data: docs } = await query
-  const rows = (docs ?? []) as Array<{
+  const rows = (docs ?? []) as unknown as Array<{
     id: string
     document_type: string
     document_number: string

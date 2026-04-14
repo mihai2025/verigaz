@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const judetCounts = new Map<number, { nume: string; count: number }>()
-  for (const f of (firmsGeo ?? []) as Array<{
+  for (const f of (firmsGeo ?? []) as unknown as Array<{
     sediu_judet_id: number | null
     judete: { nume: string } | { nume: string }[] | null
   }>) {

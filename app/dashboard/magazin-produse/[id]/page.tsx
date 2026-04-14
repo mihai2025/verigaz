@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         productId={id}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         initial={prodRes.data as any}
-        categories={(catsRes.data ?? []) as { id: number; nume: string }[]}
+        categories={(catsRes.data ?? []) as unknown as { id: number; nume: string }[]}
       />
     </div>
   )

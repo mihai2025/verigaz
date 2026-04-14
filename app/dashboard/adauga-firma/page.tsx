@@ -27,7 +27,7 @@ export default async function Page() {
         Completează datele firmei pentru a apărea în directorul verigaz.
         După trimitere, echipa noastră validează autorizația ANRE (în 1–2 zile).
       </p>
-      <AdaugaFirmaClient judete={(judete ?? []) as { id: number; nume: string }[]} />
+      <AdaugaFirmaClient judete={(judete ?? []) as unknown as { id: number; nume: string }[]} />
     </div>
   )
 }
