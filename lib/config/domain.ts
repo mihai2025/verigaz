@@ -4,7 +4,7 @@
 
 export const DOMAIN = {
   // ── Brand ──
-  brandName: "Verigaz",
+  brandName: "verificari-gaze.ro",
   domain: "verificari-gaze.ro",
   baseUrl: "https://verificari-gaze.ro",
   cdnDomain: "media.ghidulfunerar.ro", // R2 bucket partajat, folder verigaz/
@@ -24,14 +24,14 @@ export const DOMAIN = {
 
   // ── Metadata (root layout) ──
   metaTitleDefault: "Firme autorizate ANRE pentru verificări și revizii gaze în România",
-  metaTitleTemplate: "%s – Verigaz",
+  metaTitleTemplate: "%s – verificari-gaze.ro",
   metaDescription:
     "Găsește firme autorizate ANRE pentru verificare instalație gaze, revizie la 10 ani, montaj detectoare și service centrală termică. Programare rapidă, documente digitale, reminder-e automate.",
 
   metaOgDescription:
     "Verifică-ți instalația de gaze la zi: firme autorizate ANRE, programare rapidă, certificat digital, reminder-e când expiră verificarea.",
   metaTwitterDescription:
-    "Verigaz — găsește firmă autorizată ANRE, programează rapid verificarea sau revizia instalației de gaze. Documente digitale + reminder-e.",
+    "verificari-gaze.ro — găsește firmă autorizată ANRE, programează rapid verificarea sau revizia instalației de gaze. Documente digitale + reminder-e.",
 
   // ── Hero ──
   heroTitle: "Instalația ta de gaze, la zi. Oriunde în România.",

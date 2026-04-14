@@ -461,9 +461,9 @@
 .vg-footer__anpc a:hover { transform: translateY(-1px); }
 .vg-footer__anpc img {
   display: block;
-  height: 40px;
+  height: 20px;
   width: auto;
-  max-width: 140px;
+  max-width: 70px;
 }
 
 .vg-footer__bottom {
