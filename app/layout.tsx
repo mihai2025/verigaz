@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { DOMAIN } from "@/lib/config/domain"
 import { CookieBanner } from "@/components/site/CookieBanner"
+import { Header } from "@/components/site/Header"
+import { Footer } from "@/components/site/Footer"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld"
 import "@/styles/globals.css"
@@ -53,7 +55,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
-        {children}
+        <Header />
+        <main className="vg-main">{children}</main>
+        <Footer />
         <CookieBanner />
       </body>
     </html>

@@ -1,0 +1,1842 @@
+/* styles/firma.css */
+
+/* ============================================================
+   Base / Layout
+   ============================================================ */
+
+@media (max-width: 1023px) {
+  .firmaPage,
+  .firmaContainer,
+  .firmaGrid {
+    max-width: 100%;
+    overflow-x: hidden; /* clip e ok, dar hidden e mai compatibil pe mobil */
+  }
+}
+
+.firmaPage {
+  padding-bottom: 120px; /* spațiu pentru sticky CTA pe mobil */
+  overflow-x: hidden;
+}
+
+@media (min-width: 1024px) {
+  .firmaPage {
+    padding-bottom: 0;
+  }
+}
+
+.firmaContainer {
+  padding-top: 12px;
+  padding-bottom: 18px;
+}
+
+.firmaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: start;
+  min-width: 0;
+}
+
+/* Desktop: 2 coloane */
+@media (min-width: 1024px) {
+  .firmaGrid {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 18px;
+  }
+  .firmaAside {
+    position: sticky;
+    top: 14px;
+  }
+}
+
+.firmaMain,
+.firmaAside {
+  min-width: 0;
+}
+
+.firmaSection {
+  margin-top: 14px;
+}
+
+.firmaH2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.15;
+  font-weight: 650;
+  color: var(--text-900);
+}
+
+.firmaCard,
+.firmaAsideCard {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  padding: 12px;
+  min-width: 0;
+}
+
+.firmaP {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-700);
+}
+
+/* Description truncated to ~5 lines for Free plan */
+.firmaDescTrunc {
+  /* truncation removed — show full description */
+}
+.firmaDescTrunc > * {
+  /* truncation removed — show full description */
+}
+
+.firmaMuted {
+  opacity: 0.86;
+}
+
+/* Disabled universal (prima definiție; va fi suprascrisă mai jos unde există) */
+.firmaDisabled,
+.isDisabled {
+  opacity: 0.55;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+/* neutralizează “svg explode” */
+.firmaPage svg {
+  max-width: 100%;
+}
+
+/* link inheritance */
+.firmaCard a,
+.firmaAsideCard a {
+  color: inherit;
+}
+
+/* scroll offset pentru anchor-uri */
+#prezentare,
+#servicii,
+#galerie,
+#locatii,
+#seo-local,
+#harta {
+  scroll-margin-top: 96px;
+}
+
+/* ============================================================
+   Gallery responsive (CSS-only switch, no JS hydration shift)
+   ============================================================ */
+.galDesk { display: none; }
+.galMob  { display: block; }
+@media (min-width: 900px) {
+  .galDesk { display: block; }
+  .galMob  { display: none; }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.firmaHero {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.07);
+  min-width: 0;
+}
+
+.firmaCover {
+  height: 192px;
+  background: rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+@media (min-width: 640px) {
+  .firmaCover {
+    height: 228px;
+  }
+}
+
+.firmaCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.firmaHeroBody {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  min-width: 0;
+}
+
+.firmaLogoWrap {
+  width: 74px;
+  height: 74px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.firmaLogoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.firmaTitleRow{
+  display:flex;
+  align-items:center;            /* arată mai premium decât flex-start */
+  gap:10px;
+  min-width:0;
+}
+
+.firmaH1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: var(--track-tighter);
+  color: var(--text-900);
+  min-width: 0;
+  flex: 1 1 auto; 
+}
+@media (min-width: 640px) {
+  .firmaH1 {
+    font-size: 24px;
+  }
+}
+@media (min-width: 1024px){
+  .firmaHeroBody{
+    grid-template-columns: 96px minmax(0, 1fr);  /* puțin mai generos pe desktop */
+    gap: 14px;
+    padding: 14px 14px 2px;
+  }
+
+  .firmaLogoWrap{
+    width: 96px;
+    height: 96px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .firmaLogoImg{
+    width:100%;
+    height:100%;
+    object-fit: contain;          /* CHEIA: nu mai taie logo-ul */
+    padding: 6px;                 /* spațiu premium, nu “lipit” */
+    background: transparent;
+    display:block;
+  }
+}
+.firmaBadge {
+  font-size: 11px;
+  font-weight: 750;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-800);
+  white-space: nowrap;
+  margin-left:auto;
+      margin-right: auto;
+  flex: 0 0 auto;
+}
+.firmaBadge--premium {
+  background: rgba(176, 122, 42, 0.12);
+  border-color: rgba(176, 122, 42, 0.25);
+}
+.firmaBadge--plus {
+  background: rgba(0, 0, 0, 0.06);
+}
+.firmaBadge--free {
+  opacity: 0.85;
+}
+
+/* ── Verified badge ─────────────────────────────────────────────────────── */
+.firmaVerifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.firmaVerifiedBadge--yes {
+  background: rgb(255, 255, 255);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #15803d;
+}
+.firmaVerifiedBadge--no {
+  background: rgb(255, 255, 255);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #b91c1c;
+}
+/* overlay pe cover image — doar mobil */
+.firmaVerifiedBadge--coverOverlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+}
+/* pe desktop ascundem overlay-ul de pe cover (badge-ul e în firmaHeroActionsRight) */
+@media (min-width: 1024px) {
+  .firmaVerifiedBadge--coverOverlay {
+    display: none;
+  }
+}
+
+.firmaSubtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-600);
+  line-height: 1.3;
+}
+
+.firmaLocRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: var(--text-700);
+  font-size: 13px;
+  min-width: 0;
+}
+.firmaLocRow span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.firmaLocIcon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* WhatsApp CTA for free firms */
+.firmaWhatsappCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 18px;
+  background: #25d366;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 24px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+.firmaWhatsappCta:hover {
+  background: #1ebe57;
+  transform: scale(1.03);
+}
+.firmaWhatsappCta__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* HERO actions: hidden by default (mobile) */
+.firmaHeroActions--desktopOnly {
+  display: none;
+}
+
+/* Desktop: show hero actions */
+@media (min-width: 1024px) {
+  .firmaHeroActions--desktopOnly {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+/* social pills (hero) */
+.firmaSocialPill {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  color: var(--text-800);
+  text-decoration: none;
+}
+.firmaSocialPill svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .firmaSocialPill--fb {
+    color: #1877f2;
+  }
+  .firmaSocialPill--ig {
+    color: #c13584;
+  }
+  .firmaSocialPill--tt {
+    color: #111827;
+  }
+}
+
+.firmaMiniLink {
+  margin-left: 6px;
+  font-size: 13px;
+  color: var(--text-900);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  vertical-align: -webkit-baseline-middle;
+}
+.firmaMiniLink[aria-disabled="true"] {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Tabs BAR (mobile + desktop)
+   ============================================================ */
+
+.firmaTabsWrap {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.firmaTabs--bar {
+  margin-top: 10px;
+
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+
+  width: 100%;
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+.firmaTabs--bar::-webkit-scrollbar {
+  display: none;
+}
+
+.firmaTabs--bar .firmaTab {
+  flex: 1 1 0; /* se întind egal */
+  height: 58px;
+
+  border: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  background: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  text-decoration: none;
+  color: var(--text-800);
+  font-weight: 650;
+
+  min-width: 0;
+}
+
+.firmaTabs--bar .firmaTab:last-child {
+  border-right: 0;
+}
+
+.firmaTabs--bar .firmaTabIcon {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--text-700);
+  flex: 0 0 auto;
+}
+.firmaTabs--bar .firmaTabIcon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.firmaTabs--bar .firmaTabText {
+  font-size: 11px;
+  line-height: 1.1;
+  color: var(--text-700);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .firmaTabs--bar .firmaTab:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.firmaTabs--bar .firmaTab.isActive {
+  background: rgba(0, 0, 0, 0.06);
+}
+.firmaTabs--bar .firmaTab.isActive .firmaTabIcon {
+  color: var(--text-900);
+}
+.firmaTabs--bar .firmaTab.isActive .firmaTabText {
+  color: var(--text-900);
+}
+
+/* Desktop: fără scroll, se întind */
+@media (min-width: 1024px) {
+  .firmaTabs--bar {
+    overflow-x: hidden;
+  }
+  .firmaTabs--bar .firmaTab {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+/* ============================================================
+   ASIDE
+   ============================================================ */
+
+.firmaAsideWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Butoanele din aside (lead, magazin, pdf) — uniform full-width, centrate */
+.firmaAsideWrap .lead-btn,
+.firmaAsideWrap .firmaPrezBtn,
+.firmaAsideWrap .firmaPdfBtn {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+
+/* ============================================================
+   Locations (main)
+   ============================================================ */
+
+@media (min-width: 1024px) {
+  .firmaLocationsMobileOnly {
+    display: none;
+  }
+}
+
+
+/* ============================================================
+   Pills
+   ============================================================ */
+
+.firmaPill {
+  font-size: 11px;
+  font-weight: 750;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-800);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Contacts (phone/wa/email/site ONLY)
+   ============================================================ */
+
+.firmaContacts {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.firmaContactRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.62);
+  min-width: 0;
+}
+
+.firmaContacts--compact .firmaContactRow {
+  padding: 9px;
+  border-radius: 13px;
+}
+
+.firmaContactIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text-800);
+  flex: 0 0 auto;
+}
+.firmaContacts--compact .firmaContactIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+}
+
+.firmaContactIcon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.firmaContactBody {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.firmaContactLabel {
+  font-size: 12px;
+  color: var(--text-500);
+  line-height: 1.2;
+}
+
+.firmaContactValue {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-900);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.firmaContactValue--link {
+  text-decoration: none;
+}
+
+.firmaContactTag {
+  font-size: 10px;
+  font-weight: 750;
+  padding: 6px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-800);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   MOBILE Sticky CTA
+   ============================================================ */
+
+.firmaStickyCta {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  z-index: 80;
+
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(10px);
+
+  padding: 10px;
+
+  max-width: 720px;
+  margin: 0 auto;
+
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .firmaStickyCta {
+    display: none;
+  }
+}
+
+.firmaStickyInner {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.firmaStickyTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.firmaStickyIcons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.firmaStickyIconBtn {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-900);
+  white-space: nowrap;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.firmaStickyIconBtn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.firmaStickyIconBtn.isDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.firmaStickyIconBtn--fb {
+  color: #1877f2;
+}
+.firmaStickyIconBtn--ig {
+  color: #c13584;
+}
+.firmaStickyIconBtn--tt {
+  color: #111827;
+}
+.firmaStickyIconBtn--web {
+  color: #0f172a;
+}
+
+.firmaStickyNavPill {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-900);
+  font-weight: 750;
+  font-size: 12px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.firmaStickyNavPill svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+.firmaStickyNavPill.isDisabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.firmaStickyActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.firmaStickyBtn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  font-weight: 750;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.firmaStickyBtn svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.firmaStickyBtn--call {
+  background: linear-gradient(180deg, #4b83f0 0%, #2563eb 50%, #1d4ed8 100%);
+  border: 2px solid #b8960b;
+  color: #fff;
+  box-shadow:
+    0 0 0 1px rgba(184, 150, 11, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(37, 99, 235, 0.28),
+    0 2px 8px rgba(184, 150, 11, 0.18);
+}
+
+.firmaStickyBtn--wa {
+  background: linear-gradient(180deg, #34d471 0%, #22c55e 50%, #16a34a 100%);
+  border: 2px solid #b8960b;
+  color: #fff;
+  box-shadow:
+    0 0 0 1px rgba(184, 150, 11, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(34, 197, 94, 0.25),
+    0 2px 8px rgba(184, 150, 11, 0.18);
+}
+
+.firmaStickyBtn.isDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+/* ============================================================
+   Mobile Firm Header (ONLY mobile) — FIXED, not sticky
+   Motiv: sticky + overflow pe părinți = instabil pe mobil
+   ============================================================ */
+
+.firmaMobileHeader {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .firmaMobileHeader {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94),
+      rgba(255, 255, 255, 0.8)
+    );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  /* rezervă spațiu real sub header fix */
+  .firmaPage {
+    padding-top: 68px; /* ajustează dacă schimbi înălțimea headerului */
+  }
+
+  .firmaMobileHeader__inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 10px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    min-width: 0;
+  }
+
+  .firmaMobileHeader__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .firmaMobileHeader__logo {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+
+    border-radius: 12px;
+    overflow: hidden;
+
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  }
+
+  .firmaMobileHeader__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .firmaMobileHeader__meta {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .firmaMobileHeader__name {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--text-900);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .firmaMobileHeader__loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--text-700);
+
+    min-width: 0;
+  }
+
+  .firmaMobileHeader__pin {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+    color: var(--text-700);
+  }
+
+  .firmaMobileHeader__pin svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+
+  .firmaMobileHeader__locText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  /* Back button — premium, clean */
+  .firmaMobileHeader__back {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+
+    color: var(--text-900);
+    cursor: pointer;
+
+    transition: transform 0.12s ease, background 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .firmaMobileHeader__back:active {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .firmaMobileHeader__back svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  /* Actions wrapper (pdf icon + back) */
+  .firmaMobileHeader__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+
+  .firmaMobileHeader__pdf {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(184,134,11,.25);
+    background: rgba(255,251,245,.9);
+    color: #b8860b;
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .firmaMobileHeader__pdf:active {
+    transform: scale(.95);
+  }
+  .firmaMobileHeader__pdf:disabled {
+    opacity: .5;
+    cursor: wait;
+  }
+  .firmaMobileHeader__pdf svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  /* Pe mobil: header-ul are identitatea, hero devine “cover + tabs” */
+  .firmaHeroBody {
+    grid-template-columns: 1fr;
+    padding-top: 10px;
+  }
+
+  .firmaLogoWrap {
+    display: none;
+  }
+
+  .firmaHero .firmaTitleRow,
+  .firmaHero .firmaLocRow {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Mobile overflow hardening (defensiv)
+   ============================================================ */
+
+@media (max-width: 1023px) {
+  .firmaGrid {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .firmaMain,
+  .firmaAside {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .firmaHero,
+  .firmaSection,
+  .firmaCard,
+  .firmaAsideCard {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .firmaHero img,
+  .firmaCard img,
+  .firmaPage svg,
+  .firmaPage video,
+  .firmaPage canvas {
+    max-width: 100%;
+  }
+
+  .firmaStickyCta {
+    left: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+  }
+}
+
+/* ============================================================
+   Header control (desktop-only header wrapper)
+   ============================================================ */
+
+.firmeDesktopHeader {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .firmeDesktopHeader {
+    display: block;
+  }
+}
+
+/* ============================================================
+   Location cards (variantă “card premium”)
+   ============================================================ */
+
+/* stack de carduri */
+.locAsideStack {
+  display: grid;
+  gap: 12px;
+}
+
+/* card premium */
+.locCard {
+  background: var(--card, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 12px 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+
+/* disabled (A DOUA definiție .isDisabled — asta rămâne “câștigătoare”) */
+.isDisabled {
+  opacity: 0.45;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+/* link "vezi toate" */
+.locSeeAll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.78);
+}
+
+/* ============================================================
+   Minimal locations aside (ca mockup) — fără card, fără contur
+   ============================================================ */
+
+.fminiStack {
+  display: grid;
+  gap: 26px;
+}
+
+.fminiSection {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.fminiHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.fminiTitle {
+  font-size: 22px;
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.fminiPill {
+  font-size: 14px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.65);
+  display: none;
+}
+
+/* linie subtire sub titlu */
+.fminiDivider {
+  height: 1px;
+  background: rgba(15, 23, 42, 0.22);
+  margin: 14px 0 8px;
+}
+
+/* randuri */
+.fminiRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  text-decoration: none;
+  color: inherit;
+}
+.fminiRow:last-child {
+  border-bottom: 0;
+}
+
+.fminiLeft {
+  width: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fminiText {
+  font-size: 16px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* icon colors, subtile dar clare */
+.fminiIc {
+  color: rgba(15, 23, 42, 0.75);
+}
+.fminiIc--pin {
+  color: #ef4444;
+}
+.fminiIc--phone {
+  color: #2563eb;
+}
+.fminiIc--wa {
+  color: #16a34a;
+}
+.fminiIc--mail {
+  color: rgba(15, 23, 42, 0.75);
+}
+
+.fminiRow:hover {
+  opacity: 0.92;
+}
+.fminiRow.isDisabled {
+  opacity: 0.35;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   Servicii — grid responsive inteligent (păstrat “ultimul”)
+   ============================================================ */
+
+.firmaServicesGrid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Tablet: 2 coloane */
+@media (max-width: 1024px) {
+  .firmaServicesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobil: 2 coloane dacă încape, altfel 1 */
+@media (max-width: 640px) {
+  .firmaServicesGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 380px) {
+  .firmaServicesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.firmaServiceItem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+/* bifa "negru-gold" (gold închis, premium) */
+.firmaServiceCheck {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 800;
+  line-height: 1;
+  font-size: 12px;
+
+  /* gold închis + contur subtil */
+  color: #8a6a1f;
+  background: rgba(138, 106, 31, 0.12);
+  border: 1px solid rgba(138, 106, 31, 0.28);
+}
+
+.firmaServiceText {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+/* AICI e cheia: nu se rupe pe 2 rânduri */
+.firmaServiceName {
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Notițele: tot elegante, tot 1 rând */
+.firmaServiceNotes {
+  opacity: 0.85;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* ============================================================
+   Premium Website Row (aside)
+   ============================================================ */
+
+.firmaWebRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:10px 10px;
+  border-radius:14px;
+
+  
+  background: rgba(255,255,255,.72);
+
+  text-decoration:none;
+  color: inherit;
+
+  
+  min-width:0;
+
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover:hover){
+  .firmaWebRow:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,.86);
+    box-shadow: 0 14px 34px rgba(0,0,0,.10);
+  }
+}
+
+.firmaWebIcon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+
+  display:grid;
+  place-items:center;
+
+  
+  background: rgba(255,255,255,.92);
+
+  /* icon NU mai e “fad” */
+  color: rgba(15,23,42,.90);
+
+  
+  flex: 0 0 auto;
+}
+
+.firmaWebIcon svg{
+  width:18px;
+  height:18px;
+  display:block;
+}
+
+.firmaWebText{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  min-width:0;
+  flex: 1 1 auto;
+}
+
+.firmaWebDomain{
+  font-size:13px;
+  font-weight:800;
+  color: var(--text-900);
+  min-width:0;
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
+  /* underline premium discret */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(15,23,42,.22);
+}
+
+.firmaWebArrow{
+  font-size:14px;
+  font-weight:900;
+  color: rgba(15,23,42,.70);
+  flex:0 0 auto;
+}
+
+/* Download PDF button — gold premium */
+.firmaPdfBtn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:12px 16px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#b8860b 0%,#daa520 50%,#b8860b 100%);
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition:opacity .2s,transform .15s;
+  text-align:left;
+}
+.firmaPdfBtn:hover{
+  opacity:.9;
+  transform:translateY(-1px);
+}
+.firmaPdfBtn:active{
+  transform:translateY(0);
+}
+.firmaPdfBtn:disabled{
+  opacity:.55;
+  cursor:wait;
+}
+.firmaPdfBtn__icon{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  background:rgba(255,255,255,.18);
+}
+.firmaPdfBtn__icon svg{
+  color:#fff;
+}
+
+.firmaWebRow.isDisabled{
+  opacity:.45;
+  pointer-events:none;
+  filter: grayscale(1);
+  box-shadow:none;
+}
+
+/* ── Prezentare firmă button (aside, desktop) ── */
+.firmaPrezBtn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:12px 16px;
+  border:1.5px solid #b8860b;
+  border-radius:10px;
+  background:#111;
+  color:#daa520;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition:opacity .2s,transform .15s;
+  text-align:left;
+  text-decoration:none;
+}
+a.firmaPrezBtn,a.firmaPrezBtn:visited{color:#daa520}
+.firmaPrezBtn:hover{
+  opacity:.88;
+  transform:translateY(-1px);
+}
+.firmaPrezBtn:active{
+  transform:translateY(0);
+}
+.firmaPrezBtn__icon{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  background:rgba(218,165,32,.15);
+}
+.firmaPrezBtn__icon svg{
+  color:#daa520;
+}
+
+/* ============================================================
+   Blur overlay — plan FREE (images, gallery, map, logo, cover)
+   ============================================================ */
+.firmaBlurred {
+  /* blur and overlay removed — content visible for all plans */
+}
+.firmaBlurred > * {
+  /* blur removed */
+}
+.firmaBlurred::after {
+  display: none;
+}
+
+/* Badge styling for START plan */
+.firmaBadge--start {
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  color: #fff;
+}
+/* ASF logo sizing (desktop hero) */
+.firmaAsfLogo {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+/* ASF button in mobile header: same sizing as other header buttons */
+/* Container — nu mai e pătrat fix */
+.firmaMobileHeader__asf {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 2px 0;
+}
+
+/* Icon controlează lățimea totală */
+.firmaMobileHeader__asfIcon {
+  width: 42px;      /* controlează tot */
+  height: auto;
+  display: block;
+}
+
+/* Text adaptat EXACT la lățimea iconului */
+.firmaMobileHeader__asfLabel {
+  width: 100%;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* === Fix layout: nume+locație nu mai sunt afectate de blocul din dreapta === */
+/* Container principal text */
+.firmaHeroText{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* === RÂNDUL 1 === */
+.firmaHeroTopGrid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 20px;
+}
+
+/* Stânga: titlu + locație */
+.firmaHeroLeft{
+  min-width: 0;
+}
+
+/* Dreapta: plan + ASF */
+.firmaHeroRight{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+/* === RÂNDUL 2 (social) === */
+.firmaHeroActions--leftOnly{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ASF block */
+.firmaAsfBlock{
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  text-decoration: none;
+}
+
+/* text MEMBRU */
+.firmaAsfLabel{
+  font-size: 11px;
+  letter-spacing: .18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #111;
+  opacity: .85;
+}
+
+/* wrapper logo */
+.firmaAsfLogoWrap{
+  position: relative;
+  height: 24px;
+  width: 72px;
+  min-width: 72px;
+  color: #111; /* LOGO NEGRU */
+}
+
+/* SVG */
+.firmaAsfLogoWrap svg{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+/* Shine metalic auriu elegant */
+.firmaAsfLogoWrap::after{
+  content: "";
+  position: absolute;
+  inset: -8px -20px;
+  pointer-events: none;
+
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255,215,120,.0) 47%,
+    rgba(255,215,120,.55) 50%,
+    rgba(255,215,120,.0) 53%,
+    transparent 58%,
+    transparent 100%
+  );
+
+  transform: translateX(-180%);
+  opacity: .6;
+  mix-blend-mode: screen;
+  animation: asfGoldShine 8s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes asfGoldShine{
+  0%   { transform: translateX(-180%); opacity: 0; }
+  15%  { opacity: .6; }
+  50%  { transform: translateX(180%); opacity: .6; }
+  60%  { opacity: 0; }
+  100% { transform: translateX(180%); opacity: 0; }
+} 
+/* Actions row: left content should not stretch weirdly */
+@media (min-width: 1024px){
+  .firmaHeroActions{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .firmaHeroActionsLeft{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: 520px;   /* CHEIA: nu mai arată ca o bară full width */
+  }
+  .firmaHeroActionsRight{
+    flex: 1 1 auto;     /* spacer */
+  }
+}
+/* rând social desktop: 2 coloane (stânga iconuri / dreapta spacer) */
+.firmaHeroActionsRow{
+  display: grid;
+  grid-template-columns: auto 1fr; /* stânga cât are nevoie, dreapta ia restul */
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.firmaHeroActionsLeft{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.firmaHeroActionsRight{
+  min-width: 1px; /* doar ca să existe coloana 2 */
+}
+/* ASF block: nu apare pe mobil */
+@media (max-width: 1023px) {
+  .firmaAsfBlock {
+    display: none !important;
+  }
+  .firmaHeroActionsRow {
+    display: none !important;
+  }
+}
+        .firmaServicesGrid {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: grid;
+          gap: 10px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        @media (max-width: 1024px) {
+          .firmaServicesGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 640px) {
+          .firmaServicesGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 380px) {
+          .firmaServicesGrid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .firmaServiceItem {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          min-width: 0;
+        }
+
+        /* Authorized service — green highlight */
+        .firmaServiceItem--authorized {
+          background: rgba(22, 163, 74, 0.04);
+          border-radius: 8px;
+          padding: 4px 6px;
+          margin: -4px -6px;
+        }
+
+        /* Default check — gold */
+        .firmaServiceCheck {
+          flex: 0 0 auto;
+          width: 18px;
+          height: 18px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          font-weight: 800;
+          line-height: 1;
+          font-size: 12px;
+
+          color: #8a6a1f;
+          background: rgba(138, 106, 31, 0.12);
+          border: 1px solid rgba(138, 106, 31, 0.28);
+        }
+
+        /* Authorized check — green */
+        .firmaServiceCheck--authorized {
+          color: #16a34a;
+          background: rgba(22, 163, 74, 0.08);
+          border-color: rgba(22, 163, 74, 0.25);
+        }
+
+        .firmaServiceText {
+          min-width: 0;
+          display: grid;
+          gap: 2px;
+        }
+
+        .firmaServiceName {
+          font-weight: 650;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .firmaServiceNotes {
+          opacity: 0.85;
+          font-size: 13px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* Badge AUTORIZAT LEGAL — gold premium on metallic dark */
+        .firmaCatBadge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px 10px 3px 8px;
+          border-radius: 4px;
+
+          /* Metallic black — highlight la top, adâncime la mijloc */
+          background: linear-gradient(
+            160deg,
+            #2e2e2e 0%,
+            #161616 22%,
+            #0a0a0a 50%,
+            #141414 78%,
+            #262626 100%
+          );
+          /* Reflexie internă metalică */
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.10),
+            inset 0 -1px 0 rgba(0,0,0,0.6),
+            0 2px 6px rgba(0,0,0,0.55),
+            0 0 0 1px rgba(218,165,32,0.35);
+
+          /* Gold text cu strălucire subtilă */
+          color: #e8c050;
+          text-shadow:
+            0 0 8px rgba(218,165,32,0.50),
+            0 1px 2px rgba(0,0,0,0.90);
+
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.9px;
+          text-transform: uppercase;
+          font-family: system-ui, sans-serif;
+          white-space: nowrap;
+        }

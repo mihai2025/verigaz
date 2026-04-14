@@ -2,102 +2,77 @@ import Link from "next/link"
 import { DOMAIN } from "@/lib/config/domain"
 
 export function Footer() {
+  const year = new Date().getFullYear()
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-card">
-          <div className="footer-grid footer-grid--5col">
-            {/* BRAND */}
-            <div className="footer-brand">
-              <div className="footer-logo">{DOMAIN.domain}</div>
-              <p className="footer-desc">{DOMAIN.footerDescription}</p>
-              <div className="footer-meta">
-                © {new Date().getFullYear()} • Toate drepturile rezervate
-              </div>
-              <div className="footer-anpc">
-                <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer">
-                  <img src="/imagini/anpc-sal.webp" alt="ANPC – SAL" className="footer-anpc__img" />
-                </a>
-                <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
-                  <img src="/imagini/anpc-sol.webp" alt="SOL – Soluționarea online a litigiilor" className="footer-anpc__img" />
-                </a>
-              </div>
-            </div>
+    <footer className="vg-footer">
+      <div className="vg-footer__inner">
+        <div className="vg-footer__grid">
+          <div className="vg-footer__brand">
+            <div className="vg-footer__logo">verificari-gaze.ro</div>
+            <p className="vg-footer__desc">{DOMAIN.footerDescription}</p>
+            <p style={{ fontSize: 12, color: "#64748b", margin: "12px 0 0" }}>
+              © {year} · {DOMAIN.brandName}
+            </p>
+          </div>
 
-            {/* SERVICII FUNERARE */}
-            <div className="footer-col">
-              <div className="footer-title">Servicii funerare</div>
-              <div className="footer-links">
-                <Link href="/servicii">Director servicii</Link>
-                <Link href="/comemorari">Comemorări și anunțuri</Link>
-                <Link href="/servicii-funerare/ghid-complet-dupa-deces">Ghid complet după deces</Link>
-                <Link href="/servicii-funerare/acte-necesare-dupa-deces">Acte necesare după deces</Link>
-                <Link href="/servicii-funerare/cost-inmormantare">Cost înmormântare</Link>
-                <Link href="/servicii-funerare/ajutor-de-inmormantare">Ajutor de înmormântare</Link>
-                <Link href="/servicii-funerare/ce-trebuie-facut-dupa-deces-ghid-pdf">Ghid PDF — primele 72 ore</Link>
-                <Link href="/servicii-funerare/calculator-cost-inmormantare">Calculator cost înmormântare</Link>
-              </div>
-            </div>
+          <div>
+            <div className="vg-footer__title">Servicii gaze</div>
+            <nav className="vg-footer__links">
+              <Link href="/servicii-gaze">Firme autorizate ANRE</Link>
+              <Link href="/servicii/verificare-instalatie">Verificare la 2 ani</Link>
+              <Link href="/servicii/revizie-instalatie">Revizie la 10 ani</Link>
+              <Link href="/servicii/montaj-detector">Montaj detector</Link>
+              <Link href="/servicii/reparatii-instalatie">Reparații</Link>
+              <Link href="/programare">Programează online</Link>
+            </nav>
+          </div>
 
-            {/* PARASTASE ȘI TRADIȚII */}
-            <div className="footer-col">
-              <div className="footer-title">Parastase și tradiții</div>
-              <div className="footer-links">
-                <Link href="/calendar-ortodox">Calendar Ortodox 2026</Link>
-                <Link href="/mesaje-condoleante">Mesaje de condoleanțe</Link>
-                <Link href="/servicii-funerare/calendar-parastase">Calendar parastase</Link>
-                <Link href="/servicii-funerare/calculator-parastase">Calculator date parastas</Link>
-                <Link href="/servicii-funerare/reminder-parastase">Reminder parastas SMS</Link>
-                <Link href="/servicii-funerare/ghid/ghid-complet-parastas">Ghid complet parastas</Link>
-                <Link href="/servicii-funerare/ghid/ce-se-da-la-40-zile">Ce se dă la 40 de zile</Link>
-                <Link href="/servicii-funerare/ghid/ce-se-imparte-la-parastas">Ce se împarte la parastas</Link>
-                <Link href="/servicii-funerare/ghid/model-pomelnic-40-zile-sarindar">Model pomelnic 40 zile</Link>
-                <Link href="/servicii-funerare/ghid/ghid-complet-traditii">Ghid complet tradiții</Link>
-              </div>
-            </div>
+          <div>
+            <div className="vg-footer__title">Centrale termice</div>
+            <nav className="vg-footer__links">
+              <Link href="/verificari-centrala">Verificare VTP ISCIR</Link>
+              <Link href="/revizii-centrala">Revizie anuală</Link>
+              <Link href="/servicii/service-detector">Service detector</Link>
+              <Link href="/magazin">Piese & detectoare</Link>
+            </nav>
+          </div>
 
-            {/* GHIDURI ȘI RESURSE */}
-            <div className="footer-col">
-              <div className="footer-title">Ghiduri și resurse</div>
-              <div className="footer-links">
-                <Link href="/articole">Articole și ghiduri</Link>
-                <Link href="/servicii-funerare/ghid/model-anunt-deces">Model anunț deces</Link>
-                <Link href="/servicii-funerare/ghid/model-mesaje-condoleante">Modele mesaje condoleanțe</Link>
-                <Link href="/servicii-funerare/ghid/ghid-complet-doliu">Ghid complet doliu</Link>
-                <Link href="/servicii-funerare/ghid/reguli-doliu">Reguli de doliu</Link>
-                <Link href="/servicii-funerare/ghid/organizare-inmormantare-checklist">Checklist înmormântare</Link>
-                <Link href="/servicii-funerare/organizare-inmormantare-timeline">Timeline organizare</Link>
-                <Link href="/psihologi">Psihologi doliu</Link>
-                <Link href="/servicii-funerare/life-plan">Pagina digitală QR</Link>
-                <Link href="/magazin">Magazin online</Link>
-              </div>
-            </div>
+          <div>
+            <div className="vg-footer__title">Informații utile</div>
+            <nav className="vg-footer__links">
+              <Link href="/utile">Toate ghidurile</Link>
+              <Link href="/utile/anre-ord-179-2015-explicat-pe-intelesul-tuturor">ANRE Ord. 179/2015</Link>
+              <Link href="/utile/amenzi-verificare-gaze-neefectuata">Amenzi verificare</Link>
+              <Link href="/utile/preturi-orientative-servicii-gaze-2026">Prețuri 2026</Link>
+              <Link href="/utile/siguranta-instalatie-gaze-acasa-ghid-complet">Siguranță gaze</Link>
+              <Link href="/cum-functioneaza">Cum funcționează</Link>
+            </nav>
+          </div>
 
-            {/* B2B + LEGAL */}
-            <div className="footer-col">
-              <div className="footer-title">Pentru firme</div>
-              <div className="footer-links">
-                <Link href="/adauga-firma">Adaugă firmă</Link>
-                <Link href="/abonamente">Planuri și prețuri</Link>
-                <Link href="/prezentare-b2b">Prezentare B2B</Link>
-                <Link href="/remindere-parastase">Remindere parastase B2B</Link>
-                <Link href="/servicii-funerare/life-plan-b2b">Parteneriate Life Plan QR</Link>
-              </div>
+          <div>
+            <div className="vg-footer__title">Pentru firme</div>
+            <nav className="vg-footer__links">
+              <Link href="/pentru-firme">Listează-te gratuit</Link>
+              <Link href="/abonamente">Planuri și prețuri</Link>
+              <Link href="/inregistrare?firm=1">Înregistrare firmă</Link>
+              <Link href="/login">Dashboard firmă</Link>
+            </nav>
 
-              <div className="footer-title" style={{ marginTop: 20 }}>Legal</div>
-              <div className="footer-links">
-                <Link href="/termeni-si-conditii">Termeni și condiții</Link>
-                <Link href="/politica-de-confidentialitate">Politica de confidențialitate</Link>
-                <Link href="/politica-de-cookies">Politica cookies</Link>
-                <Link href="/verificare-firme">Verificare firme</Link>
-                <Link href="/despre">Despre noi</Link>
-                <Link href="/contact">Contact</Link>
-              </div>
+            <div className="vg-footer__title" style={{ marginTop: 20 }}>Legal</div>
+            <nav className="vg-footer__links">
+              <Link href="/despre">Despre</Link>
+              <Link href="/contact">Contact</Link>
+              <Link href="/termeni">Termeni</Link>
+              <Link href="/confidentialitate">Confidențialitate</Link>
+              <Link href="/cookies">Cookies</Link>
+            </nav>
+          </div>
+        </div>
 
-              <div className="footer-note">
-                Recenziile pot fi moderate. Platforma oferă listare și informare, nu intermediază servicii.
-              </div>
-            </div>
+        <div className="vg-footer__bottom">
+          <div>Platformă de informare — nu intermediem servicii tehnice.</div>
+          <div>
+            Urgențe gaz: <strong>Distrigaz 0 800 877 778</strong> · <strong>Delgaz 0 800 800 928</strong>
           </div>
         </div>
       </div>

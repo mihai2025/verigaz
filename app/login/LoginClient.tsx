@@ -74,73 +74,85 @@ export default function LoginClient({
     setNotice("Ți-am trimis un link pentru resetarea parolei.")
   }
 
-  return (
-    <div className="auth-page container">
-      <div className="auth-card">
-        <h1 className="auth-title">
-          {mode === "login" ? "Autentificare" : mode === "signup" ? "Creează cont" : "Recuperare parolă"}
-        </h1>
+  const titles = {
+    login: "Autentificare",
+    signup: asFirm ? "Înregistrare firmă" : "Creează cont",
+    reset: "Recuperare parolă",
+  }
+  const intros = {
+    login: "Intră în contul tău pentru a vedea programările și documentele.",
+    signup: asFirm
+      ? "Înregistrează-ți firma autorizată ANRE în directorul nostru național."
+      : "Creează cont pentru a programa verificări și a primi certificat digital.",
+    reset: "Introdu email-ul — îți trimitem link-ul de resetare.",
+  }
 
-        {error && <div className="auth-error" role="alert">{error}</div>}
-        {notice && <div className="auth-notice">{notice}</div>}
+  return (
+    <div className="vg-auth-page">
+      <div className="vg-auth-card">
+        <h1>{titles[mode]}</h1>
+        <p className="vg-auth-intro">{intros[mode]}</p>
+
+        {error && <div className="vg-auth-error" role="alert">{error}</div>}
+        {notice && <div className="vg-auth-notice">{notice}</div>}
 
         {mode === "login" && (
-          <form onSubmit={handleLogin} className="auth-form">
-            <label className="auth-field">
+          <form onSubmit={handleLogin} className="vg-auth-form">
+            <label className="vg-auth-field">
               <span>Email</span>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </label>
-            <label className="auth-field">
+            <label className="vg-auth-field">
               <span>Parolă</span>
               <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
             </label>
-            <button type="submit" disabled={loading} className="auth-btn auth-btn--primary">
+            <button type="submit" disabled={loading} className="vg-auth-btn">
               {loading ? "Se autentifică…" : "Intră în cont"}
             </button>
-            <div className="auth-actions">
-              <button type="button" onClick={() => setMode("reset")} className="auth-link">
-                Ai uitat parola?
+            <div className="vg-auth-actions">
+              <button type="button" onClick={() => setMode("reset")} className="vg-auth-link">
+                Am uitat parola
               </button>
-              <button type="button" onClick={() => setMode("signup")} className="auth-link">
-                Nu ai cont? Înregistrează-te
+              <button type="button" onClick={() => setMode("signup")} className="vg-auth-link">
+                Creează cont
               </button>
             </div>
           </form>
         )}
 
         {mode === "signup" && (
-          <form onSubmit={handleSignup} className="auth-form">
-            <label className="auth-field">
+          <form onSubmit={handleSignup} className="vg-auth-form">
+            <label className="vg-auth-field">
               <span>Nume complet</span>
               <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} autoComplete="name" />
             </label>
-            <label className="auth-field">
+            <label className="vg-auth-field">
               <span>Email</span>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </label>
-            <label className="auth-field">
+            <label className="vg-auth-field">
               <span>Telefon</span>
               <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" placeholder="07..." />
             </label>
-            <label className="auth-field">
+            <label className="vg-auth-field">
               <span>Parolă (min. 8 caractere)</span>
               <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
             </label>
 
-            <label className="auth-checkbox">
+            <label className="vg-auth-checkbox">
               <input type="checkbox" checked={asFirm} onChange={(e) => setAsFirm(e.target.checked)} />
-              <span>Sunt reprezentantul unei firme autorizate ANRE (vreau cont de firmă)</span>
+              <span>Sunt reprezentantul unei firme autorizate ANRE</span>
             </label>
 
-            <button type="submit" disabled={loading} className="auth-btn auth-btn--primary">
-              {loading ? "Se creează contul…" : "Creează cont"}
+            <button type="submit" disabled={loading} className="vg-auth-btn">
+              {loading ? "Se creează contul…" : asFirm ? "Înregistrează firma" : "Creează cont"}
             </button>
-            <div className="auth-actions">
-              <button type="button" onClick={() => setMode("login")} className="auth-link">
-                Ai deja cont? Intră în cont
+            <div className="vg-auth-actions">
+              <button type="button" onClick={() => setMode("login")} className="vg-auth-link">
+                ← Am deja cont
               </button>
             </div>
-            <p className="auth-legal">
+            <p className="vg-auth-legal">
               Prin crearea contului accepți <Link href="/termeni">Termenii</Link> și{" "}
               <Link href="/confidentialitate">Politica de confidențialitate</Link>.
             </p>
@@ -148,16 +160,16 @@ export default function LoginClient({
         )}
 
         {mode === "reset" && (
-          <form onSubmit={handleReset} className="auth-form">
-            <label className="auth-field">
+          <form onSubmit={handleReset} className="vg-auth-form">
+            <label className="vg-auth-field">
               <span>Email</span>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </label>
-            <button type="submit" disabled={loading} className="auth-btn auth-btn--primary">
+            <button type="submit" disabled={loading} className="vg-auth-btn">
               {loading ? "Se trimite…" : "Trimite link de resetare"}
             </button>
-            <div className="auth-actions">
-              <button type="button" onClick={() => setMode("login")} className="auth-link">
+            <div className="vg-auth-actions">
+              <button type="button" onClick={() => setMode("login")} className="vg-auth-link">
                 ← Înapoi la autentificare
               </button>
             </div>

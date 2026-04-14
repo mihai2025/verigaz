@@ -1,0 +1,301 @@
+/* styles/pages.css
+   Refăcut “Bootstrap-like”: colțuri mai tight, greutăți calme, fără bubble excesiv.
+   ✅ Desktop: pickere + buton pe ACELAȘI rând (Alege categoria | Alege locația | Vezi firmele)
+   ✅ Mobil: stack (una sub alta) ca acum
+*/
+
+/* Typography */
+.h1{
+  margin:0;
+  font-size:22px;
+  line-height:1.18;
+  letter-spacing:var(--track-tighter);
+  font-weight:650;
+  color:var(--text-900);
+}
+.h2{
+  margin:0;
+  font-size:15px;
+  line-height:1.4;
+  font-weight:520;
+  color:var(--text-700);
+}
+.p{
+  margin:0;
+  font-size:14px;
+  line-height:1.7;
+  font-weight:420;
+  color:var(--text-700);
+}
+.section{margin-top:18px}
+
+/* Cards (aerisite, discrete) */
+.card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border-faint);
+  border-radius:14px;
+  box-shadow:var(--shadow-1);
+  transition:transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:radial-gradient(900px 260px at 18% 0%, rgba(255,255,255,.85), rgba(255,255,255,0) 60%);
+  opacity:.38;
+  transition:opacity 150ms ease;
+}
+@media (hover:hover){
+  .card:hover{
+    transform:translateY(-1px);
+    box-shadow:var(--shadow-2);
+    border-color:rgba(47,122,113,.12);
+    background:rgba(255,255,255,.94);
+  }
+  .card:hover::before{opacity:.58}
+}
+.card:focus-within{
+  border-color:rgba(47,122,113,.18);
+  box-shadow:var(--focus), var(--shadow-1);
+}
+
+.card-pad{padding:12px}
+@media (min-width:900px){ .card-pad{padding:16px} }
+
+
+/* ======================================================
+   RECOMMENDED COMPANIES (reco-*)
+   - layout: stack card (cover -> content -> actions)
+   - actions: folosesc SV buttons 1:1 (sv-actions + sv-chip…)
+   ====================================================== */
+
+.reco{ margin-top:18px; }
+
+.reco-head{
+  text-align:center;
+  margin:0 0 12px 0;
+}
+.reco-title{
+  margin:0;
+  font-size:22px;
+  line-height:1.15;
+  letter-spacing:var(--track-tighter);
+  font-weight:650;
+}
+.reco-sub{
+  margin:6px 0 0 0;
+  font-size:14px;
+  color:var(--text-600);
+  line-height:1.6;
+  font-weight:420;
+}
+
+/* Grid */
+.reco-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+/* Actions — folosim butoanele SV 1:1, doar le punem pe stack */
+.reco-actions{
+  margin-top:10px;
+}
+
+/* dacă markup-ul e:
+   <div class="sv-actions reco-actions"> <a class="sv-chip ...">...</a> ... </div>
+*/
+.reco-actions.sv-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* forțează butoanele pe full-width, aliniate frumos */
+.reco-actions .sv-chip{
+  width:100%;
+  justify-content:center;
+}
+
+@media (min-width:900px){
+  .reco-title{ font-size:26px; }
+  .reco-grid{ grid-template-columns:repeat(3, 1fr); gap:14px; }
+}
+
+
+/* Results/Filters (safe defaults) */
+.results-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+@media (min-width:900px){
+  .results-grid{
+    grid-template-columns:1fr 420px;
+    gap:16px;
+    align-items:start;
+  }
+}
+/* container nav */
+.sv-socialBtn--nav{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+
+/* icon rotit ~45° */
+.sv-navIcon{
+  display:inline-flex;
+  transform:rotate(45deg);
+  transition:transform .15s ease;
+}
+
+/* mic feedback la hover (doar premium) */
+.sv-socialBtn--nav:hover .sv-navIcon{
+  transform:rotate(45deg) translateX(1px);
+}
+
+/* text mic, discret */
+.sv-navText{
+  font-size:12px;
+  font-weight:500;
+  color:inherit;
+}
+
+/* disabled */
+.sv-socialBtn--disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+/* Nav pill (Premium-only feature) */
+.sv-navPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:6px 10px;
+  border-radius:999px;
+
+  border:1px solid var(--border-200);
+  background:var(--card-50, rgba(0,0,0,.02));
+  color:var(--text-700);
+
+  font-size:12px;
+  font-weight:520;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.sv-navPill:hover{
+  color:var(--text-900);
+  border-color:var(--border-300);
+}
+
+.sv-navPillIcon{
+  width:18px;
+  height:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(45deg); /* ✅ 45° spre dreapta */
+}
+
+.sv-navPillIcon svg{
+  width:18px;
+  height:18px;
+  display:block;
+}
+
+.sv-navPill--disabled{
+  opacity:.35;
+  cursor:not-allowed;
+  user-select:none;
+}
+
+.sv-navPill--disabled *{
+  pointer-events:none;
+}
+/* buttons: 3 pe rând pe desktop, stack pe mobil (ca servicii feel) */
+.reco-actions{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+@media (min-width:900px){
+  .reco-actions{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+}
+/* Recommended: folosim exact stilul sv-*, doar îl punem stack */
+.reco-firm{
+  overflow:hidden;
+}
+
+/* cover sus, full width */
+.reco-media{
+  width:100%;
+}
+
+/* main: stack */
+.reco-main{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:12px;
+}
+
+/* logo + actions sub text */
+.reco-sideStack{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* desktop */
+@media (min-width:900px){
+  .reco-main{padding:14px}
+}
+/* Skeleton (recommended) */
+.reco-skelCover{
+  height:180px;
+  background:rgba(15,23,42,.06);
+}
+.reco-skelLine{
+  height:12px;
+  border-radius:8px;
+  background:rgba(15,23,42,.06);
+}
+.reco-skelBlock{
+  height:44px;
+  border-radius:10px;
+  background:rgba(15,23,42,.06);
+}
+.reco-skelLogo{
+  height:52px;
+  border-radius:12px;
+  background:rgba(15,23,42,.06);
+}
+.icon-btn--user.is-guest {
+  color: var(--text-700);
+}
+
+.icon-btn--user.is-auth {
+  color: var(--gold-600, #b07a2a); /* premium / auriu */
+}
+
+.icon-btn--user.is-auth:hover {
+  filter: drop-shadow(0 0 10px rgba(176, 122, 42, 0.22));
+}
+
+.icon-btn--user.has-avatar {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  border-color: var(--gold-600, #b07a2a);
+}
