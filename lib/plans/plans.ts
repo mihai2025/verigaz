@@ -103,13 +103,13 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
   premium: {
     key: "premium",
     nume: "Premium",
-    tagline: "Exclusivitate locală — singura firmă afișată în localitățile tale.",
+    tagline: "Exclusivitate locală — singura firmă afișată în localitatea ta.",
     priceYearly: 1490,
     currency: "RON",
     stripePriceIdEnv: "STRIPE_PRICE_PREMIUM_YEARLY",
     highlights: [
       "Tot ce e în Plus +",
-      "Exclusivitate locală (nicio altă firmă în listing-ul localității)",
+      "Exclusivitate pe o localitate la alegere (nicio altă firmă în listing-ul ei)",
       "Locații operare nelimitate",
       "Support prioritar (răspuns 24h)",
       "Onboarding dedicat",
