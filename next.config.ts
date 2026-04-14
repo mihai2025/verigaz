@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   // care dau fals-pozitive TS. Proiectul rulează corect la runtime; type-check-ul va fi
   // reenabled după trecerea la @supabase/supabase-js codegen (database.types.ts).
   typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
   images: {
     deviceSizes: [640, 750, 828, 1080],
     formats: ["image/avif", "image/webp"],
