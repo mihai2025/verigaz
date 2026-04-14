@@ -152,6 +152,12 @@ export default async function FirmProfilePage({
             <h1 className="vg-firm-hero__name">{displayName}</h1>
             <div className="vg-firm-hero__meta">
               {rawLegal && rawLegal !== displayName && <div><strong>{rawLegal}</strong></div>}
+              {firm.cui && (
+                <div style={{ fontSize: 13, color: "var(--text-600)", marginTop: 2 }}>
+                  CUI: <strong>{firm.cui as string}</strong>
+                  {firm.registration_no && <> · Reg. com. {firm.registration_no as string}</>}
+                </div>
+              )}
               {j && (
                 <div style={{ marginTop: 4 }}>
                   📍 {l && <>{l.nume}, </>}

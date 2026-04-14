@@ -5,6 +5,7 @@ import Link from "next/link"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
 import FirmModerationActions from "./FirmModerationActions"
+import FirmOwnerAssign from "./FirmOwnerAssign"
 
 type Params = { id: string }
 
@@ -18,7 +19,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   if (role !== "admin") redirect("/dashboard")
 
   const admin = getServiceRoleSupabase()
-  const [firmRes, docsRes, auditRes] = await Promise.all([
+  const [firmRes, docsRes, auditRes, usersRes] = await Promise.all([
     admin
       .from("gas_firms")
       .select(
@@ -45,6 +46,11 @@ export default async function Page({ params }: { params: Promise<Params> }) {
       .eq("entity_id", id)
       .order("created_at", { ascending: false })
       .limit(20),
+    admin
+      .from("profiles")
+      .select("user_id, email, full_name, firm_id")
+      .order("full_name", { ascending: true })
+      .limit(500),
   ])
 
   const firm = firmRes.data
@@ -69,6 +75,22 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     created_at: string
     actor_user_id: string | null
   }>
+
+  const users = ((usersRes.data ?? []) as Array<{
+    user_id: string
+    email: string | null
+    full_name: string | null
+    firm_id: string | null
+  }>).map((p) => ({
+    userId: p.user_id,
+    email: p.email,
+    fullName: p.full_name,
+    firmId: p.firm_id,
+  }))
+
+  const currentOwner = firm.owner_user_id
+    ? users.find((x) => x.userId === firm.owner_user_id)
+    : undefined
 
   return (
     <div className="dash-page">
@@ -154,6 +176,15 @@ export default async function Page({ params }: { params: Promise<Params> }) {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="dash-card">
+        <h2>Owner & atribuire user</h2>
+        <FirmOwnerAssign
+          firmId={firm.id as string}
+          currentOwner={currentOwner ? { userId: currentOwner.userId, email: currentOwner.email, fullName: currentOwner.fullName } : null}
+          users={users}
+        />
       </section>
 
       <FirmModerationActions

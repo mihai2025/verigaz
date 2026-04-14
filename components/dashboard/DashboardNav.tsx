@@ -56,6 +56,7 @@ export function DashboardNav({ role, firmId, pendingClaims = 0, pendingOrders = 
           <>
             <li className="dash-nav__sep">Admin</li>
             <li><Link href="/dashboard/firme">Firme <Badge count={pendingClaims} /></Link></li>
+            <li><Link href="/dashboard/utilizatori">Utilizatori</Link></li>
             <li><Link href="/dashboard/leads-admin">Lead-uri</Link></li>
             <li><Link href="/dashboard/reviews-admin">Review-uri</Link></li>
             <li><Link href="/dashboard/audit">Audit</Link></li>
