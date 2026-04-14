@@ -65,7 +65,7 @@ export async function GET(request: Request) {
   const slugTech = technicianName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
   const filename = `foaie-${slugTech}-${new Date().toISOString().slice(0, 10)}.pdf`
 
-  return new NextResponse(pdfBytes as Uint8Array, {
+  return new NextResponse(new Uint8Array(pdfBytes), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename="${filename}"`,

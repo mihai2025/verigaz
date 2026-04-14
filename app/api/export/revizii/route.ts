@@ -145,7 +145,7 @@ export async function GET(request: Request) {
   const buffer = await wb.xlsx.writeBuffer()
   const filename = `revizii-verigaz-${new Date().toISOString().slice(0, 10)}.xlsx`
 
-  return new NextResponse(buffer as ArrayBuffer, {
+  return new NextResponse(new Uint8Array(buffer as ArrayBuffer), {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "Content-Disposition": `attachment; filename="${filename}"`,

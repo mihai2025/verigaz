@@ -27,11 +27,30 @@ export function staticEntries(): SitemapEntry[] {
     { url: `${BASE}/verificari-centrala`,lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/revizii-centrala`,   lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/magazin`,            lastModified: now, changeFrequency: "daily",   priority: 0.8 },
+    { url: `${BASE}/utile`,              lastModified: now, changeFrequency: "weekly",  priority: 0.85 },
+    { url: `${BASE}/abonamente`,         lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/cauta`,              lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE}/despre`,             lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE}/cum-functioneaza`,   lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/pentru-firme`,       lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/contact`,            lastModified: now, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE}/termeni`,            lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
+    { url: `${BASE}/confidentialitate`,  lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
+    { url: `${BASE}/cookies`,            lastModified: now, changeFrequency: "yearly",  priority: 0.2 },
   ]
+}
+
+/**
+ * Cele 20 ghiduri SEO din /utile/[slug].
+ */
+export async function utileEntries(): Promise<SitemapEntry[]> {
+  const { ARTICLES } = await import("@/lib/utile/articles")
+  return ARTICLES.map((a) => ({
+    url: `${BASE}/utile/${a.slug}`,
+    lastModified: new Date(a.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }))
 }
 
 /**

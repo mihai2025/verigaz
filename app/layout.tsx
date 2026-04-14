@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { DOMAIN } from "@/lib/config/domain"
 import { CookieBanner } from "@/components/site/CookieBanner"
+import { JsonLdScript } from "@/components/seo/JsonLdScript"
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld"
 import "@/styles/globals.css"
 
 export const metadata: Metadata = {
@@ -19,14 +21,14 @@ export const metadata: Metadata = {
     siteName: DOMAIN.brandName,
     title: `${DOMAIN.brandName} – ${DOMAIN.metaTitleDefault}`,
     description: DOMAIN.metaOgDescription,
-    images: [{ url: "/og.jpg", width: 1200, height: 630 }],
+    images: [{ url: `/og?title=${encodeURIComponent(DOMAIN.metaTitleDefault)}&subtitle=${encodeURIComponent("Firme autorizate ANRE")}&type=default`, width: 1200, height: 630 }],
   },
 
   twitter: {
     card: "summary_large_image",
     title: `${DOMAIN.brandName} – ${DOMAIN.metaTitleDefault}`,
     description: DOMAIN.metaTwitterDescription,
-    images: ["/og.jpg"],
+    images: [`/og?title=${encodeURIComponent(DOMAIN.metaTitleDefault)}&subtitle=${encodeURIComponent("Firme autorizate ANRE")}&type=default`],
   },
 
   robots: {
@@ -50,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href={`https://${DOMAIN.cdnDomain}`} />
       </head>
       <body>
+        <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
         {children}
         <CookieBanner />
       </body>
