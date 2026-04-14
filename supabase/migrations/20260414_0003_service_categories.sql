@@ -19,8 +19,6 @@ insert into public.service_categories (slug, nume, descriere, sort_order) values
   ('montaj-detector',        'Montaj detector gaze',       'Detector automat cu electrovalvă', 3),
   ('service-detector',       'Service detector gaze',      'Calibrare și verificare anuală', 4),
   ('reparatii-instalatie',   'Reparații instalație gaze',  'Remedieri după opriri sau defecțiuni', 5),
-  ('racordare-gaze',         'Racordare la rețea',         'Bransament nou / extensie', 6),
-  ('audit-asociatie',        'Audit asociație proprietari','Verificare conformitate pentru asociații', 7),
-  ('verificare-centrala',    'Verificare centrală termică (VTP)', 'Verificare tehnică periodică ISCIR', 8),
-  ('revizie-centrala',       'Revizie centrală termică',   'Revizie completă centrală ISCIR', 9)
+  ('verificare-centrala',    'Verificare centrală termică (VTP)', 'Verificare tehnică periodică ISCIR', 6),
+  ('revizie-centrala',       'Revizie centrală termică',   'Revizie completă centrală ISCIR', 7)
 on conflict (slug) do nothing;

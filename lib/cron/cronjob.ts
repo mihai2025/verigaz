@@ -24,7 +24,7 @@ export type CronJobSchedule = {
 
 export type CronJobDefinition = {
   title: string
-  url: string                // ex https://verigaz.ro/api/cron/send-reminders
+  url: string                // ex https://verificari-gaze.ro/api/cron/send-reminders
   enabled?: boolean
   saveResponses?: boolean
   requestMethod?: 0 | 1      // 0 = GET, 1 = POST

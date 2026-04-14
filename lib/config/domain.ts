@@ -5,10 +5,10 @@
 export const DOMAIN = {
   // ── Brand ──
   brandName: "Verigaz",
-  domain: "verigaz.ro",
-  baseUrl: "https://verigaz.ro",
+  domain: "verificari-gaze.ro",
+  baseUrl: "https://verificari-gaze.ro",
   cdnDomain: "media.ghidulfunerar.ro", // R2 bucket partajat, folder verigaz/
-  contactEmail: "contact@verigaz.ro",
+  contactEmail: "contact@verificari-gaze.ro",
   facebookUrl: "https://www.facebook.com/verigaz",
 
   // ── Terminologie domeniu ──
@@ -50,7 +50,7 @@ export const DOMAIN = {
   // ── Texte servicii ──
   servicesPageTitle: "Servicii pentru instalații de gaze",
   servicesPageDesc:
-    "Găsește servicii pentru gaze: verificare obligatorie la 2 ani, revizie la 10 ani, montaj detector, reparații, racordare. Filtrează după județ și localitate.",
+    "Găsește servicii pentru gaze: verificare obligatorie la 2 ani, revizie la 10 ani, montaj detector, reparații. Filtrează după județ și localitate.",
   servicesFilteredTitle: "Servicii pentru gaze – căutare și filtrare",
   servicesFilteredDesc:
     "Caută și filtrează firme autorizate ANRE pentru verificări, revizii și montaj detectoare gaze. Compară rapid și programează direct.",
@@ -77,7 +77,7 @@ export const DOMAIN = {
   countyPageIntro: (county: string) =>
     `Aici găsești rapid <strong>firme autorizate ANRE</strong> din județul ${county} care execută verificarea periodică a instalațiilor de gaze (la 2 ani) și revizia obligatorie (la 10 ani). Programare online, fără drumuri la sediu.`,
   countyPageServicesNote: (county: string) =>
-    `Verificare, revizie, montaj detector, reparații, racordare, audit asociație. Filtrează și programează rapid în ${county}.`,
+    `Verificare, revizie, montaj detector, reparații, service detector, verificare și revizie centrală termică. Filtrează și programează rapid în ${county}.`,
   countyPageInfoTitle: (county: string) =>
     `Siguranță gaze în ${county}: firme, scadențe, documente`,
   countyPageInfoDesc: (county: string) =>
@@ -250,7 +250,7 @@ export const DOMAIN = {
   // ── Legal pages ──
   legalTitleSuffix: "Verigaz",
   termsDesc:
-    "Termeni și condiții de utilizare pentru verigaz.ro – reguli, responsabilități, abonamente, proprietate intelectuală și limitarea răspunderii.",
+    "Termeni și condiții de utilizare pentru verificari-gaze.ro – reguli, responsabilități, abonamente, proprietate intelectuală și limitarea răspunderii.",
   termsDisclaimer:
     "Nu executăm verificări/revizii de gaze direct — facilităm programarea cu firme autorizate ANRE.",
   termsPlatformDesc:
@@ -262,12 +262,12 @@ export const DOMAIN = {
     "Platforma NU execută verificări/revizii tehnice, NU este parte contractuală între utilizatori și firmele listate.",
 
   cookiesDesc:
-    "Politica de Cookies pentru verigaz.ro – ce cookie-uri folosim, cum îți gestionezi consimțământul și cum le dezactivezi.",
+    "Politica de Cookies pentru verificari-gaze.ro – ce cookie-uri folosim, cum îți gestionezi consimțământul și cum le dezactivezi.",
   cookiesAnalytics: (domain: string) =>
     `Pe ${domain} folosim <strong>Google Analytics</strong> pentru a înțelege, la nivel agregat, cum este utilizată`,
 
   privacyDesc:
-    "Politica de confidențialitate verigaz.ro – ce date colectăm, de ce, cum le folosim și drepturile tale conform GDPR.",
+    "Politica de confidențialitate verificari-gaze.ro – ce date colectăm, de ce, cum le folosim și drepturile tale conform GDPR.",
   privacyPlatformDesc: (domain: string) =>
     `Platforma <span class="doc-strong">${domain}</span> este un director + sistem de programare pentru firme autorizate ANRE.`,
 

@@ -4,19 +4,19 @@
 export const SMS_TEMPLATES = {
   // ── Reminder scadență verificare (24 luni) ──
   reminder_verificare_24m_b2c:
-    "Verificarea instalatiei tale de gaze expira pe {DATA}. Programeaza pe verigaz.ro/programare/{REF} sau suna {TELEFON}. STOP dezabonare.",
+    "Verificarea instalatiei tale de gaze expira pe {DATA}. Programeaza pe verificari-gaze.ro/programare/{REF} sau suna {TELEFON}. STOP dezabonare.",
   reminder_verificare_24m_b2b:
     "{FIRMA}: Verificarea instalatiei de gaze pentru {ADRESA} expira pe {DATA}. Programeaza: {TELEFON}. STOP dezabonare.",
 
   // ── Reminder scadență revizie (120 luni) ──
   reminder_revizie_120m_b2c:
-    "Revizia la 10 ani a instalatiei de gaze expira pe {DATA}. Obligatoriu ANRE. Programeaza: verigaz.ro/programare/{REF}. STOP dezabonare.",
+    "Revizia la 10 ani a instalatiei de gaze expira pe {DATA}. Obligatoriu ANRE. Programeaza: verificari-gaze.ro/programare/{REF}. STOP dezabonare.",
   reminder_revizie_120m_b2b:
     "{FIRMA}: Revizia la 10 ani pentru {ADRESA} expira pe {DATA}. Programeaza: {TELEFON}. STOP dezabonare.",
 
   // ── Reminder service detector (12 luni) ──
   reminder_detector_12m:
-    "Service-ul anual al detectorului de gaze e recomandat in {DATA}. Programeaza pe verigaz.ro. STOP dezabonare.",
+    "Service-ul anual al detectorului de gaze e recomandat in {DATA}. Programeaza pe verificari-gaze.ro. STOP dezabonare.",
 
   // ── Confirmare programare ──
   confirmare_programare:
@@ -30,15 +30,15 @@ export const SMS_TEMPLATES = {
 
   // ── Certificat digital emis ──
   certificat_emis:
-    "Certificatul tau Verigaz pentru {ADRESA} e gata: verigaz.ro/doc/{REF}. Pastreaza linkul — valabil pana la {VALID_PANA}.",
+    "Certificatul tau Verigaz pentru {ADRESA} e gata: verificari-gaze.ro/doc/{REF}. Pastreaza linkul — valabil pana la {VALID_PANA}.",
 
   // ── Cerere recenzie post-job ──
   cerere_recenzie:
-    "Multumim ca ai ales {FIRMA} prin Verigaz. Spune-ne cum a fost: verigaz.ro/recenzie/{REF}.",
+    "Multumim ca ai ales {FIRMA} prin Verigaz. Spune-ne cum a fost: verificari-gaze.ro/recenzie/{REF}.",
 
   // ── Magazin comandă confirmată ──
   comanda_confirmata:
-    "Comanda Verigaz {REF} confirmata. Total {TOTAL} RON. Stare: verigaz.ro/comanda/{REF}.",
+    "Comanda Verigaz {REF} confirmata. Total {TOTAL} RON. Stare: verificari-gaze.ro/comanda/{REF}.",
   comanda_expediata:
     "Comanda Verigaz {REF} a fost expediata. Tracking: {TRACKING}.",
 } as const

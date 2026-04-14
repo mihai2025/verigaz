@@ -1,27 +1,36 @@
+// app/sitemap.ts
+// Sitemap programatic pentru toate paginile SEO verigaz.
+// Combinăm hub-urile, categoriile, județele × 3 familii de rute, localitățile
+// cu semnal (tier T1-T3 sau firme înregistrate), firmele aprobate, produsele.
+//
+// Target: 5k-20k URLs, sub limita de 50k/sitemap.
+// ISR cadence: revalidat la 24h (schimbările firmă/produse apar cu lag acceptabil).
 import type { MetadataRoute } from "next"
-import { DOMAIN } from "@/lib/config/domain"
+import {
+  staticEntries,
+  categoryEntries,
+  judetEntries,
+  localitateEntries,
+  firmEntries,
+  productEntries,
+} from "@/lib/seo/sitemapGenerators"
+
+export const revalidate = 86400 // 24h
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Sitemap static inițial. La pasul SEO programatic vom genera dinamic
-  // paginile de județ/localitate/categorie din DB.
+  const [judet, localitate, firms, products] = await Promise.all([
+    judetEntries(),
+    localitateEntries(2000),
+    firmEntries(),
+    productEntries(),
+  ])
+
   return [
-    {
-      url: `${DOMAIN.baseUrl}/`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1.0,
-    },
-    {
-      url: `${DOMAIN.baseUrl}/cauta`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${DOMAIN.baseUrl}/despre`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
+    ...staticEntries(),
+    ...categoryEntries(),
+    ...judet,
+    ...localitate,
+    ...firms,
+    ...products,
   ]
 }

@@ -42,7 +42,20 @@ function setGeoCookie(res: NextResponse, lat: string, lng: string, city: string 
   )
 }
 
-async function findCityRedirect(supabase: any, citySlug: string): Promise<string | null> {
+// Familii de rute SEO cu structură {prefix}/{judet}/{localitate}.
+// Extinde aici când adaugi categorii noi.
+const CITY_ROUTE_PREFIXES = [
+  "servicii-gaze",
+  "verificari-centrala",
+  "revizii-centrala",
+] as const
+type RoutePrefix = typeof CITY_ROUTE_PREFIXES[number]
+
+async function findCityRedirect(
+  supabase: any,
+  citySlug: string,
+  prefix: RoutePrefix,
+): Promise<string | null> {
   const { data, error } = await supabase
     .from("localitati")
     .select("nume, judete(nume)")
@@ -60,26 +73,36 @@ async function findCityRedirect(supabase: any, citySlug: string): Promise<string
 
   if (!judetNume) return null
 
-  return `/servicii-gaze/${slugifyRO(judetNume)}/${citySlug}`
+  return `/${prefix}/${slugifyRO(judetNume)}/${citySlug}`
+}
+
+function matchCityRoute(
+  pathname: string,
+): { prefix: RoutePrefix; citySlug: string; kind: "dash" | "slash" } | null {
+  for (const prefix of CITY_ROUTE_PREFIXES) {
+    const dash = pathname.match(new RegExp(`^/${prefix}-([a-z0-9-]+)$`))
+    if (dash) return { prefix, citySlug: dash[1], kind: "dash" }
+    const slash = pathname.match(new RegExp(`^/${prefix}/([a-z0-9-]+)$`))
+    if (slash) return { prefix, citySlug: slash[1], kind: "slash" }
+  }
+  return null
 }
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname
 
-  // Redirect flat city URLs → /servicii-gaze/{judet}/{localitate}
-  const dashMatch = pathname.match(/^\/servicii-gaze-([a-z0-9-]+)$/)
-  const slashMatch = pathname.match(/^\/servicii-gaze\/([a-z0-9-]+)$/)
-
-  if (dashMatch || slashMatch) {
-    const citySlug = (dashMatch ?? slashMatch)![1]
+  // Redirect flat city URLs → /{prefix}/{judet}/{localitate}
+  // Acoperă: servicii-gaze, verificari-centrala, revizii-centrala
+  const route = matchCityRoute(pathname)
+  if (route) {
     try {
       const supabase = getPublicSupabase()
 
-      if (slashMatch) {
+      if (route.kind === "slash") {
         const { data: allCounties } = await supabase.from("judete").select("nume")
-        const isCounty = (allCounties ?? []).some((c: any) => slugifyRO(c.nume) === citySlug)
+        const isCounty = (allCounties ?? []).some((c: any) => slugifyRO(c.nume) === route.citySlug)
         if (!isCounty) {
-          const redirectUrl = await findCityRedirect(supabase, citySlug)
+          const redirectUrl = await findCityRedirect(supabase, route.citySlug, route.prefix)
           if (redirectUrl) {
             const url = req.nextUrl.clone()
             url.pathname = redirectUrl
@@ -88,7 +111,7 @@ export async function middleware(req: NextRequest) {
           }
         }
       } else {
-        const redirectUrl = await findCityRedirect(supabase, citySlug)
+        const redirectUrl = await findCityRedirect(supabase, route.citySlug, route.prefix)
         if (redirectUrl) {
           const url = req.nextUrl.clone()
           url.pathname = redirectUrl

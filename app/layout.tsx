@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { DOMAIN } from "@/lib/config/domain"
+import { CookieBanner } from "@/components/site/CookieBanner"
 import "@/styles/globals.css"
 
 export const metadata: Metadata = {
@@ -48,7 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href={`https://${DOMAIN.cdnDomain}`} />
         <link rel="dns-prefetch" href={`https://${DOMAIN.cdnDomain}`} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieBanner />
+      </body>
     </html>
   )
 }

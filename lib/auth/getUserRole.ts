@@ -27,7 +27,7 @@ export async function getUserRole(userId: string): Promise<UserRole> {
 
   // 2) Check if user owns a firm
   const { data: firm } = await admin
-    .from("funeral_firms")
+    .from("gas_firms")
     .select("id")
     .eq("owner_user_id", userId)
     .limit(1)

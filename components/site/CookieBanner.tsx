@@ -34,7 +34,7 @@ export function CookieBanner() {
           <div className="cb__title">Folosim cookie-uri</div>
           <p className="cb__text">
             Acest site folosește cookie-uri pentru a-ți oferi o experiență mai bună.{" "}
-            <a href="/politica-de-cookies" className="cb__link">Detalii</a>
+            <a href="/cookies" className="cb__link">Detalii</a>
           </p>
         </div>
 

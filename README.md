@@ -55,7 +55,7 @@ npm run dev
 
 - **GitHub:** `https://github.com/mihai2025/verigaz`
 - **Vercel:** proiect separat, cont partajat cu ghidulfunerar
-- **Domeniu:** `verigaz.ro` (DNS → Vercel)
+- **Domeniu:** `verificari-gaze.ro` (DNS → Vercel)
 
 ## Ce se reutilizează din ghidulfunerar
 

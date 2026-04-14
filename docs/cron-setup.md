@@ -6,9 +6,9 @@ Vercel plan Free nu permite cron jobs. Folosim **cron-job.org** (cont partajat c
 
 | Nume | Endpoint | Schedule | Scop |
 |---|---|---|---|
-| `verigaz_reminders` | `GET https://verigaz.ro/api/cron/send-reminders` | `0 5 * * *` (zilnic 05:00) | Trimite SMS/email pentru scadențe verificare/revizie/service detector care expiră în 60/30/7 zile |
-| `verigaz_subscriptions` | `GET https://verigaz.ro/api/cron/check-subscriptions` | `0 3 * * *` (zilnic 03:00) | Verifică abonamente Stripe, downgrade firm-uri la plan `free` când expiră |
-| `verigaz_document_cleanup` | `GET https://verigaz.ro/api/cron/document-cleanup` | `0 4 * * 0` (săptămânal duminică 04:00) | Marchează documente expirate, arhivare |
+| `verigaz_reminders` | `GET https://verificari-gaze.ro/api/cron/send-reminders` | `0 5 * * *` (zilnic 05:00) | Trimite SMS/email pentru scadențe verificare/revizie/service detector care expiră în 60/30/7 zile |
+| `verigaz_subscriptions` | `GET https://verificari-gaze.ro/api/cron/check-subscriptions` | `0 3 * * *` (zilnic 03:00) | Verifică abonamente Stripe, downgrade firm-uri la plan `free` când expiră |
+| `verigaz_document_cleanup` | `GET https://verificari-gaze.ro/api/cron/document-cleanup` | `0 4 * * 0` (săptămânal duminică 04:00) | Marchează documente expirate, arhivare |
 
 ## Cum configurezi manual în dashboard cron-job.org
 
@@ -34,7 +34,7 @@ import { createJob } from "@/lib/cron/cronjob"
 
 const id = await createJob({
   title: "verigaz_reminders",
-  url: "https://verigaz.ro/api/cron/send-reminders",
+  url: "https://verificari-gaze.ro/api/cron/send-reminders",
   requestMethod: 0,
   enabled: true,
   extendedData: {
