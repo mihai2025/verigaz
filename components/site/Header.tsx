@@ -11,8 +11,26 @@ const NAV_LINKS = [
   { href: "/abonamente", label: "Pentru firme" },
 ]
 
-export function Header() {
+type AuthUser = {
+  firstName: string | null
+  email: string | null
+} | null
+
+function firstNameFrom(fullName: string | null, email: string | null): string | null {
+  if (fullName) {
+    const first = fullName.trim().split(/\s+/)[0]
+    if (first) return first
+  }
+  if (email) {
+    const local = email.split("@")[0] ?? ""
+    if (local) return local.charAt(0).toUpperCase() + local.slice(1)
+  }
+  return null
+}
+
+export function Header({ user }: { user?: AuthUser }) {
   const [open, setOpen] = useState(false)
+  const greetingName = user ? firstNameFrom(user.firstName, user.email) : null
 
   return (
     <header className="vg-header">
@@ -29,7 +47,22 @@ export function Header() {
         </nav>
 
         <div className="vg-header__actions">
-          <Link href="/login" className="vg-btn vg-btn--ghost">Autentificare</Link>
+          {user ? (
+            <Link href="/dashboard" className="vg-user-chip" aria-label="Contul meu">
+              <span className="vg-user-chip__avatar" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="8" r="4" fill="currentColor" />
+                  <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="currentColor" />
+                </svg>
+              </span>
+              <span className="vg-user-chip__text">
+                <span className="vg-user-chip__hello">Salut,</span>
+                <span className="vg-user-chip__name">{greetingName ?? "cont"}</span>
+              </span>
+            </Link>
+          ) : (
+            <Link href="/login" className="vg-btn vg-btn--ghost">Autentificare</Link>
+          )}
           <Link href="/programare" className="vg-btn vg-btn--primary">Programează</Link>
           <button
             type="button"
@@ -53,8 +86,14 @@ export function Header() {
         {NAV_LINKS.map((l) => (
           <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</Link>
         ))}
-        <Link href="/login" onClick={() => setOpen(false)}>Autentificare</Link>
-        <Link href="/inregistrare" onClick={() => setOpen(false)}>Înregistrare</Link>
+        {user ? (
+          <Link href="/dashboard" onClick={() => setOpen(false)}>Dashboard{greetingName ? ` (${greetingName})` : ""}</Link>
+        ) : (
+          <>
+            <Link href="/login" onClick={() => setOpen(false)}>Autentificare</Link>
+            <Link href="/inregistrare" onClick={() => setOpen(false)}>Înregistrare</Link>
+          </>
+        )}
       </div>
     </header>
   )

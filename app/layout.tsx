@@ -5,6 +5,7 @@ import { Header } from "@/components/site/Header"
 import { Footer } from "@/components/site/Footer"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld"
+import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import "@/styles/globals.css"
 
 export const metadata: Metadata = {
@@ -46,7 +47,31 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+async function getHeaderUser() {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.auth.getUser()
+    if (!data.user) return null
+    let firstName: string | null = null
+    try {
+      const admin = getServiceRoleSupabase()
+      const { data: prof } = await admin
+        .from("profiles")
+        .select("full_name")
+        .eq("user_id", data.user.id)
+        .maybeSingle()
+      firstName = (prof as { full_name: string | null } | null)?.full_name ?? null
+    } catch {
+      firstName = null
+    }
+    return { firstName, email: data.user.email ?? null }
+  } catch {
+    return null
+  }
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerUser = await getHeaderUser()
   return (
     <html lang="ro">
       <head>
@@ -55,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
-        <Header />
+        <Header user={headerUser} />
         <main className="vg-main">{children}</main>
         <Footer />
         <CookieBanner />
