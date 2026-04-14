@@ -11,6 +11,8 @@ import { slugifyRO } from "@/lib/utils/slugify"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd, localBusinessJsonLd } from "@/lib/seo/jsonld"
 import { DOMAIN } from "@/lib/config/domain"
+import { FirmLogo } from "@/components/firms/FirmLogo"
+import { cleanFirmName } from "@/lib/utils/firmInitials"
 
 type Params = { slug: string }
 
@@ -111,140 +113,168 @@ export default async function FirmProfilePage({
     anreAuthorizationNo: (firm.anre_authorization_no as string) ?? null,
   })
 
+  const displayName = cleanFirmName(name) || name
+  const rawLegal = firm.legal_name as string
+
   return (
-    <div className="firm-page container">
+    <div className="container" style={{ padding: "24px 16px 56px" }}>
       <JsonLdScript data={[localBusinessSchema, breadcrumbJsonLd(breadcrumbs)]} />
       <nav className="sv-breadcrumb" aria-label="Navigare">
         <Link href="/">Acasă</Link>
         <span aria-hidden="true"> / </span>
         <Link href="/servicii-gaze">Firme</Link>
         <span aria-hidden="true"> / </span>
-        <span aria-current="page">{name}</span>
+        <span aria-current="page">{displayName}</span>
       </nav>
 
-      <header className="firm-hero">
-        {firm.cover_url && (
+      <div className="vg-firm-hero">
+        {firm.cover_url ? (
           <img
-            className="firm-hero__cover"
+            className="vg-firm-hero__cover"
             src={firm.cover_url as string}
-            alt={`Cover ${name}`}
+            alt={`Imagine ${displayName}`}
             width={1200}
-            height={400}
+            height={260}
           />
+        ) : (
+          <div className="vg-firm-hero__cover" aria-hidden="true" />
         )}
-        <div className="firm-hero__main">
-          {firm.logo_url && (
-            <img
-              className="firm-hero__logo"
-              src={firm.logo_url as string}
-              alt={`Logo ${name}`}
-              width={96}
-              height={96}
+        <div className="vg-firm-hero__body">
+          <div className="vg-firm-hero__logo">
+            <FirmLogo
+              logoUrl={firm.logo_url as string | null}
+              firmName={name}
+              size={120}
+              alt={`Logo ${displayName}`}
             />
-          )}
+          </div>
           <div>
-            <h1 className="firm-hero__name">{name}</h1>
-            <div className="firm-hero__meta">
-              {firm.legal_name && firm.legal_name !== name && (
-                <div>{firm.legal_name as string}</div>
-              )}
+            <h1 className="vg-firm-hero__name">{displayName}</h1>
+            <div className="vg-firm-hero__meta">
+              {rawLegal && rawLegal !== displayName && <div><strong>{rawLegal}</strong></div>}
               {j && (
-                <div>
-                  {l && <>{l.nume}, </>}
-                  <Link href={`/servicii-gaze/${slugifyRO(j.nume)}`}>județul {j.nume}</Link>
+                <div style={{ marginTop: 4 }}>
+                  📍 {l && <>{l.nume}, </>}
+                  <Link href={`/servicii-gaze/${slugifyRO(j.nume)}`} style={{ color: "var(--accent-600)", fontWeight: 600 }}>
+                    județul {j.nume}
+                  </Link>
                 </div>
               )}
               {firm.anre_authorization_no && (
-                <div className="firm-anre">
-                  Autorizație ANRE: <code>{firm.anre_authorization_no as string}</code>
-                  {firm.anre_category && <> · categoria {firm.anre_category as string}</>}
+                <div style={{ marginTop: 8 }}>
+                  <span className="dash-status dash-status--approved">
+                    ✓ Aut. ANRE {firm.anre_authorization_no as string}
+                    {firm.anre_category && <> · {firm.anre_category as string}</>}
+                  </span>
                 </div>
               )}
             </div>
           </div>
+          <div className="vg-firm-hero__actions">
+            <Link href={`/programare?firma=${encodeURIComponent(slug)}`} className="vg-btn vg-btn--primary vg-btn--lg">
+              Programează online →
+            </Link>
+            {firm.phone && (
+              <a href={`tel:${firm.phone}`} className="vg-btn vg-btn--outline vg-btn--lg">
+                📞 {firm.phone as string}
+              </a>
+            )}
+          </div>
         </div>
-      </header>
+      </div>
 
-      <div className="firm-grid">
-        <div className="firm-main">
-          {firm.description && (
-            <section className="firm-section">
-              <h2>Despre firmă</h2>
-              <p>{firm.description as string}</p>
-            </section>
-          )}
+      <div className="vg-firm-grid">
+        <div>
+          <div className="vg-firm-card">
+            <h2>Despre firmă</h2>
+            <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-700)", margin: 0 }}>
+              {(firm.description as string) ||
+                `${displayName} este o firmă autorizată ANRE pentru servicii de verificare, revizie și
+                 instalație gaze naturale${j?.nume ? ` în ${j.nume}` : ""}. Autorizația e validată manual
+                 de echipa verificari-gaze.ro din registrul oficial ANRE.`}
+            </p>
+          </div>
 
           {services.length > 0 && (
-            <section className="firm-section">
+            <div className="vg-firm-card">
               <h2>Servicii oferite</h2>
-              <ul className="firm-services">
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 12 }}>
                 {services.map((s, i) => {
-                  const sc = Array.isArray(s.service_categories)
-                    ? s.service_categories[0]
-                    : s.service_categories
+                  const sc = Array.isArray(s.service_categories) ? s.service_categories[0] : s.service_categories
                   if (!sc) return null
-                  const priceRange =
-                    s.price_from && s.price_to
-                      ? `${s.price_from} – ${s.price_to} lei`
-                      : s.price_from
-                        ? `de la ${s.price_from} lei`
-                        : null
+                  const priceRange = s.price_from && s.price_to
+                    ? `${s.price_from}–${s.price_to} lei`
+                    : s.price_from ? `de la ${s.price_from} lei` : null
                   return (
-                    <li key={i} className="firm-service">
-                      <div className="firm-service__name">{sc.nume}</div>
-                      {sc.descriere && <div className="firm-service__desc">{sc.descriere}</div>}
-                      {priceRange && <div className="firm-service__price">{priceRange}</div>}
-                      {s.price_note && <div className="firm-service__note">{s.price_note}</div>}
+                    <li key={i} style={{ padding: 14, border: "1px solid var(--border)", borderRadius: 10, background: "var(--surface-2)" }}>
+                      <div style={{ fontWeight: 700, color: "var(--text-900)", marginBottom: 4 }}>{sc.nume}</div>
+                      {sc.descriere && <div style={{ fontSize: 13, color: "var(--text-600)", marginBottom: 4 }}>{sc.descriere}</div>}
+                      {priceRange && <div style={{ color: "var(--accent-700)", fontWeight: 600, fontSize: 14 }}>{priceRange}</div>}
+                      {s.price_note && <div style={{ fontSize: 12, color: "var(--text-500)" }}>{s.price_note}</div>}
                     </li>
                   )
                 })}
               </ul>
-            </section>
+            </div>
           )}
+
+          <div className="vg-firm-card" style={{ background: "linear-gradient(135deg, var(--accent-700), var(--accent-600))", color: "#fff", textAlign: "center" }}>
+            <h2 style={{ color: "#fff", fontSize: 20 }}>Gata să programezi?</h2>
+            <p style={{ opacity: .9, margin: "0 0 16px" }}>
+              Formular de 2 minute. {displayName} te contactează în 24h pentru confirmare.
+            </p>
+            <Link href={`/programare?firma=${encodeURIComponent(slug)}`} className="vg-btn vg-btn--lg" style={{ background: "#fff", color: "var(--accent-700)" }}>
+              Programează verificarea →
+            </Link>
+          </div>
         </div>
 
-        <aside className="firm-side">
-          <div className="firm-contact">
-            <h3>Contact</h3>
-            {firm.phone && (
-              <a href={`tel:${firm.phone}`} className="firm-chip firm-chip--call">
-                Sună: {firm.phone as string}
-              </a>
-            )}
-            {firm.whatsapp && (
-              <a
-                href={`https://wa.me/${(firm.whatsapp as string).replace(/[^\d]/g, "")}`}
-                target="_blank"
-                rel="noreferrer"
-                className="firm-chip firm-chip--wa"
-              >
-                WhatsApp
-              </a>
-            )}
-            {firm.email && (
-              <a href={`mailto:${firm.email}`} className="firm-chip firm-chip--email">
-                Email
-              </a>
-            )}
-            {firm.website && (
-              <a
-                href={firm.website as string}
-                target="_blank"
-                rel="noreferrer"
-                className="firm-chip firm-chip--site"
-              >
-                Site
-              </a>
-            )}
+        <aside>
+          <div className="vg-firm-card">
+            <h2>Contact direct</h2>
+            <div style={{ display: "grid", gap: 8 }}>
+              {firm.phone && (
+                <a href={`tel:${firm.phone}`} className="vg-btn vg-btn--primary" style={{ justifyContent: "flex-start" }}>
+                  📞 {firm.phone as string}
+                </a>
+              )}
+              {firm.whatsapp && (
+                <a
+                  href={`https://wa.me/${(firm.whatsapp as string).replace(/[^\d]/g, "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="vg-btn vg-btn--ghost"
+                  style={{ justifyContent: "flex-start", background: "#25d366", color: "#fff", borderColor: "#25d366" }}
+                >
+                  WhatsApp
+                </a>
+              )}
+              {firm.email && (
+                <a href={`mailto:${firm.email}`} className="vg-btn vg-btn--ghost" style={{ justifyContent: "flex-start" }}>
+                  ✉ Email
+                </a>
+              )}
+              {firm.website && (
+                <a href={firm.website as string} target="_blank" rel="noreferrer" className="vg-btn vg-btn--ghost" style={{ justifyContent: "flex-start" }}>
+                  🌐 Site
+                </a>
+              )}
+            </div>
             {firm.sediu_adresa && (
-              <p className="firm-address">Sediu: {firm.sediu_adresa as string}</p>
+              <p style={{ marginTop: 14, fontSize: 13, color: "var(--text-600)", lineHeight: 1.5 }}>
+                📍 <strong>Sediu:</strong> {firm.sediu_adresa as string}
+              </p>
             )}
           </div>
 
-          <div className="firm-cta">
-            <Link href={`/programare?firma=${encodeURIComponent(slug)}`} className="firm-chip firm-chip--cta">
-              Programează online
-            </Link>
+          <div className="vg-firm-card">
+            <h2>De ce verificari-gaze.ro</h2>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 13 }}>
+              <li>✓ Autorizație ANRE validată manual</li>
+              <li>✓ Certificat digital cu QR public</li>
+              <li>✓ Reminder SMS la scadența următoare</li>
+              <li>✓ Fără comision pe intervenție</li>
+            </ul>
           </div>
         </aside>
       </div>

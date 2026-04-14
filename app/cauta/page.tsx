@@ -4,6 +4,8 @@ import Link from "next/link"
 import { searchAll, type SearchFirm } from "@/lib/search/searchAll"
 import { slugifyRO } from "@/lib/utils/slugify"
 import { CautaTracker } from "./CautaTracker"
+import { FirmLogo } from "@/components/firms/FirmLogo"
+import { cleanFirmName } from "@/lib/utils/firmInitials"
 
 export async function generateMetadata({
   searchParams,
@@ -51,33 +53,37 @@ function FirmSearchCard({ f, index }: { f: SearchFirm; index: number }) {
   const plan = (f.plan || "free").toLowerCase()
   const isPremium = plan === "premium"
   const isPaid = plan !== "free"
+  const displayName = cleanFirmName(f.name) || f.name
 
   const cardPlanClass =
     isPremium ? "sv-firmPremium" : plan === "plus" ? "sv-firmPlus" : plan === "start" ? "sv-firmStart" : "sv-firmFree"
 
   const locText = [f.localitate_nume, f.judet_nume].filter(Boolean).join(", ") || "—"
 
-  const coverSrc = f.cover_url || "/imagini/noimage.webp"
-  const logoSrc  = f.logo_url  || "/imagini/noimage.webp"
-
-  const tel  = isPaid ? telLink(f.phone || f.whatsapp) : null
-  const wa   = isPaid ? waLink(f.whatsapp || f.phone)  : null
-  const site = isPaid ? f.website                      : null
+  const tel  = telLink(f.phone || f.whatsapp)
+  const wa   = waLink(f.whatsapp || f.phone)
+  const site = isPaid ? f.website : null
 
   const profileHref = `/firme/${encodeURIComponent(f.slug)}`
 
   return (
     <article className={`sv-firm sv-firm--3col ${cardPlanClass}`}>
-      <Link href={profileHref} className="sv-media sv-media--left" aria-label={`Imagine ${f.name}`} tabIndex={-1}>
-        <img
-          className="sv-mediaImg"
-          src={coverSrc}
-          alt={`Imagine reprezentativă: ${f.name}`}
-          width={720}
-          height={420}
-          decoding="async"
-          loading={index === 0 ? "eager" : "lazy"}
-        />
+      <Link href={profileHref} className="sv-media sv-media--left" aria-label={`Profil ${displayName}`} tabIndex={-1}>
+        {f.cover_url ? (
+          <img
+            className="sv-mediaImg"
+            src={f.cover_url}
+            alt={`Imagine ${displayName}`}
+            width={720}
+            height={420}
+            decoding="async"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        ) : (
+          <div className="sv-media-fallback">
+            <FirmLogo firmName={f.name} size={180} logoUrl={null} />
+          </div>
+        )}
       </Link>
 
       <div className="sv-main sv-main--flex">
@@ -87,7 +93,7 @@ function FirmSearchCard({ f, index }: { f: SearchFirm; index: number }) {
               {isPremium ? "★" : isPaid ? "●" : "○"}
             </span>
             <Link href={profileHref} className="sv-name" style={{ textDecoration: "none", color: "inherit" }}>
-              {f.name}
+              {displayName}
             </Link>
           </div>
         </div>
@@ -106,7 +112,7 @@ function FirmSearchCard({ f, index }: { f: SearchFirm; index: number }) {
 
       <div className="sv-side">
         <div className="sv-logo">
-          <img className="sv-logoImg" src={logoSrc} alt={`Logo ${f.name}`} width={96} height={96} decoding="async" loading="lazy" />
+          <FirmLogo logoUrl={f.logo_url} firmName={f.name} size={96} className="sv-logoImg" />
         </div>
 
         <div className="sv-actions sv-actions--stack">
