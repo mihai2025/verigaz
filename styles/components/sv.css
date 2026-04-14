@@ -1,0 +1,1206 @@
+/* ======================================================
+   SV — Directory UI system (single source of truth)
+   Include:
+   - page layout (.sv-wrap, .sv-grid, hero, aside)
+   - firm cards layout (.sv-firm, media, main, side)
+   - actions & chips (.sv-actions, .sv-chip, variants)
+   - social buttons + nav pill + tooltip
+   - badges / plan accents
+   - pagination
+   - coverage helper (used in multiple places)
+   ====================================================== */
+
+
+/* ======================================================
+   1) WRAPPER + GRID
+   ====================================================== */
+.sv-wrap{ padding:18px 0 56px; }
+
+.sv-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+  align-items:start;
+}
+.sv-mainCol{ min-width:0; }
+.sv-asideCol{ display:none; }
+
+@media (min-width:1024px){
+  .sv-grid{
+    grid-template-columns:minmax(0, 1fr) 340px;
+    gap:22px;
+  }
+  .sv-asideCol{
+    display:block;
+    position:sticky;
+    top:92px;
+  }
+}
+.sv-asideDesktopOnly{ display:none; }
+@media (min-width:1024px){ .sv-asideDesktopOnly{ display:block; } }
+
+
+/* ======================================================
+   2) HERO (compact + controls)
+   Notes:
+   - Card-ul e în container în TSX (DirectoryHeroClient)
+   - Toggle mobil: .sv-advToggle
+   - Collapse: .sv-head.is-collapsed / .sv-heroControls.is-collapsed
+   ====================================================== */
+.sv-hero{
+  padding:22px 0 14px;
+  background:radial-gradient(900px 380px at 25% 0%, rgba(0,0,0,.045), rgba(0,0,0,0));
+}
+.sv-hero--compact{
+  padding:10px 0 14px;
+  background:radial-gradient(900px 380px at 25% 0%, rgba(0,0,0,.035), rgba(0,0,0,0));
+}
+
+.sv-heroCard{
+  border-radius:20px;
+  padding:18px;
+  background:rgba(255,255,255,.90);
+  border:1px solid rgba(15,23,42,.08);
+  box-shadow:0 18px 60px rgba(15,23,42,.07);
+  backdrop-filter:blur(8px);
+  color:var(--text-900);
+}
+.sv-heroCard--compact{
+  padding:16px;
+  border-radius:16px;
+}
+
+/* MOBILE ADVANCED TOGGLE (top line) */
+.sv-advToggle{
+  width:100%;
+  min-height:44px;
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+
+  border-radius:14px;
+  border:1px solid rgba(15,23,42,.10);
+  background:rgba(255,255,255,.92);
+  box-shadow:0 10px 28px rgba(15,23,42,.05);
+
+  padding:10px 12px;
+  cursor:pointer;
+  color:var(--text-900);
+}
+
+@media (max-width:900px){
+  .sv-advToggle{ display:flex; }
+}
+
+/* Head */
+.sv-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.sv-head--compact{ align-items:flex-start; }
+.sv-headLeft{ min-width:0; }
+
+.sv-title{
+  margin:0;
+  font-size:30px;
+  line-height:1.12;
+  letter-spacing:-0.5px;
+  font-weight:650;
+}
+@media (min-width:900px){ .sv-title{ font-size:38px; } }
+
+.sv-title--compact{
+  font-size:30px;
+  line-height:1.12;
+  margin:0;
+}
+@media (min-width:900px){ .sv-title--compact{ font-size:34px; } }
+
+.sv-sub{
+  margin:10px 0 0;
+  font-size:15px;
+  opacity:.78;
+  font-weight:450;
+  line-height:1.5;
+}
+.sv-sub--compact{
+  margin:8px 0 0;
+  font-size:14px;
+  opacity:.78;
+  line-height:1.5;
+}
+
+.sv-countLine{
+  margin-top:8px;
+  font-size:12.5px;
+  opacity:.85;
+  font-weight:650;
+}
+
+/* Hero controls grid */
+.sv-heroControls{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1.2fr auto;
+  gap:10px;
+  align-items:end;
+}
+@media (max-width:1024px){
+  .sv-heroControls{ grid-template-columns:1fr 1fr; }
+  .sv-heroBtns{ grid-column:1 / -1; justify-content:flex-end; }
+}
+@media (max-width:900px){
+  .sv-heroControls{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .sv-heroBtns{ flex-direction:column; }
+  .sv-resetBtn{ width:100%; }
+  .sv-head{ gap:10px; }
+}
+
+/* Collapse on mobile when toggled closed */
+@media (max-width:900px){
+  .sv-head.is-collapsed,
+  .sv-heroControls.is-collapsed{
+    display:none;
+  }
+}
+
+/* Pills */
+.sv-pill{
+  border-radius:14px;
+  padding:10px 12px;
+  border:1px solid rgba(15,23,42,.10);
+  background:rgba(255,255,255,.92);
+  min-width:170px;
+  box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+.sv-pill--click{ cursor:pointer; text-align:left; }
+.sv-pillLabel{
+  font-size:11px;
+  opacity:.58;
+  font-weight:650;
+  letter-spacing:.2px;
+}
+.sv-pillValue{
+  margin-top:5px;
+  font-size:13px;
+  font-weight:650;
+  opacity:.92;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Search input inside hero */
+.sv-search{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  border: 1px solid #0000001a;
+}
+.sv-searchLabel{
+  font-size:12px;
+  opacity:.6;
+  font-weight:650;
+  margin-left:2px;
+}
+.sv-searchInput{ border-radius:10px; }
+
+/* Hero buttons row */
+.sv-heroBtns{ display:flex; gap:10px; }
+.sv-resetBtn{
+  width:auto;
+  min-width:120px;
+  border-radius:10px;
+}
+
+/* IMPORTANT: Fix text vizibil pe butoane în hero, fără să afecteze global */
+.sv-hero .sv-headRight .btn,
+.sv-hero .sv-heroBtns .btn{
+  color:#fff;
+  opacity:1;
+  filter:none;
+  text-shadow:none;
+}
+.sv-hero .sv-heroBtns .btn--ghost{
+  color:var(--text-900);
+}
+
+/* Dacă vreun overlay/z-index îți acoperă textul (rar) */
+
+
+/* ======================================================
+   3) ASIDE (articole desktop)
+   ====================================================== */
+.sv-asideCard{
+  border-radius:18px;
+  border:1px solid rgba(15,23,42,.08);
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(8px);
+  box-shadow:0 14px 44px rgba(15,23,42,.08);
+  padding:14px;
+}
+
+
+/* ======================================================
+   4) META + PAGINARE SUS
+   ====================================================== */
+.sv-metaRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.sv-meta{
+  margin:16px 0 12px;
+  font-size:13px;
+  opacity:.65;
+  font-weight:550;
+}
+.sv-metaSub{ opacity:.6; font-weight:650; }
+
+.sv-pagerTop{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.sv-pgBtn{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  border:1px solid rgba(15,23,42,.10);
+  background:#fff;
+  box-shadow:0 10px 24px rgba(15,23,42,.05);
+  opacity:.85;
+  cursor:pointer;
+  transition:transform 120ms ease, background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+}
+@media (hover:hover){
+  .sv-pgBtn:hover{
+    transform:translateY(-1px);
+    background:rgba(15,23,42,.02);
+    border-color:rgba(13,148,136,.16);
+  }
+}
+.sv-pgBtn:disabled{ opacity:.35; cursor:default; transform:none; }
+.sv-pgInfo{ font-size:12px; opacity:.65; font-weight:650; }
+
+
+/* ======================================================
+   5) LISTĂ FIRME — CARD 3 COL + RESPONSIVE
+   ====================================================== */
+.sv-firms{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+
+.sv-firm{
+  display:grid;
+  grid-template-columns:200px minmax(0, 1fr) 190px;
+  gap:14px;
+
+  border-radius:14px;
+  background:#fff;
+  border:1px solid rgba(15,23,42,.08);
+  box-shadow:0 14px 50px rgba(15,23,42,.06);
+
+  overflow:hidden;
+  align-items:stretch;
+}
+.sv-firm--3col{ grid-template-columns:200px minmax(0,1fr) 190px; }
+
+@media (max-width:900px){
+  .sv-firm,
+  .sv-firm--3col{ grid-template-columns:1fr; }
+  .sv-media{ height:180px; border-right:0; border-bottom:1px solid rgba(15,23,42,.08); }
+  .sv-main{ padding:14px; }
+  .sv-side{ padding:0 14px 14px; border-top:1px solid rgba(15,23,42,.08); }
+}
+
+
+/* ======================================================
+   6) CARD: MEDIA (cover stânga)
+   ====================================================== */
+.sv-media{
+  background:rgba(15,23,42,.04);
+  min-height:180px;
+  border-right:1px solid rgba(15,23,42,.06);
+}
+.sv-mediaImg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+
+/* ======================================================
+   7) CARD: MAIN (info mijloc)
+   ====================================================== */
+.sv-main{
+  padding:14px 0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.sv-main--flex{
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+}
+@media (max-width:900px){ .sv-main{ padding:14px; } }
+
+.sv-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.sv-nameRow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.sv-name{
+  font-size:16px;
+  font-weight:750;
+  letter-spacing:-0.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.sv-loc{
+  margin-top:6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12.5px;
+  opacity:.78;
+  font-weight:550;
+  min-width:0;
+}
+.sv-locIcon{ width:16px; height:16px; opacity:.85; }
+.sv-locText{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:100%;
+}
+
+.sv-desc{
+  margin-top:8px;
+  font-size:13px;
+  opacity:.82;
+  line-height:1.45;
+  font-weight:450;
+}
+
+
+/* ======================================================
+   8) SOCIAL ROW (brand colors + tooltip + nav aligned)
+   ====================================================== */
+.sv-social{
+  margin-top:auto;
+  padding-top:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sv-social--bottom{
+  margin-top:auto;
+  align-items:center;
+}
+
+/* Social icon buttons */
+.sv-socialBtn{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  border:1px solid rgba(15,23,42,.10);
+  background:rgba(255,255,255,.94);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  opacity:.96;
+  transition:transform .10s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
+  position:relative;
+}
+.sv-socialBtn svg{ width:20px; height:20px; display:block; }
+
+@media (hover:hover){
+  .sv-socialBtn:hover{
+    transform:translateY(-1px);
+    border-color:rgba(13,148,136,.14);
+    box-shadow:0 10px 22px rgba(15,23,42,.08);
+  }
+}
+
+/* Disabled social */
+.sv-socialDisabled,
+.sv-socialBtn--disabled{
+  opacity:.35;
+  pointer-events:none;
+  filter:grayscale(1);
+}
+
+/* Brand colors */
+.sv-socialBtn--fb{ color:#1877F2; }
+.sv-socialBtn--ig{ color:#E1306C; }
+.sv-socialBtn--tt{ color:#111827; }
+
+@media (hover:hover){
+  .sv-socialBtn--fb:hover{ background:rgba(24,119,242,.06); }
+  .sv-socialBtn--ig:hover{ background:rgba(225,48,108,.06); }
+  .sv-socialBtn--tt:hover{ background:rgba(17,24,39,.05); }
+}
+
+/* Nav pill */
+.sv-navPill{
+  height:40px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,23,42,.10);
+  background:rgba(255,255,255,.94);
+
+  color:var(--text-700);
+  font-size:12px;
+  font-weight:650;
+  line-height:1;
+  white-space:nowrap;
+
+  transition:transform .10s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
+  position:relative;
+}
+@media (hover:hover){
+  .sv-navPill:hover{
+    transform:translateY(-1px);
+    border-color:rgba(13,148,136,.14);
+    box-shadow:0 10px 22px rgba(15,23,42,.08);
+    background:rgba(15,23,42,.01);
+  }
+}
+.sv-navPillIcon{
+  width:18px;
+  height:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(45deg);
+}
+.sv-navPillIcon svg{ width:18px; height:18px; display:block; }
+
+.sv-navPill--disabled{
+  opacity:.35;
+  cursor:not-allowed;
+  user-select:none;
+}
+.sv-navPill--disabled *{ pointer-events:none; }
+
+/* Tooltip */
+.sv-socialBtn[data-tip]::after,
+.sv-navPill[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(100% + 9px);
+  background:rgba(17,24,39,.92);
+  color:#fff;
+  padding:6px 8px;
+  border-radius:8px;
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .12s ease, transform .12s ease;
+  z-index:50;
+}
+.sv-socialBtn[data-tip]::before,
+.sv-navPill[data-tip]::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(100% + 3px);
+  border:6px solid transparent;
+  border-top-color:rgba(17,24,39,.92);
+  opacity:0;
+  transition:opacity .12s ease;
+  z-index:50;
+}
+@media (hover:hover){
+  .sv-socialBtn:hover::after,
+  .sv-socialBtn:hover::before,
+  .sv-navPill:hover::after,
+  .sv-navPill:hover::before{
+    opacity:1;
+  }
+  .sv-socialBtn:hover::after,
+  .sv-navPill:hover::after{
+    transform:translateX(-50%) translateY(-1px);
+  }
+}
+
+
+/* ======================================================
+   9) SIDE (logo + actions)
+   ====================================================== */
+.sv-side{
+  padding:14px 14px 14px 0;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+}
+@media (min-width:901px){
+  .sv-side{
+    border-left:1px solid rgba(15,23,42,.06);
+    padding-left:14px;
+  }
+}
+
+.sv-logo{
+  width:100%;
+  height:58px;
+  border-radius:10px;
+  border:1px solid rgba(15,23,42,.10);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.sv-logoImg{ width:100%; height:100%; object-fit:contain; padding:8px; }
+
+
+/* ======================================================
+   10) ACTIONS + CHIPS (Sună / WhatsApp / Site)
+   ====================================================== */
+.sv-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:2px;
+}
+
+/* base */
+.sv-chip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  height:40px;
+  padding:0 12px;
+  border-radius:8px;
+
+  font-size:13px;
+  font-weight:700;
+  line-height:1;
+
+  border:1px solid rgba(0,0,0,.12);
+  text-decoration:none;
+
+  user-select:none;
+  cursor:pointer;
+
+  transition:transform .10s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease, border-color .12s ease;
+}
+
+.sv-chipIco,
+.sv-chipIco svg{
+  display:block;
+}
+
+.sv-chipIco{
+  width:16px;
+  height:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 16px;
+  transform:translateY(.5px);
+  opacity:.95;
+}
+.sv-chipIco svg{
+  width:16px;
+  height:16px;
+}
+
+@media (hover:hover){
+  .sv-chip:hover{
+    transform:translateY(-1px);
+    box-shadow:0 10px 22px rgba(15,23,42,.08);
+  }
+}
+.sv-chip:active{ transform:translateY(0px); box-shadow:none; }
+
+/* Variants — premium metallic + gold border */
+.sv-chipCall,
+.sv-chip--call{
+  background:linear-gradient(180deg, #2a2a2a 0%, #0f172a 50%, #0a0f1a 100%);
+  color:#fff;
+  border:2px solid #b8960b;
+  box-shadow:
+    0 0 0 1px rgba(184,150,11,.25),
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 8px 24px rgba(15,23,42,.28),
+    0 2px 8px rgba(184,150,11,.18);
+}
+@media (hover:hover){
+  .sv-chipCall:hover,
+  .sv-chip--call:hover{
+    background:linear-gradient(180deg, #333 0%, #1a2340 50%, #0f172a 100%);
+    box-shadow:
+      0 0 0 1px rgba(184,150,11,.35),
+      inset 0 1px 0 rgba(255,255,255,.18),
+      0 12px 32px rgba(15,23,42,.32),
+      0 4px 12px rgba(184,150,11,.22);
+  }
+}
+
+.sv-chipWa{
+  background:linear-gradient(180deg, #34d471 0%, #22c55e 50%, #16a34a 100%);
+  color:#062A14;
+  border:2px solid #b8960b;
+  box-shadow:
+    0 0 0 1px rgba(184,150,11,.25),
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 8px 24px rgba(34,197,94,.28),
+    0 2px 8px rgba(184,150,11,.18);
+}
+@media (hover:hover){
+  .sv-chipWa:hover{
+    background:linear-gradient(180deg, #3ee07d 0%, #28d468 50%, #1aad52 100%);
+    box-shadow:
+      0 0 0 1px rgba(184,150,11,.35),
+      inset 0 1px 0 rgba(255,255,255,.28),
+      0 12px 32px rgba(34,197,94,.32),
+      0 4px 12px rgba(184,150,11,.22);
+  }
+}
+
+.sv-chipSite{
+  background:linear-gradient(180deg, #4b83f0 0%, #2563eb 50%, #1d4ed8 100%);
+  color:#fff;
+  border:2px solid #b8960b;
+  box-shadow:
+    0 0 0 1px rgba(184,150,11,.25),
+    inset 0 1px 0 rgba(255,255,255,.22),
+    0 8px 24px rgba(37,99,235,.28),
+    0 2px 8px rgba(184,150,11,.18);
+}
+@media (hover:hover){
+  .sv-chipSite:hover{
+    background:linear-gradient(180deg, #5a90f5 0%, #3070f0 50%, #2258d9 100%);
+    box-shadow:
+      0 0 0 1px rgba(184,150,11,.35),
+      inset 0 1px 0 rgba(255,255,255,.25),
+      0 12px 32px rgba(37,99,235,.32),
+      0 4px 12px rgba(184,150,11,.22);
+  }
+}
+
+/* Profile link chip (used in search results) */
+.sv-chipProfile{
+  background:rgba(13,148,136,.07);
+  color:var(--accent-700,#0f766e);
+  border-color:rgba(13,148,136,.18);
+  font-weight:650;
+}
+@media (hover:hover){
+  .sv-chipProfile:hover{
+    background:rgba(13,148,136,.13);
+    border-color:rgba(13,148,136,.30);
+  }
+}
+
+/* Optional muted/outline */
+.sv-chip--muted{
+  background:rgba(15,23,42,.03);
+  color:var(--text-800);
+  border-color:rgba(15,23,42,.10);
+}
+@media (hover:hover){
+  .sv-chip--muted:hover{ background:rgba(15,23,42,.05); }
+}
+
+
+/* Disabled */
+.sv-disabled,
+.sv-chip--disabled,
+.sv-chip[aria-disabled="true"]{
+  pointer-events:none;
+  opacity:.35;
+  filter:grayscale(1);
+}
+
+
+/* ======================================================
+   11) BADGES (star) + plan accents
+   ====================================================== */
+.sv-star{
+  width:22px;
+  height:22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  font-size:14px;
+  line-height:1;
+  border:1px solid rgba(15,23,42,.12);
+  background:#fff;
+}
+.sv-starPremium{
+  color:#b88a00;
+  background:rgba(255,196,0,.12);
+  border-color:rgba(184,138,0,.35);
+}
+.sv-starStart{
+  color:#1d4ed8;
+  background:rgba(59,130,246,.10);
+  border-color:rgba(37,99,235,.30);
+}
+.sv-starPlus{
+  color:#374151;
+  background:rgba(55,65,81,.10);
+  border-color:rgba(55,65,81,.28);
+}
+.sv-starFree{
+  color:rgba(0,0,0,.22);
+  background:rgba(0,0,0,.02);
+  border-color:rgba(0,0,0,.10);
+}
+
+.sv-firmPremium{ border-color:rgba(184,138,0,.35); }
+.sv-firmStart{ border-color:rgba(37,99,235,.30); }
+.sv-firmPlus{ border-color:rgba(55,65,81,.25); }
+.sv-firmFree{ border-color:rgba(15,23,42,.08); }
+.sv-firmClickable{ cursor:pointer; }
+
+
+/* ======================================================
+   12) PAGINARE JOS
+   ====================================================== */
+.sv-pager{
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+
+/* ======================================================
+   13) COVERAGE helper (check line)
+   ====================================================== */
+.sv-coverage{
+  margin-top:6px;
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  font-size:12.5px;
+  line-height:1.35;
+  color:var(--text-700);
+}
+.sv-checkIcon{
+  width:16px;
+  height:16px;
+  margin-top:1px;
+  flex:0 0 16px;
+  color:#16a34a;
+}
+.sv-coverage strong{
+  font-weight:650;
+  color:var(--text-900);
+}
+.sv-coverage--premium{
+  background:linear-gradient(90deg, rgba(22,163,74,.08), rgba(22,163,74,.02));
+  padding:6px 8px;
+  border-radius:8px;
+}
+/* ======================================================
+   SV HERO — hard fixes (width + buttons contrast)
+   ====================================================== */
+
+/* hero să nu mai pară “full bleed” la desktop */
+.sv-hero{ padding:12px 0 10px; }
+.sv-hero--compact{ padding:10px 0 10px; }
+
+/* ghost rămâne ghost (text închis) */
+.sv-hero .sv-resetBtn{
+  background:#fff !important;
+  color: var(--text-900) !important;
+  border-color: rgba(15,23,42,.14) !important;
+}
+
+/* când toggle-ul e închis pe mobile home */
+.sv-collapsed{ display:none; }
+/* ===========================
+   Mobile gutters (Servicii)
+   Fix: lipit de margini (stânga/dreapta)
+   =========================== */
+@media (max-width: 900px) {
+  /* Gutter general pagină */
+  .sv-wrap {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* NU pune padding pe card dacă vrei imaginea full-bleed */
+  .sv-firm {
+    padding-left: 0;
+    padding-right: 0;
+     scroll-margin-top: 72px; /* ajustează după înălțimea headerului */
+  }
+
+  /* Imaginea rămâne full-bleed (0 padding), dar să nu iasă din colțurile cardului */
+  .sv-media {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .sv-mediaImg {
+    display: block;
+    width: 100%;
+  }
+
+  /* Padding doar pe conținut (titlu, badge, text, social) */
+  .sv-main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Padding doar pe logo + butoane (să nu fie lipite) */
+  .sv-side {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Rândul de sus (nr firme + paginare) să nu fie lipit */
+  .sv-metaRow {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}
+/* ============================
+   HERO / Directory — DESKTOP ONLY (unified bar like screenshot)
+   ============================ */
+@media (min-width: 900px){
+
+  /* card + spacing */
+  .sv-hero--desktop{
+    padding-top: 34px;
+    padding-bottom: 26px;
+  }
+
+  .sv-heroCard--desktop{
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 30px 90px rgba(0,0,0,.22);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  .sv-head--desktop{
+    padding: 26px 22px 14px 22px;
+    text-align: center;
+  }
+
+  .sv-title--desktop{
+    font-family: var(--font-display);
+    font-weight: 720;
+    letter-spacing: var(--track-tight);
+    line-height: 1.06;
+    font-size: 44px;
+    color: rgba(0, 0, 0, 0.92);
+    margin: 0;
+  }
+
+  .sv-sub--desktop{
+    margin: 10px auto 0 auto;
+    max-width: 840px;
+    font-size: 15px;
+    line-height: 1.5;
+    
+  }
+
+  .sv-countLine--desktop{
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: rgba(214,178,108,.90);
+    letter-spacing: var(--track-tight);
+  }
+
+  /* Unified search bar */
+  .sv-heroControls--desktop{
+    display: grid;
+    grid-template-columns: 1.05fr 1.05fr 1.15fr 1.35fr auto;
+    gap: 0;
+    align-items: stretch;
+
+    margin: 18px auto 22px auto;
+    width: min(980px, 100%);
+    padding: 0;
+
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.10);
+    box-shadow: 0 18px 54px rgba(0,0,0,.22);
+    overflow: hidden;
+  }
+
+  /* each segment separator */
+  .sv-heroControls--desktop > .sv-pill,
+  .sv-heroControls--desktop > .sv-search{
+    border-right: 1px solid rgba(255,255,255,.10);
+  }
+
+  /* segments */
+  .sv-heroControls--desktop .sv-pill{
+    
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 14px 14px;
+    text-align: left;
+    min-height: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sv-heroControls--desktop .sv-pillLabel{
+    font-size: 11px;
+    opacity: .75;
+    color: rgba(57, 57, 57, 0.7);
+    letter-spacing: var(--track-tight);
+    margin-bottom: 4px;
+  }
+  .sv-heroControls--desktop .sv-pillValue{
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: var(--track-tight);
+    color: rgba(28, 27, 27, 0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* search segment */
+  .sv-heroControls--desktop .sv-search{
+    margin: 0 !important;
+    padding: 14px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 64px;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  .sv-heroControls--desktop .sv-searchLabel{
+    font-size: 11px;
+    opacity: .75;
+    color: rgba(85, 84, 84, 0.7);
+    margin-bottom: 4px;
+    letter-spacing: var(--track-tight);
+  }
+
+  .sv-heroControls--desktop .sv-searchInput{
+    width: 100%;
+    
+    outline: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 14px;
+           font-weight: normal;
+    color: rgba(0, 0, 0, 0.92);
+  }
+  .sv-heroControls--desktop .sv-searchInput::placeholder{
+    color: rgba(255,255,255,.62);
+   font-weight: normal;
+  }
+
+  /* buttons segment */
+  .sv-heroControls--desktop .sv-heroBtns{
+    display: grid;
+    grid-template-columns: 140px 130px;
+    gap: 10px;
+    padding: 12px;
+    align-items: center;
+    border-right: 0;
+    background: rgba(0,0,0,.06);
+  }
+
+  /* “Caută” dark like screenshot */
+  .sv-heroControls--desktop .sv-searchBtn{
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(17,24,39,.92);
+    color: rgba(0, 0, 0, 0.96);
+    font-weight: 400;
+    letter-spacing: var(--track-tight);
+    box-shadow: 0 16px 40px rgba(0,0,0,.20);
+  }
+
+  /* “Resetează” light */
+  .sv-heroControls--desktop .sv-clearBtn{
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.12);
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 400;
+    letter-spacing: var(--track-tight);
+  }
+
+  @media (hover:hover){
+    .sv-heroControls--desktop .sv-searchBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 46px rgba(0,0,0,.24);
+    }
+    .sv-heroControls--desktop .sv-clearBtn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.16);
+    }
+  }
+  .sv-heroControls--desktop .sv-searchBtn:active,
+  .sv-heroControls--desktop .sv-clearBtn:active{
+    transform: translateY(1px);
+  }
+
+  /* focus ring soft gold */
+  .sv-heroControls--desktop .sv-pill:focus-visible,
+  .sv-heroControls--desktop .sv-searchInput:focus-visible{
+    box-shadow: 0 0 0 3px rgba(214,178,108,.14) !important;
+    border-radius: 12px;
+  }
+}
+
+
+/* ======================================================
+   FOOTER CTA — below listing
+   ====================================================== */
+.sv-footer-cta {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.sv-footer-cta__title {
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--text-900, #0f172a);
+  margin: 0 0 14px;
+  letter-spacing: -0.2px;
+}
+
+.sv-footer-cta__links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 480px) {
+  .sv-footer-cta__links {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.sv-footer-cta__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface, #fff);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  text-decoration: none;
+  color: var(--text-800, #1e293b);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 180ms ease;
+}
+
+.sv-footer-cta__link:hover {
+  border-color: rgba(13, 148, 136, 0.2);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+  color: var(--accent-700, #0f766e);
+}
+
+.sv-footer-cta__icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.sv-footer-cta__actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 480px) {
+  .sv-footer-cta__actions {
+    flex-direction: row;
+  }
+}
+
+.sv-footer-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 180ms ease;
+  text-align: center;
+}
+
+.sv-footer-cta__btn--primary {
+  background: var(--accent-600, #0d9488);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+}
+
+.sv-footer-cta__btn--primary:hover {
+  background: var(--accent-700, #0f766e);
+  box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+  transform: translateY(-1px);
+}
+
+.sv-footer-cta__btn--secondary {
+  background: var(--surface, #fff);
+  color: var(--accent-700, #0f766e);
+  border: 1.5px solid rgba(13, 148, 136, 0.2);
+}
+
+.sv-footer-cta__btn--secondary:hover {
+  background: rgba(13, 148, 136, 0.04);
+  border-color: rgba(13, 148, 136, 0.35);
+  transform: translateY(-1px);
+}
