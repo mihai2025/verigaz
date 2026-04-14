@@ -1,124 +1,159 @@
 // app/magazin/page.tsx
-// Catalog public — produse grupate pe categorie cu linkuri la detaliu.
+// Catalog public — hero + card-uri categorii + grid produse (stil ghidulfunerar).
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getPublicServerSupabase } from "@/lib/supabase/server"
+import { ShopCategoryCards, type ShopCategory } from "@/components/shop/ShopCategoryCards"
+import { ShopProductGrid } from "@/components/shop/ShopProductGrid"
+import type { ShopProduct } from "@/components/shop/ShopProductCard"
+import { JsonLdScript } from "@/components/seo/JsonLdScript"
+import { breadcrumbJsonLd } from "@/lib/seo/jsonld"
+import { DOMAIN } from "@/lib/config/domain"
 
-export const metadata: Metadata = {
-  title: "Magazin verigaz — detectoare gaze, senzori CO, piese centrală",
-  description:
-    "Detectoare gaze certificate EN50194, senzori CO, electrovalve, piese centrală termică. Livrare rapidă în toată țara.",
-  alternates: { canonical: "/magazin" },
-}
+export const dynamic = "force-dynamic"
 
 type Props = { searchParams: Promise<{ cat?: string; q?: string }> }
 
-export default async function Page({ searchParams }: Props) {
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const sp = await searchParams
+  if (sp.cat) {
+    return {
+      title: `Magazin — ${sp.cat}`,
+      description: `Produse pentru instalații gaze și centrale termice — ${sp.cat}.`,
+      alternates: { canonical: `/magazin?cat=${sp.cat}` },
+    }
+  }
+  return {
+    title: "Magazin online — detectoare gaze, senzori CO, piese centrală",
+    description:
+      "Cumpără online detectoare gaze certificate EN50194, senzori CO, electrovalve, piese centrală termică. Firme autorizate ANRE, livrare rapidă.",
+    alternates: { canonical: "/magazin" },
+    openGraph: {
+      title: "Magazin online — verificari-gaze.ro",
+      description: "Produse pentru instalații gaze de la firme autorizate ANRE.",
+      url: `${DOMAIN.baseUrl}/magazin`,
+    },
+  }
+}
+
+export default async function ShopPage({ searchParams }: Props) {
   const sp = await searchParams
   const supabase = getPublicServerSupabase()
 
   const [catsRes, productsRes] = await Promise.all([
     supabase
       .from("shop_categories")
-      .select("id, slug, nume, descriere")
+      .select("id, slug, nume, icon")
       .eq("is_active", true)
       .order("sort_order"),
     (async () => {
       let q = supabase
         .from("shop_products")
-        .select("id, slug, nume, descriere_scurta, price, price_old, image_url, stock, manage_stock, is_featured, category_id, brand")
+        .select(
+          "id, slug, nume, descriere_scurta, price, price_old, image_url, stock, manage_stock, is_featured, brand, category_id, " +
+          "shop_categories(nume), gas_firms:seller_firm_id(slug, brand_name, legal_name, logo_url)",
+        )
         .eq("is_active", true)
         .order("is_featured", { ascending: false })
         .order("created_at", { ascending: false })
-        .limit(120)
+        .limit(48)
       if (sp.cat) {
         const { data: c } = await supabase
           .from("shop_categories")
           .select("id")
           .eq("slug", sp.cat)
           .maybeSingle()
-        if (c) q = q.eq("category_id", c.id)
+        if (c) q = q.eq("category_id", (c as { id: number }).id)
       }
       if (sp.q) q = q.ilike("nume", `%${sp.q}%`)
       return q
     })(),
   ])
 
-  const categories = (catsRes.data ?? []) as unknown as { id: number; slug: string; nume: string; descriere: string | null }[]
-  const products = (productsRes.data ?? []) as unknown as Array<{
-    id: string; slug: string; nume: string; descriere_scurta: string | null
-    price: number; price_old: number | null; image_url: string | null
-    stock: number; manage_stock: boolean; is_featured: boolean
-    category_id: number | null; brand: string | null
-  }>
+  const categories = ((catsRes.data ?? []) as Array<{
+    id: number
+    slug: string
+    nume: string
+    icon: string | null
+  }>) as ShopCategory[]
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const products: ShopProduct[] = ((productsRes.data ?? []) as any[]).map((p) => {
+    const firm = Array.isArray(p.gas_firms) ? p.gas_firms[0] : p.gas_firms
+    const cat = Array.isArray(p.shop_categories) ? p.shop_categories[0] : p.shop_categories
+    return {
+      id: p.id,
+      slug: p.slug,
+      nume: p.nume,
+      descriere_scurta: p.descriere_scurta,
+      price: Number(p.price),
+      price_old: p.price_old != null ? Number(p.price_old) : null,
+      image_url: p.image_url,
+      stock: p.stock,
+      manage_stock: p.manage_stock,
+      is_featured: p.is_featured,
+      brand: p.brand,
+      category_id: p.category_id,
+      category_nume: cat?.nume ?? null,
+      firm_name: firm ? (firm.brand_name || firm.legal_name) : null,
+      firm_slug: firm?.slug ?? null,
+      firm_logo_url: firm?.logo_url ?? null,
+    }
+  })
 
   const activeCat = sp.cat ? categories.find((c) => c.slug === sp.cat) : null
 
+  const breadcrumbs = activeCat
+    ? [
+        { label: "Acasă", href: "/" },
+        { label: "Magazin", href: "/magazin" },
+        { label: activeCat.nume },
+      ]
+    : [
+        { label: "Acasă", href: "/" },
+        { label: "Magazin" },
+      ]
+
   return (
-    <div className="shop-page container">
-      <header className="shop-hero">
-        <h1 className="shop-title">{activeCat?.nume ?? "Magazin verigaz"}</h1>
-        <p className="shop-lead">
-          {activeCat?.descriere ??
-            "Detectoare gaze certificate, senzori CO, piese centrală — produse selectate pentru siguranța instalației tale."}
+    <>
+      <JsonLdScript data={[breadcrumbJsonLd(breadcrumbs)]} />
+
+      <section className="shop-hero">
+        <h1 className="shop-hero__title">{activeCat?.nume ?? "Magazin online"}</h1>
+        <p className="shop-hero__sub">
+          {activeCat
+            ? `Produse ${activeCat.nume.toLowerCase()} de la firme autorizate ANRE.`
+            : "Detectoare gaze certificate, senzori CO, piese centrală — de la firme autorizate ANRE, cu livrare rapidă în toată România."}
         </p>
-        <form method="get" action="/magazin" className="shop-search">
-          <input name="q" defaultValue={sp.q ?? ""} placeholder="Caută produs…" />
+        <form method="get" action="/magazin" className="shop-search" style={{ maxWidth: 480, margin: "20px auto 0", display: "flex", gap: 8 }}>
+          <input
+            name="q"
+            defaultValue={sp.q ?? ""}
+            placeholder="Caută produs (ex: detector, senzor CO, electrovalva)…"
+            className="shop-form-input"
+            style={{ flex: 1, height: 46, padding: "0 16px", borderRadius: 10, border: "1px solid var(--border)", fontSize: 15 }}
+          />
           {sp.cat && <input type="hidden" name="cat" value={sp.cat} />}
-          <button type="submit">Caută</button>
+          <button type="submit" className="vg-btn vg-btn--primary" style={{ height: 46, padding: "0 20px" }}>
+            Caută
+          </button>
         </form>
-      </header>
+      </section>
 
-      <nav className="shop-cats">
-        <Link href="/magazin" className={`shop-cat ${!sp.cat ? "shop-cat--active" : ""}`}>Toate</Link>
-        {categories.map((c) => (
-          <Link
-            key={c.id}
-            href={`/magazin?cat=${c.slug}${sp.q ? `&q=${encodeURIComponent(sp.q)}` : ""}`}
-            className={`shop-cat ${sp.cat === c.slug ? "shop-cat--active" : ""}`}
-          >
-            {c.nume}
-          </Link>
-        ))}
-      </nav>
+      <div className="shop-container">
+        <ShopCategoryCards categories={categories} activeSlug={sp.cat ?? null} />
 
-      {products.length === 0 ? (
-        <p className="shop-empty">Nu găsim produse pentru filtrul curent.</p>
-      ) : (
-        <ul className="shop-grid">
-          {products.map((p) => {
-            const outOfStock = p.manage_stock && p.stock <= 0
-            return (
-              <li key={p.id} className={`shop-card ${outOfStock ? "shop-card--oos" : ""}`}>
-                <Link href={`/magazin/${p.slug}`} className="shop-card__link">
-                  <div className="shop-card__img">
-                    <img
-                      src={p.image_url || "/imagini/noimage.webp"}
-                      alt={p.nume}
-                      width={360}
-                      height={360}
-                      loading="lazy"
-                    />
-                    {p.is_featured && <span className="shop-badge shop-badge--featured">Recomandat</span>}
-                    {outOfStock && <span className="shop-badge shop-badge--oos">Stoc epuizat</span>}
-                  </div>
-                  <div className="shop-card__body">
-                    {p.brand && <div className="shop-card__brand">{p.brand}</div>}
-                    <h3 className="shop-card__name">{p.nume}</h3>
-                    {p.descriere_scurta && <p className="shop-card__desc">{p.descriere_scurta}</p>}
-                    <div className="shop-card__prices">
-                      {p.price_old && p.price_old > p.price && (
-                        <span className="shop-card__price-old">{p.price_old} lei</span>
-                      )}
-                      <span className="shop-card__price">{p.price} lei</span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </div>
+        <nav className="shop-breadcrumbs" aria-label="Breadcrumb">
+          {breadcrumbs.map((b, i) => (
+            <span key={i} style={{ display: "inline-flex", alignItems: "center" }}>
+              {b.href ? <Link href={b.href}>{b.label}</Link> : <span>{b.label}</span>}
+              {i < breadcrumbs.length - 1 && <span className="shop-breadcrumbs__sep">/</span>}
+            </span>
+          ))}
+        </nav>
+
+        <ShopProductGrid products={products} />
+      </div>
+    </>
   )
 }
