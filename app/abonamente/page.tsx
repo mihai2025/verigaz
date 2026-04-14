@@ -1,5 +1,5 @@
 // app/abonamente/page.tsx
-// Pagina publică de pricing — fiecare plan cu highlights + CTA.
+// Pricing page premium pentru firme autorizate ANRE.
 import type { Metadata } from "next"
 import Link from "next/link"
 import { PLANS, PLAN_ORDER } from "@/lib/plans/plans"
@@ -8,86 +8,205 @@ import { DOMAIN } from "@/lib/config/domain"
 export const metadata: Metadata = {
   title: `Abonamente pentru firme autorizate ANRE — ${DOMAIN.brandName}`,
   description:
-    "Alege planul potrivit firmei tale: Start (490 lei/an), Plus (890 lei/an) sau Premium (1490 lei/an, cu exclusivitate locală).",
+    "Listare gratuită. Planuri plătite: Start 490 lei/an, Plus 890 lei/an, Premium 1.490 lei/an cu exclusivitate locală. Fără comision pe intervenții.",
   alternates: { canonical: "/abonamente" },
 }
 
+type Feature = { label: string; free: boolean; start: boolean; plus: boolean; premium: boolean }
+
+const FEATURES: Feature[] = [
+  { label: "Listare în directorul național", free: true, start: true, plus: true, premium: true },
+  { label: "Telefon + email vizibile public", free: true, start: true, plus: true, premium: true },
+  { label: "Primire programări prin platformă", free: true, start: true, plus: true, premium: true },
+  { label: "Profil complet cu galerie foto + descriere lungă", free: false, start: true, plus: true, premium: true },
+  { label: "Template-uri SMS personalizate firmei", free: false, start: true, plus: true, premium: true },
+  { label: "Locații operare extinse (nu doar sediul)", free: false, start: true, plus: true, premium: true },
+  { label: "Dashboard analytics complet", free: false, start: true, plus: true, premium: true },
+  { label: "Badge Recomandat pe card", free: false, start: false, plus: true, premium: true },
+  { label: "Featured placement (top 3 rezultate)", free: false, start: false, plus: true, premium: true },
+  { label: "Magazin cu produse nelimitate", free: false, start: false, plus: true, premium: true },
+  { label: "Exclusivitate locală (unic firmă listată)", free: false, start: false, plus: false, premium: true },
+  { label: "Locații operare nelimitate", free: false, start: false, plus: false, premium: true },
+  { label: "Support prioritar (răspuns 24h)", free: false, start: false, plus: false, premium: true },
+  { label: "Onboarding dedicat", free: false, start: false, plus: false, premium: true },
+]
+
 export default function Page() {
   return (
-    <div className="pricing-page container">
-      <header className="pricing-hero">
-        <h1 className="pricing-title">Abonamente pentru firme autorizate ANRE</h1>
-        <p className="pricing-lead">
-          Profilul Free te listează. Planurile plătite îți aduc conversie:
-          vizibilitate prioritară, magazin activ, exclusivitate locală.
-        </p>
-      </header>
-
-      <div className="pricing-grid">
-        {PLAN_ORDER.map((key) => {
-          const p = PLANS[key]
-          const isPremium = key === "premium"
-          const isFree = key === "free"
-          return (
-            <section key={key} className={`pricing-card pricing-card--${key}${isPremium ? " pricing-card--highlight" : ""}`}>
-              <h2 className="pricing-card__name">{p.nume}</h2>
-              <p className="pricing-card__tagline">{p.tagline}</p>
-              <div className="pricing-card__price">
-                {isFree ? (
-                  <strong>0 lei</strong>
-                ) : (
-                  <>
-                    <strong>{p.priceYearly} lei</strong>
-                    <span className="pricing-card__period"> / an</span>
-                  </>
-                )}
-              </div>
-              <ul className="pricing-card__list">
-                {p.highlights.map((h) => <li key={h}>{h}</li>)}
-              </ul>
-              <div className="pricing-card__cta">
-                {isFree ? (
-                  <Link href="/inregistrare?firm=1" className="shop-btn shop-btn--ghost">
-                    Înregistrează gratuit
-                  </Link>
-                ) : (
-                  <Link
-                    href={`/dashboard/abonament?upgrade=${key}`}
-                    className="shop-btn shop-btn--primary"
-                  >
-                    Alege {p.nume}
-                  </Link>
-                )}
-              </div>
-            </section>
-          )
-        })}
-      </div>
-
-      <section className="pricing-faq">
-        <h2>Întrebări frecvente</h2>
-        <dl className="pricing-dl">
-          <dt>Ce înseamnă „exclusivitate locală"?</dt>
-          <dd>
-            Pe planul Premium, firmele concurente din aceeași localitate nu apar în listing.
-            Doar tu ești afișat — maximizează conversia pe zona ta.
-          </dd>
-          <dt>Cum mă dezabonez?</dt>
-          <dd>
-            Din dashboard, buton „Anulează abonamentul". Plata se oprește la sfârșitul
-            perioadei curente, fără termen limită.
-          </dd>
-          <dt>Pot schimba planul oricând?</dt>
-          <dd>
-            Da. Upgrade e imediat, downgrade se activează la reînnoire.
-          </dd>
-          <dt>Ce se întâmplă dacă nu plătesc la timp?</dt>
-          <dd>
-            După 3 retry-uri Stripe, firma revine pe planul Free. Profilul rămâne activ,
-            doar că pierde features-urile premium.
-          </dd>
-        </dl>
+    <>
+      <section className="vg-hero">
+        <div className="vg-hero__inner">
+          <span className="vg-hero__eyebrow">Pentru firme ANRE</span>
+          <h1 className="vg-hero__title">
+            Abonamente <em>pentru creștere</em>
+          </h1>
+          <p className="vg-hero__sub">
+            Listare gratuită în directorul național. Planuri plătite pentru vizibilitate prioritară,
+            exclusivitate locală și magazin online. Fără comision pe intervenții.
+          </p>
+        </div>
       </section>
-    </div>
+
+      <section className="vg-section">
+        <div className="container">
+          <div className="pricing-grid pricing-grid--4">
+            {PLAN_ORDER.map((key) => {
+              const p = PLANS[key]
+              const isPremium = key === "premium"
+              const isPlus = key === "plus"
+              const isFree = key === "free"
+              return (
+                <div key={key} className={`pricing-plan pricing-plan--${key} ${isPremium ? "pricing-plan--featured" : ""}`}>
+                  {isPremium && <div className="pricing-plan__ribbon">Cea mai populară</div>}
+                  {isPlus && <div className="pricing-plan__ribbon pricing-plan__ribbon--plus">Cel mai bun raport</div>}
+                  <h3 className="pricing-plan__name">{p.nume}</h3>
+                  <p className="pricing-plan__tagline">{p.tagline}</p>
+                  <div className="pricing-plan__price">
+                    {isFree ? (
+                      <><strong>0</strong><span>lei</span></>
+                    ) : (
+                      <>
+                        <strong>{p.priceYearly}</strong>
+                        <span>lei / an</span>
+                      </>
+                    )}
+                  </div>
+                  {!isFree && (
+                    <div className="pricing-plan__per-month">
+                      ~{Math.round(p.priceYearly / 12)} lei / lună
+                    </div>
+                  )}
+                  <ul className="pricing-plan__list">
+                    {p.highlights.map((h) => (
+                      <li key={h}>
+                        <span className="pricing-plan__check">✓</span>
+                        <span>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="pricing-plan__cta">
+                    {isFree ? (
+                      <Link href="/inregistrare?firm=1" className="vg-btn vg-btn--outline vg-btn--lg">
+                        Înregistrează gratuit
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/dashboard/abonament?upgrade=${key}`}
+                        className={`vg-btn vg-btn--lg ${isPremium ? "vg-btn--gold" : "vg-btn--primary"}`}
+                      >
+                        Alege {p.nume}
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="vg-section" style={{ background: "var(--surface-2)" }}>
+        <div className="container">
+          <div className="vg-section__head">
+            <p className="vg-section__kicker">Comparație detaliată</p>
+            <h2 className="vg-section__title">Ce primești pe fiecare plan</h2>
+          </div>
+
+          <div className="pricing-table-wrap">
+            <table className="pricing-table">
+              <thead>
+                <tr>
+                  <th>Funcționalitate</th>
+                  <th>Free</th>
+                  <th>Start<br /><span>490 lei/an</span></th>
+                  <th>Plus<br /><span>890 lei/an</span></th>
+                  <th className="pricing-table__premium">Premium<br /><span>1.490 lei/an</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {FEATURES.map((f) => (
+                  <tr key={f.label}>
+                    <td>{f.label}</td>
+                    <td>{f.free ? <span className="pricing-check">✓</span> : <span className="pricing-dash">—</span>}</td>
+                    <td>{f.start ? <span className="pricing-check">✓</span> : <span className="pricing-dash">—</span>}</td>
+                    <td>{f.plus ? <span className="pricing-check">✓</span> : <span className="pricing-dash">—</span>}</td>
+                    <td className="pricing-table__premium">{f.premium ? <span className="pricing-check">✓</span> : <span className="pricing-dash">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="vg-section">
+        <div className="container container--narrow">
+          <div className="vg-section__head">
+            <p className="vg-section__kicker">Întrebări frecvente</p>
+            <h2 className="vg-section__title">Răspunsuri la ce ne întrebă firmele</h2>
+          </div>
+
+          <div className="pricing-faq">
+            <details className="pricing-faq__item" open>
+              <summary>Ce înseamnă exclusivitate locală?</summary>
+              <p>
+                Pe planul Premium, firmele concurente din aceeași localitate nu apar în listing.
+                Doar tu ești afișat pe pagina localității tale — maximizează conversia pe zona ta.
+              </p>
+            </details>
+            <details className="pricing-faq__item">
+              <summary>Cum mă dezabonez?</summary>
+              <p>
+                Din dashboard, buton Anulează abonamentul. Plata se oprește la sfârșitul
+                perioadei curente — beneficiile rămân până atunci. Nu există termen minim.
+              </p>
+            </details>
+            <details className="pricing-faq__item">
+              <summary>Pot schimba planul oricând?</summary>
+              <p>
+                Da. Upgrade e imediat (plătești diferența prorata). Downgrade se activează
+                la reînnoire (păstrezi features-urile actuale până expiră).
+              </p>
+            </details>
+            <details className="pricing-faq__item">
+              <summary>Ce se întâmplă dacă nu plătesc la timp?</summary>
+              <p>
+                Stripe încearcă 3 retry-uri automat. După ultimul eșec, firma revine pe
+                planul Free. Profilul rămâne activ, doar că pierzi features-urile premium.
+              </p>
+            </details>
+            <details className="pricing-faq__item">
+              <summary>Cum se face plata?</summary>
+              <p>
+                Securizată prin Stripe. Card personal sau business. Primești factură
+                automată pe email. Posibilitate factură pe CUI dacă specifici.
+              </p>
+            </details>
+            <details className="pricing-faq__item">
+              <summary>Există comisioane pe intervenții?</summary>
+              <p>
+                <strong>Nu.</strong> Abonamentul acoperă totul — nu plătești procent pe
+                programări. Clientul plătește firma direct, fără intermediere.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section className="vg-section">
+        <div className="container">
+          <div className="vg-cta-band vg-cta-band--gold">
+            <h2>Pregătit să începi?</h2>
+            <p>Listare gratuită în 2 minute. Validarea ANRE durează 1-2 zile.</p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/inregistrare?firm=1" className="vg-btn-lg">Înscrie firma gratuit →</Link>
+              <Link href="/contact" className="vg-btn-lg" style={{ background: "rgba(255,255,255,.2)", color: "#fff" }}>
+                Ai întrebări? Contactează-ne
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

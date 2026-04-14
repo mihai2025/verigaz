@@ -13,6 +13,26 @@ export function Footer() {
             <p style={{ fontSize: 12, color: "#64748b", margin: "12px 0 0" }}>
               © {year} · {DOMAIN.brandName}
             </p>
+            <div className="vg-footer__anpc">
+              <a
+                href="https://anpc.ro/ce-este-sal/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ANPC — SAL"
+                title="ANPC — Soluționarea Alternativă a Litigiilor"
+              >
+                <img src="/imagini/anpc-sal.webp" alt="ANPC – SAL" loading="lazy" />
+              </a>
+              <a
+                href="https://ec.europa.eu/consumers/odr"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="SOL — Soluționarea online a litigiilor"
+                title="SOL — Soluționarea Online a Litigiilor"
+              >
+                <img src="/imagini/anpc-sol.webp" alt="SOL – Soluționarea online a litigiilor" loading="lazy" />
+              </a>
+            </div>
           </div>
 
           <div>
