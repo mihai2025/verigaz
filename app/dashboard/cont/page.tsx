@@ -32,6 +32,9 @@ export default async function ContPage() {
       <p className="dash-lead">
         Actualizează datele personale. Emailul se modifică doar prin suport.
       </p>
+      <div style={{ padding: "8px 12px", background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 6, fontSize: 12, marginBottom: 12, fontFamily: "monospace" }}>
+        DEBUG · uid={data.user.id.slice(0,8)}… · email={data.user.email} · profile.role={String(profile?.role ?? "null")} · getUserRole={role} · ts={new Date().toISOString()}
+      </div>
       <ContEditClient
         email={data.user.email ?? ""}
         fullName={(profile?.full_name as string | null) ?? null}
