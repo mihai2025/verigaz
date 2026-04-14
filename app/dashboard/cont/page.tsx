@@ -1,5 +1,8 @@
 // app/dashboard/cont/page.tsx
 // Profil utilizator — date din auth.users + profiles, editabile.
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 import { redirect } from "next/navigation"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import ContEditClient from "./ContEditClient"

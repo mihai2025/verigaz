@@ -11,6 +11,13 @@ type Props = {
   createdAt: string | null
 }
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: "Administrator",
+  firm_owner: "Proprietar firmă",
+  firm: "Proprietar firmă",
+  user: "Utilizator",
+}
+
 export default function ContEditClient({ email, fullName, phone, role, createdAt }: Props) {
   const [pending, startTransition] = useTransition()
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null)
@@ -71,7 +78,7 @@ export default function ContEditClient({ email, fullName, phone, role, createdAt
       <fieldset className="dash-fieldset">
         <legend>Informații cont</legend>
         <dl className="dash-dl">
-          <dt>Rol</dt><dd>{role}</dd>
+          <dt>Rol</dt><dd>{ROLE_LABELS[role] ?? role}</dd>
           <dt>Cont creat</dt>
           <dd>{createdAt ? new Date(createdAt).toLocaleDateString("ro-RO") : "—"}</dd>
         </dl>
