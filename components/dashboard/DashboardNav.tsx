@@ -60,7 +60,11 @@ export function DashboardNav({ role, firmId, pendingClaims = 0, pendingOrders = 
             <li><Link href="/dashboard/reviews-admin">Review-uri</Link></li>
             <li><Link href="/dashboard/audit">Audit</Link></li>
             <li><Link href="/dashboard/sms-templates">SMS templates</Link></li>
+            <li><Link href="/dashboard/sms-log">SMS log</Link></li>
+            <li><Link href="/dashboard/planuri">Planuri & tarife</Link></li>
             <li><Link href="/dashboard/magazin-comenzi">Toate comenzile <Badge count={pendingOrders} /></Link></li>
+            <li className="dash-nav__sep">Rapoarte admin</li>
+            <li><Link href="/dashboard/rapoarte/facturare-sms">Facturare SMS</Link></li>
           </>
         )}
       </ul>

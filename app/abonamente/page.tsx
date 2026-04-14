@@ -1,9 +1,12 @@
 // app/abonamente/page.tsx
 // Pricing page premium pentru firme autorizate ANRE.
+export const revalidate = 300
+
 import type { Metadata } from "next"
 import Link from "next/link"
 import { PLANS, PLAN_ORDER } from "@/lib/plans/plans"
 import { DOMAIN } from "@/lib/config/domain"
+import { getPlanPrices } from "@/lib/settings/appSettings"
 
 export const metadata: Metadata = {
   title: `Abonamente pentru firme autorizate ANRE — ${DOMAIN.brandName}`,
@@ -31,7 +34,12 @@ const FEATURES: Feature[] = [
   { label: "Onboarding dedicat", free: false, start: false, plus: false, premium: true },
 ]
 
-export default function Page() {
+export default async function Page() {
+  const prices = await getPlanPrices()
+  const priceOf = (key: string): number => {
+    if (key === "free") return 0
+    return (prices as Record<string, number>)[key] ?? PLANS[key as keyof typeof PLANS].priceYearly
+  }
   return (
     <>
       <section className="vg-hero">
@@ -66,14 +74,14 @@ export default function Page() {
                       <><strong>0</strong><span>lei</span></>
                     ) : (
                       <>
-                        <strong>{p.priceYearly}</strong>
+                        <strong>{priceOf(key)}</strong>
                         <span>lei / an</span>
                       </>
                     )}
                   </div>
                   {!isFree && (
                     <div className="pricing-plan__per-month">
-                      ~{Math.round(p.priceYearly / 12)} lei / lună
+                      ~{Math.round(priceOf(key) / 12)} lei / lună
                     </div>
                   )}
                   <ul className="pricing-plan__list">
@@ -118,9 +126,9 @@ export default function Page() {
                 <tr>
                   <th>Funcționalitate</th>
                   <th>Free</th>
-                  <th>Start<br /><span>490 lei/an</span></th>
-                  <th>Plus<br /><span>890 lei/an</span></th>
-                  <th className="pricing-table__premium">Premium<br /><span>1.490 lei/an</span></th>
+                  <th>Start<br /><span>{priceOf("start")} lei/an</span></th>
+                  <th>Plus<br /><span>{priceOf("plus")} lei/an</span></th>
+                  <th className="pricing-table__premium">Premium<br /><span>{priceOf("premium")} lei/an</span></th>
                 </tr>
               </thead>
               <tbody>
