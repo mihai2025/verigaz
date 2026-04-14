@@ -21,7 +21,7 @@ export function DashboardNav({ role, firmId, pendingClaims = 0, pendingOrders = 
   return (
     <nav className="dash-nav" aria-label="Dashboard">
       <div className="dash-nav__brand">
-        <Link href="/dashboard">verigaz · dashboard</Link>
+        <Link href="/dashboard">verificari-gaze.ro · dashboard</Link>
       </div>
 
       <ul className="dash-nav__list">

@@ -2,7 +2,7 @@
 // Onboarding firmă — creează rândul în gas_firms cu status="pending" și leagă
 // owner_user_id la userul curent. Admin aprobă ulterior.
 import { redirect } from "next/navigation"
-import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
+import { createClient, getPublicServerSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
 import AdaugaFirmaClient from "./AdaugaFirmaClient"
 
@@ -14,8 +14,8 @@ export default async function Page() {
   const { role, firmId } = await getUserRole(data.user.id)
   if (role === "firm_owner" && firmId) redirect("/dashboard/firma-mea")
 
-  const admin = getServiceRoleSupabase()
-  const { data: judete } = await admin
+  const pub = getPublicServerSupabase()
+  const { data: judete } = await pub
     .from("judete")
     .select("id, nume")
     .order("nume")
@@ -24,7 +24,7 @@ export default async function Page() {
     <div className="dash-page">
       <h1 className="dash-title">Adaugă firmă</h1>
       <p className="dash-lead">
-        Completează datele firmei pentru a apărea în directorul verigaz.
+        Completează datele firmei pentru a apărea în directorul verificari-gaze.ro.
         După trimitere, echipa noastră validează autorizația ANRE (în 1–2 zile).
       </p>
       <AdaugaFirmaClient judete={(judete ?? []) as unknown as { id: number; nume: string }[]} />

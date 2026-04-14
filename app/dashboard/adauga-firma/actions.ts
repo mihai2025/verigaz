@@ -20,6 +20,8 @@ export async function createFirm(formData: FormData): Promise<Result> {
   const email = String(formData.get("email") ?? "").trim() || null
   const judetIdRaw = String(formData.get("sediu_judet_id") ?? "").trim()
   const judetId = judetIdRaw ? Number(judetIdRaw) : null
+  const localitateIdRaw = String(formData.get("sediu_localitate_id") ?? "").trim()
+  const localitateId = localitateIdRaw ? Number(localitateIdRaw) : null
   const sediuAdresa = String(formData.get("sediu_adresa") ?? "").trim() || null
   const shortDescription = String(formData.get("short_description") ?? "").trim() || null
 
@@ -53,6 +55,7 @@ export async function createFirm(formData: FormData): Promise<Result> {
       phone,
       email,
       sediu_judet_id: judetId,
+      sediu_localitate_id: localitateId,
       sediu_adresa: sediuAdresa,
       short_description: shortDescription,
       owner_user_id: data.user.id,

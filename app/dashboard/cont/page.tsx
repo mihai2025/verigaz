@@ -1,7 +1,8 @@
 // app/dashboard/cont/page.tsx
-// Profil utilizator — date din auth.users + profiles.
+// Profil utilizator — date din auth.users + profiles, editabile.
 import { redirect } from "next/navigation"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
+import ContEditClient from "./ContEditClient"
 
 export default async function ContPage() {
   const supabase = await createClient()
@@ -18,15 +19,16 @@ export default async function ContPage() {
   return (
     <div className="dash-page">
       <h1 className="dash-title">Contul meu</h1>
-      <dl className="dash-dl">
-        <dt>Email</dt><dd>{data.user.email}</dd>
-        <dt>Nume</dt><dd>{profile?.full_name || <em>nesetat</em>}</dd>
-        <dt>Telefon</dt><dd>{profile?.phone || <em>nesetat</em>}</dd>
-        <dt>Rol</dt><dd>{profile?.role ?? "user"}</dd>
-        <dt>Cont creat</dt>
-        <dd>{profile?.created_at ? new Date(profile.created_at as string).toLocaleDateString("ro-RO") : "—"}</dd>
-      </dl>
-      <p className="dash-note">Editarea datelor va fi disponibilă într-o iterație viitoare.</p>
+      <p className="dash-lead">
+        Actualizează datele personale. Emailul se modifică doar prin suport.
+      </p>
+      <ContEditClient
+        email={data.user.email ?? ""}
+        fullName={(profile?.full_name as string | null) ?? null}
+        phone={(profile?.phone as string | null) ?? null}
+        role={(profile?.role as string | null) ?? "user"}
+        createdAt={(profile?.created_at as string | null) ?? null}
+      />
     </div>
   )
 }
