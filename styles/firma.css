@@ -1840,3 +1840,210 @@ a.firmaPrezBtn,a.firmaPrezBtn:visited{color:#daa520}
           font-family: system-ui, sans-serif;
           white-space: nowrap;
         }
+
+/* =========================================================
+   Verigaz-specific: FirmaHero + FirmaAside + FirmaCtaBand
+   ========================================================= */
+
+.firmaHero {
+  background: #fff;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  position: relative;
+}
+.firmaHero__cover {
+  position: relative;
+  height: 220px;
+  background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+  overflow: hidden;
+}
+@media (min-width: 768px) { .firmaHero__cover { height: 280px; } }
+.firmaHero__coverImg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.firmaHero__coverPlaceholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, var(--accent-200, #bae6fd), var(--accent-400, #38bdf8));
+}
+.firmaHero__badge {
+  position: absolute; top: 14px; right: 14px;
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+  background: #fff; color: var(--accent-700, #14849b);
+  border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.firmaHero__badge--premium { background: linear-gradient(135deg, #d4af37, #b8860b); color: #fff; border: 0; }
+.firmaHero__badge--plus { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border: 0; }
+
+.firmaHero__body {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  padding: 0 20px 20px;
+  align-items: end;
+  position: relative;
+}
+.firmaHero__logoWrap {
+  margin-top: -60px;
+  width: 120px; height: 120px;
+  border-radius: 20px;
+  background: #fff;
+  padding: 6px;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  display: flex; align-items: center; justify-content: center;
+}
+.firmaHero__logoWrap > * { border-radius: 14px; overflow: hidden; }
+
+.firmaHero__titleBlock { min-width: 0; padding-top: 12px; }
+.firmaHero__title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800; color: var(--text-900, #0f172a);
+  margin: 0 0 4px; line-height: 1.2;
+}
+.firmaHero__sub { font-size: 14px; color: var(--text-600, #475569); font-weight: 600; margin-bottom: 4px; }
+.firmaHero__meta { font-size: 13px; color: var(--text-500, #64748b); margin-bottom: 2px; }
+.firmaHero__loc { font-size: 14px; color: var(--text-700, #334155); margin-top: 4px; }
+.firmaHero__loc a { color: var(--accent-700, #14849b); font-weight: 600; text-decoration: none; }
+.firmaHero__loc a:hover { text-decoration: underline; }
+.firmaHero__anreBadge {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 8px; padding: 5px 12px;
+  border-radius: 999px;
+  background: #e6f4ea; color: #1e6b34;
+  border: 1px solid #b7dfc3;
+  font-size: 13px; font-weight: 600;
+}
+.firmaHero__rating { margin-top: 6px; font-size: 14px; color: #d97706; font-weight: 600; }
+.firmaHero__rating span { color: var(--text-500, #64748b); font-weight: 500; margin-left: 4px; }
+
+.firmaHero__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+@media (max-width: 640px) {
+  .firmaHero__body { grid-template-columns: 1fr; }
+  .firmaHero__logoWrap { margin-top: -40px; width: 80px; height: 80px; }
+  .firmaHero__actions { width: 100%; }
+  .firmaHero__cta { flex: 1 1 auto; }
+}
+
+.firmaHero__cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border-radius: 10px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+.firmaHero__cta--primary {
+  background: linear-gradient(135deg, var(--accent-600, #14849b), var(--accent-700, #0e6a7d));
+  color: #fff;
+}
+.firmaHero__cta--primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(20, 132, 155, .25); }
+
+.firmaTabs {
+  display: flex; gap: 0;
+  border-top: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.firmaTabs::-webkit-scrollbar { display: none; }
+.firmaTab {
+  flex: 1 0 auto; padding: 14px 18px; text-align: center;
+  color: var(--text-600, #475569); text-decoration: none;
+  font-size: 14px; font-weight: 600;
+  border-right: 1px solid var(--border);
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.firmaTab:last-child { border-right: 0; }
+.firmaTab:hover { background: var(--surface-2, #f8fafc); color: var(--accent-700, #14849b); }
+
+/* ASIDE CARDS */
+.firmaAsideInner { display: flex; flex-direction: column; gap: 14px; }
+.firmaAsideCard {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px;
+}
+.firmaAsideCard--anre {
+  background: linear-gradient(135deg, #f0fdf4, #fff);
+  border-color: #b7dfc3;
+}
+.firmaAsideCard__title {
+  font-size: 13px; font-weight: 800; color: var(--text-900);
+  margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.firmaAsideBtn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px; border-radius: 10px;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  margin-bottom: 8px; border: 1px solid transparent;
+  transition: transform .15s, background .15s;
+}
+.firmaAsideBtn:last-child { margin-bottom: 0; }
+.firmaAsideBtn--call { background: var(--accent-600, #14849b); color: #fff; }
+.firmaAsideBtn--call:hover { background: var(--accent-700, #0e6a7d); transform: translateY(-1px); }
+.firmaAsideBtn--wa { background: #25d366; color: #fff; }
+.firmaAsideBtn--email { background: var(--surface-2, #f8fafc); color: var(--text-900); border-color: var(--border); }
+.firmaAsideBtn--site { background: var(--surface-2, #f8fafc); color: var(--text-900); border-color: var(--border); }
+.firmaAsideBtn--nav { background: #1d4ed8; color: #fff; }
+.firmaAsideBtn--primary {
+  background: linear-gradient(135deg, var(--accent-600), var(--accent-700));
+  color: #fff; justify-content: center;
+  padding: 14px 16px; font-weight: 700;
+}
+.firmaAsideBtn--locked {
+  background: #f3f4f6; color: #6b7280;
+  font-size: 13px; cursor: not-allowed;
+}
+.firmaAsideAddr {
+  font-size: 14px; line-height: 1.6;
+  color: var(--text-700); margin-bottom: 12px;
+}
+.firmaAsideAnre { display: grid; gap: 6px; font-size: 13px; color: var(--text-700); }
+.firmaAsideAnre strong { color: var(--text-900); }
+.firmaAsideAnre__note { margin-top: 8px; font-size: 12px; color: var(--text-500); font-style: italic; }
+.firmaAsideSocials { display: flex; gap: 8px; flex-wrap: wrap; }
+.firmaAsideSocial {
+  padding: 8px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  text-decoration: none; color: #fff;
+}
+.firmaAsideSocial--fb { background: #1877f2; }
+.firmaAsideSocial--ig { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+.firmaAsideWhy {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 8px;
+  font-size: 13px; color: var(--text-700); line-height: 1.5;
+}
+
+/* SERVICES */
+.firmaServicesList { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.firmaServiceItem {
+  padding: 14px;
+  background: var(--surface-2, #f8fafc);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.firmaServiceItem__name { font-weight: 700; font-size: 15px; color: var(--text-900); margin-bottom: 4px; }
+.firmaServiceItem__desc { font-size: 13px; color: var(--text-600); margin-bottom: 6px; line-height: 1.5; }
+.firmaServiceItem__price { font-size: 14px; font-weight: 700; color: var(--accent-700); }
+.firmaServiceItem__note { font-size: 12px; color: var(--text-500); margin-top: 4px; }
+
+/* CTA BAND */
+.firmaCtaBand {
+  background: linear-gradient(135deg, var(--accent-700, #0e6a7d), var(--accent-600, #14849b));
+  color: #fff; padding: 28px 24px;
+  border-radius: 14px; text-align: center;
+}
+.firmaCtaBand h2 { color: #fff; font-size: 22px; font-weight: 800; margin: 0 0 10px; }
+.firmaCtaBand p { opacity: 0.9; margin: 0 0 18px; font-size: 15px; line-height: 1.5; }
+.firmaCtaBand__btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 10px;
+  background: #fff; color: var(--accent-700, #0e6a7d);
+  font-weight: 800; font-size: 15px; text-decoration: none;
+  transition: transform .15s;
+}
+.firmaCtaBand__btn:hover { transform: translateY(-1px); }
+
+/* Bottom padding on mobile to not overlap sticky CTA */
+@media (max-width: 1023px) {
+  .firmaPage { padding-bottom: 140px; }
+}

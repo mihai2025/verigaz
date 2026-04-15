@@ -1,18 +1,17 @@
 // app/firme/[slug]/page.tsx
-// Profil public firmă gaze — versiune minimală MVP.
-// Extensii ulterioare: galerie, reviews, contact form, booking inline.
+// Profil public firmă — layout ghidulfunerar-style: aside desktop, stack mobile,
+// sticky bottom CTA pe mobil (Sună + WhatsApp + social), sticky header top mobil.
 export const revalidate = 3600
 
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getPublicServerSupabase } from "@/lib/supabase/server"
 import { slugifyRO } from "@/lib/utils/slugify"
+import { cleanFirmName } from "@/lib/utils/firmInitials"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd, localBusinessJsonLd } from "@/lib/seo/jsonld"
 import { DOMAIN } from "@/lib/config/domain"
-import { FirmLogo } from "@/components/firms/FirmLogo"
-import { cleanFirmName } from "@/lib/utils/firmInitials"
+import FirmaClient, { type FirmaClientData } from "./FirmaClient"
 
 type Params = { slug: string }
 
@@ -79,211 +78,91 @@ export default async function FirmProfilePage({
   const firm = await fetchFirm(slug)
   if (!firm) notFound()
 
-  const name = (firm.brand_name as string) || (firm.legal_name as string)
-  const j = (Array.isArray(firm.judete) ? firm.judete[0] : firm.judete) as { nume: string } | null
-  const l = (Array.isArray(firm.localitati) ? firm.localitati[0] : firm.localitati) as { nume: string } | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const f = firm as any
+  const name = (f.brand_name as string) || (f.legal_name as string)
+  const displayName = cleanFirmName(name) || name
+  const j = (Array.isArray(f.judete) ? f.judete[0] : f.judete) as { nume: string } | null
+  const l = (Array.isArray(f.localitati) ? f.localitati[0] : f.localitati) as { nume: string } | null
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const services = (Array.isArray(firm.firm_services) ? firm.firm_services : []) as any[]
+  const firmServices = (Array.isArray(f.firm_services) ? f.firm_services : []) as any[]
+  const services = firmServices
+    .map((s) => {
+      const sc = Array.isArray(s.service_categories) ? s.service_categories[0] : s.service_categories
+      if (!sc) return null
+      return {
+        nume: sc.nume as string,
+        descriere: (sc.descriere as string | null) ?? null,
+        price_from: s.price_from != null ? Number(s.price_from) : null,
+        price_to: s.price_to != null ? Number(s.price_to) : null,
+        price_note: (s.price_note as string | null) ?? null,
+      }
+    })
+    .filter(Boolean) as FirmaClientData["services"]
+
+  const data: FirmaClientData = {
+    firm: {
+      id: f.id as string,
+      slug: f.slug as string,
+      name: displayName,
+      legal_name: f.legal_name as string,
+      cui: (f.cui as string | null) ?? null,
+      logo_url: (f.logo_url as string | null) ?? null,
+      cover_url: (f.cover_url as string | null) ?? null,
+      description: (f.description as string | null) ?? null,
+      short_description: (f.short_description as string | null) ?? null,
+      phone: (f.phone as string | null) ?? null,
+      whatsapp: (f.whatsapp as string | null) ?? null,
+      email: (f.email as string | null) ?? null,
+      website: (f.website as string | null) ?? null,
+      facebook_url: (f.facebook_url as string | null) ?? null,
+      instagram_url: (f.instagram_url as string | null) ?? null,
+      sediu_adresa: (f.sediu_adresa as string | null) ?? null,
+      sediu_localitate_nume: l?.nume ?? null,
+      sediu_judet_nume: j?.nume ?? null,
+      sediu_judet_slug: j?.nume ? slugifyRO(j.nume) : null,
+      anre_authorization_no: (f.anre_authorization_no as string | null) ?? null,
+      anre_category: (f.anre_category as string | null) ?? null,
+      anre_valid_until: (f.anre_valid_until as string | null) ?? null,
+      rating_avg: typeof f.rating_avg === "number" ? f.rating_avg : null,
+      rating_count: typeof f.rating_count === "number" ? f.rating_count : null,
+      plan: (f.plan as string | null) ?? "free",
+    },
+    services,
+  }
 
   const breadcrumbs = [
     { label: "Acasă", href: "/" },
     { label: "Firme", href: "/servicii-gaze" },
-    { label: name },
+    { label: displayName },
   ]
 
   const localBusinessSchema = localBusinessJsonLd({
-    slug: firm.slug as string,
-    brandName: (firm.brand_name as string) ?? null,
-    legalName: firm.legal_name as string,
-    description: (firm.description as string) ?? null,
-    shortDescription: (firm.short_description as string) ?? null,
-    phone: (firm.phone as string) ?? null,
-    email: (firm.email as string) ?? null,
-    website: (firm.website as string) ?? null,
-    logoUrl: (firm.logo_url as string) ?? null,
-    coverUrl: (firm.cover_url as string) ?? null,
-    facebookUrl: (firm.facebook_url as string) ?? null,
-    instagramUrl: (firm.instagram_url as string) ?? null,
-    ratingAvg: typeof firm.rating_avg === "number" ? firm.rating_avg : null,
-    ratingCount: typeof firm.rating_count === "number" ? firm.rating_count : null,
+    slug: f.slug as string,
+    brandName: (f.brand_name as string) ?? null,
+    legalName: f.legal_name as string,
+    description: (f.description as string) ?? null,
+    shortDescription: (f.short_description as string) ?? null,
+    phone: (f.phone as string) ?? null,
+    email: (f.email as string) ?? null,
+    website: (f.website as string) ?? null,
+    logoUrl: (f.logo_url as string) ?? null,
+    coverUrl: (f.cover_url as string) ?? null,
+    facebookUrl: (f.facebook_url as string) ?? null,
+    instagramUrl: (f.instagram_url as string) ?? null,
+    ratingAvg: typeof f.rating_avg === "number" ? f.rating_avg : null,
+    ratingCount: typeof f.rating_count === "number" ? f.rating_count : null,
     judet: j?.nume ?? null,
     localitate: l?.nume ?? null,
-    sediuAdresa: (firm.sediu_adresa as string) ?? null,
-    anreAuthorizationNo: (firm.anre_authorization_no as string) ?? null,
+    sediuAdresa: (f.sediu_adresa as string) ?? null,
+    anreAuthorizationNo: (f.anre_authorization_no as string) ?? null,
   })
 
-  const displayName = cleanFirmName(name) || name
-  const rawLegal = firm.legal_name as string
-
   return (
-    <div className="container" style={{ padding: "24px 16px 56px" }}>
+    <>
       <JsonLdScript data={[localBusinessSchema, breadcrumbJsonLd(breadcrumbs)]} />
-      <nav className="sv-breadcrumb" aria-label="Navigare">
-        <Link href="/">Acasă</Link>
-        <span aria-hidden="true"> / </span>
-        <Link href="/servicii-gaze">Firme</Link>
-        <span aria-hidden="true"> / </span>
-        <span aria-current="page">{displayName}</span>
-      </nav>
-
-      <div className="vg-firm-hero">
-        {firm.cover_url ? (
-          <img
-            className="vg-firm-hero__cover"
-            src={firm.cover_url as string}
-            alt={`Imagine ${displayName}`}
-            width={1200}
-            height={260}
-          />
-        ) : (
-          <div className="vg-firm-hero__cover" aria-hidden="true" />
-        )}
-        <div className="vg-firm-hero__body">
-          <div className="vg-firm-hero__logo">
-            <FirmLogo
-              logoUrl={firm.logo_url as string | null}
-              firmName={name}
-              size={120}
-              alt={`Logo ${displayName}`}
-            />
-          </div>
-          <div>
-            <h1 className="vg-firm-hero__name">{displayName}</h1>
-            <div className="vg-firm-hero__meta">
-              {rawLegal && rawLegal !== displayName && <div><strong>{rawLegal}</strong></div>}
-              {firm.cui && (
-                <div style={{ fontSize: 13, color: "var(--text-600)", marginTop: 2 }}>
-                  CUI: <strong>{firm.cui as string}</strong>
-                  {firm.registration_no && <> · Reg. com. {firm.registration_no as string}</>}
-                </div>
-              )}
-              {j && (
-                <div style={{ marginTop: 4 }}>
-                  📍 {l && <>{l.nume}, </>}
-                  <Link href={`/servicii-gaze/${slugifyRO(j.nume)}`} style={{ color: "var(--accent-600)", fontWeight: 600 }}>
-                    județul {j.nume}
-                  </Link>
-                </div>
-              )}
-              {firm.anre_authorization_no && (
-                <div style={{ marginTop: 8 }}>
-                  <span className="dash-status dash-status--approved">
-                    ✓ Aut. ANRE {firm.anre_authorization_no as string}
-                    {firm.anre_category && <> · {firm.anre_category as string}</>}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="vg-firm-hero__actions">
-            <Link href={`/programare?firma=${encodeURIComponent(slug)}`} className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează online →
-            </Link>
-            {firm.phone && (
-              <a href={`tel:${firm.phone}`} className="vg-btn vg-btn--outline vg-btn--lg">
-                📞 {firm.phone as string}
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="vg-firm-grid">
-        <div>
-          <div className="vg-firm-card">
-            <h2>Despre firmă</h2>
-            <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-700)", margin: 0 }}>
-              {(firm.description as string) ||
-                `${displayName} este o firmă autorizată ANRE pentru servicii de verificare, revizie și
-                 instalație gaze naturale${j?.nume ? ` în ${j.nume}` : ""}. Autorizația e validată manual
-                 de echipa verificari-gaze.ro din registrul oficial ANRE.`}
-            </p>
-          </div>
-
-          {services.length > 0 && (
-            <div className="vg-firm-card">
-              <h2>Servicii oferite</h2>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 12 }}>
-                {services.map((s, i) => {
-                  const sc = Array.isArray(s.service_categories) ? s.service_categories[0] : s.service_categories
-                  if (!sc) return null
-                  const priceRange = s.price_from && s.price_to
-                    ? `${s.price_from}–${s.price_to} lei`
-                    : s.price_from ? `de la ${s.price_from} lei` : null
-                  return (
-                    <li key={i} style={{ padding: 14, border: "1px solid var(--border)", borderRadius: 10, background: "var(--surface-2)" }}>
-                      <div style={{ fontWeight: 700, color: "var(--text-900)", marginBottom: 4 }}>{sc.nume}</div>
-                      {sc.descriere && <div style={{ fontSize: 13, color: "var(--text-600)", marginBottom: 4 }}>{sc.descriere}</div>}
-                      {priceRange && <div style={{ color: "var(--accent-700)", fontWeight: 600, fontSize: 14 }}>{priceRange}</div>}
-                      {s.price_note && <div style={{ fontSize: 12, color: "var(--text-500)" }}>{s.price_note}</div>}
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          )}
-
-          <div className="vg-firm-card" style={{ background: "linear-gradient(135deg, var(--accent-700), var(--accent-600))", color: "#fff", textAlign: "center" }}>
-            <h2 style={{ color: "#fff", fontSize: 20 }}>Gata să programezi?</h2>
-            <p style={{ opacity: .9, margin: "0 0 16px" }}>
-              Formular de 2 minute. {displayName} te contactează în 24h pentru confirmare.
-            </p>
-            <Link href={`/programare?firma=${encodeURIComponent(slug)}`} className="vg-btn vg-btn--lg" style={{ background: "#fff", color: "var(--accent-700)" }}>
-              Programează verificarea →
-            </Link>
-          </div>
-        </div>
-
-        <aside>
-          <div className="vg-firm-card">
-            <h2>Contact direct</h2>
-            <div style={{ display: "grid", gap: 8 }}>
-              {firm.phone && (
-                <a href={`tel:${firm.phone}`} className="vg-btn vg-btn--primary" style={{ justifyContent: "flex-start" }}>
-                  📞 {firm.phone as string}
-                </a>
-              )}
-              {firm.whatsapp && (
-                <a
-                  href={`https://wa.me/${(firm.whatsapp as string).replace(/[^\d]/g, "")}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="vg-btn vg-btn--ghost"
-                  style={{ justifyContent: "flex-start", background: "#25d366", color: "#fff", borderColor: "#25d366" }}
-                >
-                  WhatsApp
-                </a>
-              )}
-              {firm.email && (
-                <a href={`mailto:${firm.email}`} className="vg-btn vg-btn--ghost" style={{ justifyContent: "flex-start" }}>
-                  ✉ Email
-                </a>
-              )}
-              {firm.website && (
-                <a href={firm.website as string} target="_blank" rel="noreferrer" className="vg-btn vg-btn--ghost" style={{ justifyContent: "flex-start" }}>
-                  🌐 Site
-                </a>
-              )}
-            </div>
-            {firm.sediu_adresa && (
-              <p style={{ marginTop: 14, fontSize: 13, color: "var(--text-600)", lineHeight: 1.5 }}>
-                📍 <strong>Sediu:</strong> {firm.sediu_adresa as string}
-              </p>
-            )}
-          </div>
-
-          <div className="vg-firm-card">
-            <h2>De ce verificari-gaze.ro</h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 13 }}>
-              <li>✓ Autorizație ANRE validată manual</li>
-              <li>✓ Certificat digital cu QR public</li>
-              <li>✓ Reminder SMS la scadența următoare</li>
-              <li>✓ Fără comision pe intervenție</li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </div>
+      <FirmaClient data={data} />
+    </>
   )
 }
