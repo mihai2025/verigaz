@@ -1,13 +1,16 @@
 // app/page.tsx
-// Homepage verificari-gaze.ro — premium hero + value props + categorii + județe + CTA.
+// Homepage verificari-gaze.ro — hero + stats + cum funcționează + value props + categorii + județe + FAQ + B2B CTA.
 import type { Metadata } from "next"
 import Link from "next/link"
 import { DOMAIN } from "@/lib/config/domain"
 import { CATEGORY_PAGES } from "@/lib/servicii-gaze/links"
+import { JsonLdScript } from "@/components/seo/JsonLdScript"
+import { faqJsonLd } from "@/lib/seo/jsonld"
 
 export const metadata: Metadata = {
-  title: DOMAIN.metaTitleDefault,
-  description: DOMAIN.metaDescription,
+  title: "Verificare instalație gaze 2026 — firme autorizate ANRE pe județe",
+  description:
+    "Găsește firme autorizate ANRE pentru verificare instalație gaze (la 2 ani), revizie (la 10 ani), montaj detector și service centrală termică. Programare online gratuită, certificat digital cu QR, reminder SMS automat la scadență. 1743 firme EDIB în 42 județe.",
   alternates: { canonical: "/" },
 }
 
@@ -36,27 +39,64 @@ const CATEGORY_ICONS: Record<string, string> = {
   "revizie-centrala": "🛠️",
 }
 
+const FAQ: Array<{ q: string; a: string }> = [
+  {
+    q: "Cât de des trebuie verificată instalația de gaze?",
+    a: "Conform ANRE Ord. 179/2015, verificarea tehnică e obligatorie la maxim 2 ani pentru apartamente și case cu instalație de gaz metan. Revizia completă se face la maxim 10 ani. Fără documentele la zi, distribuitorul (Distrigaz / Delgaz) poate suspenda furnizarea.",
+  },
+  {
+    q: "Cât costă verificarea instalației de gaze în 2026?",
+    a: "Între 150 și 350 lei pentru un apartament standard (2-3 puncte de consum), 250-500 lei pentru casă. Prețul final apare în cardul firmei înainte să programezi — nu există costuri ascunse. Revizia completă la 10 ani e 300-700 lei.",
+  },
+  {
+    q: "Ce amenzi risc dacă nu fac verificarea la timp?",
+    a: "Amenzile pentru neefectuarea verificării pornesc de la 1.000 lei pentru persoane fizice și pot ajunge la 10.000 lei pentru asociații de proprietari. În plus, distribuitorul oprește furnizarea gazului până când prezinți certificat valid.",
+  },
+  {
+    q: "Firmele de pe verificari-gaze.ro sunt verificate?",
+    a: "Da. Fiecare firmă are autorizație ANRE validată manual de echipa noastră în registrul oficial. Afișăm numărul autorizației, categoria (EDIB, EDSB, IS etc.) și valabilitatea direct pe profilul public.",
+  },
+  {
+    q: "Primesc certificat valabil la distribuitor după intervenție?",
+    a: "Da. Firma emite certificatul ANRE în platformă — PDF cu hash SHA-256 și QR unic de verificare. Poți trimite documentul către Distrigaz sau Delgaz direct sau îl arăți pe telefon. Asiguratorul îl acceptă, de asemenea.",
+  },
+  {
+    q: "Cât durează o verificare tehnică?",
+    a: "Verificarea durează 45-90 minute pentru apartament, 1.5-3 ore pentru casă. Revizia completă poate ajunge la o zi întreagă. Firma te contactează în 24h de la programare pentru confirmare dată și oră.",
+  },
+  {
+    q: "Ce se întâmplă dacă firma descoperă probleme?",
+    a: "Firma îți prezintă defectele găsite și oferta de remediere. Dacă problema e gravă (scurgere activă), instalația se oprește imediat și trebuie reparată înainte de reluare. Pentru probleme minore, primești termen de remediere până la următoarea verificare.",
+  },
+  {
+    q: "E nevoie să fiu acasă în timpul verificării?",
+    a: "Da, e obligatoriu — firma trebuie să aibă acces la toate punctele de consum (aragaz, centrală, robineți). Dacă ești în chirie, proprietarul sau reprezentantul său trebuie să fie prezent și să semneze procesul verbal.",
+  },
+]
+
 export default function HomePage() {
   return (
     <>
+      <JsonLdScript data={[faqJsonLd(FAQ.map((f) => ({ question: f.q, answer: f.a })))]} />
+
       {/* HERO */}
       <section className="vg-hero">
         <div className="vg-hero__inner">
-          <span className="vg-hero__eyebrow">ANRE Ord. 179/2015 · firme validate</span>
+          <span className="vg-hero__eyebrow">ANRE Ord. 179/2015 · firme validate ANRE + ISCIR</span>
           <h1 className="vg-hero__title">
-            Instalația ta de gaze, <em>la zi și în siguranță</em>
+            Verificare instalație gaze, <em>rapid și fără drumuri</em>
           </h1>
           <p className="vg-hero__sub">
-            Firme autorizate ANRE pentru verificări la 2 ani, revizii la 10 ani,
-            montaj detectoare și service centrală termică. Programează rapid, primești
-            certificat digital.
+            1.743 firme autorizate ANRE pentru verificări la 2 ani, revizii la 10 ani, montaj detectoare
+            gaze metan + CO și service centrală termică. Alege județul, programează în 2 minute și primește
+            certificat digital cu QR de verificare publică.
           </p>
 
           <form method="get" action="/cauta" className="vg-search" role="search">
             <input
               className="vg-search__input"
               name="q"
-              placeholder="Caută firmă, oraș sau serviciu..."
+              placeholder="Caută firmă, oraș sau serviciu (ex: verificare gaze Cluj)…"
               autoComplete="off"
               aria-label="Caută pe verificari-gaze.ro"
             />
@@ -64,11 +104,11 @@ export default function HomePage() {
           </form>
 
           <div className="vg-hero__ctas">
-            <Link href="/servicii-gaze" className="vg-btn vg-btn--primary vg-btn--lg">
-              Vezi firme pe județ →
+            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
+              Programează verificarea →
             </Link>
-            <Link href="/programare" className="vg-btn vg-btn--outline vg-btn--lg">
-              Programează online
+            <Link href="/servicii-gaze" className="vg-btn vg-btn--outline vg-btn--lg">
+              Vezi firme pe județ
             </Link>
           </div>
 
@@ -81,15 +121,87 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* VALUE PROPS */}
+      {/* STATS STRIP */}
+      <section className="vg-section" style={{ padding: "40px 0", background: "linear-gradient(135deg, var(--accent-50), #fff)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+        <div className="container">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 24, textAlign: "center" }}>
+            <div>
+              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>1.743</div>
+              <div style={{ fontSize: 14, color: "var(--text-600)", marginTop: 6, fontWeight: 500 }}>Firme ANRE active</div>
+            </div>
+            <div>
+              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>42</div>
+              <div style={{ fontSize: 14, color: "var(--text-600)", marginTop: 6, fontWeight: 500 }}>Județe acoperite</div>
+            </div>
+            <div>
+              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>24h</div>
+              <div style={{ fontSize: 14, color: "var(--text-600)", marginTop: 6, fontWeight: 500 }}>Timp mediu confirmare</div>
+            </div>
+            <div>
+              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>0 lei</div>
+              <div style={{ fontSize: 14, color: "var(--text-600)", marginTop: 6, fontWeight: 500 }}>Cost căutare + programare</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CUM FUNCȚIONEAZĂ — 3 PAȘI */}
       <section className="vg-section">
+        <div className="container">
+          <div className="vg-section__head">
+            <p className="vg-section__kicker">Cum funcționează</p>
+            <h2 className="vg-section__title">De la căutare la certificat în 3 pași</h2>
+            <p className="vg-section__sub">
+              Fără telefoane pe necunoscute, fără documente pe hârtie, fără să pierzi din nou scadența.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+            {[
+              {
+                num: "1",
+                title: "Găsești firma potrivită",
+                desc: "Alegi județul + localitatea. Vezi firmele autorizate ANRE cu profil complet: autorizație, recenzii, telefon, adresă. Filtrezi pe categorie de serviciu.",
+                cta: "Caută firmă →",
+                href: "/servicii-gaze",
+              },
+              {
+                num: "2",
+                title: "Programezi online",
+                desc: "Formular de 2 minute. Alegi data preferată, confirmi adresa. Primești referință unică (VG-XXXX-XXXX) pe loc. Firma te contactează în 24h pentru confirmare.",
+                cta: "Programează →",
+                href: "/programare",
+              },
+              {
+                num: "3",
+                title: "Primești certificat + reminder",
+                desc: "După intervenție, firma emite certificatul ANRE în platformă — PDF cu hash SHA-256 + QR public. Cu 30 zile înainte de următoarea scadență primești SMS automat.",
+                cta: "Vezi ghid complet →",
+                href: "/cum-functioneaza",
+              },
+            ].map((step) => (
+              <div key={step.num} style={{ padding: 24, background: "#fff", border: "1px solid var(--border)", borderRadius: 14, position: "relative" }}>
+                <div style={{ position: "absolute", top: -16, left: 24, width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent-600), var(--accent-700))", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 }}>{step.num}</div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, margin: "12px 0 10px", color: "var(--text-900)" }}>{step.title}</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--text-600)", margin: "0 0 14px" }}>{step.desc}</p>
+                <Link href={step.href} style={{ color: "var(--accent-700)", fontWeight: 600, fontSize: 14, textDecoration: "none" }}>
+                  {step.cta}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VALUE PROPS */}
+      <section className="vg-section" style={{ background: "var(--surface-2)" }}>
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">De ce verificari-gaze.ro</p>
             <h2 className="vg-section__title">Totul într-un singur loc, fără drumuri</h2>
             <p className="vg-section__sub">
-              Transparent, rapid, conform cu normele ANRE. Poți compara firme, programa online
-              și primi documente digitale fără formulare pe hârtie.
+              Transparent, rapid, conform cu normele ANRE. Compari firme, programezi online și primești
+              documente digitale fără formulare pe hârtie.
             </p>
           </div>
 
@@ -97,36 +209,36 @@ export default function HomePage() {
             <div className="vg-value">
               <div className="vg-value__icon">✓</div>
               <h3 className="vg-value__title">Firme validate ANRE</h3>
-              <p className="vg-value__desc">Fiecare autorizație e verificată manual de echipa noastră.</p>
+              <p className="vg-value__desc">Fiecare autorizație e verificată manual în registrul ANRE. Afișăm numărul autorizației + categoria.</p>
             </div>
             <div className="vg-value">
               <div className="vg-value__icon">⚡</div>
               <h3 className="vg-value__title">Programare rapidă</h3>
-              <p className="vg-value__desc">Alegi ziua, firma te contactează în 24h pentru confirmare.</p>
+              <p className="vg-value__desc">Alegi ziua, firma te contactează în 24h pentru confirmare — nu mai bați la uși.</p>
             </div>
             <div className="vg-value">
               <div className="vg-value__icon">📄</div>
               <h3 className="vg-value__title">Certificat digital</h3>
-              <p className="vg-value__desc">PDF cu hash SHA-256 și QR pentru verificare publică.</p>
+              <p className="vg-value__desc">PDF cu hash SHA-256 și QR public — acceptat la Distrigaz, Delgaz, asigurator.</p>
             </div>
             <div className="vg-value">
               <div className="vg-value__icon">🔔</div>
               <h3 className="vg-value__title">Reminder automat</h3>
-              <p className="vg-value__desc">SMS + email cu 30 zile înainte să expire scadența.</p>
+              <p className="vg-value__desc">SMS + email cu 30 zile înainte de scadență — nu mai plătești amenzi.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CATEGORII SERVICII */}
-      <section className="vg-section" style={{ background: "var(--surface-2)" }}>
+      <section className="vg-section">
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">Servicii disponibile</p>
-            <h2 className="vg-section__title">Ce poți programa</h2>
+            <h2 className="vg-section__title">Ce poți programa astăzi</h2>
             <p className="vg-section__sub">
               De la verificarea obligatorie la 2 ani până la montajul detectorului de gaze —
-              toate intervențiile necesare pentru siguranța locuinței tale.
+              toate intervențiile pentru instalații și centrale termice, cu firme autorizate ANRE și ISCIR.
             </p>
           </div>
 
@@ -146,13 +258,13 @@ export default function HomePage() {
       </section>
 
       {/* JUDEȚE TOP */}
-      <section className="vg-section">
+      <section className="vg-section" style={{ background: "var(--surface-2)" }}>
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">Acoperire națională</p>
-            <h2 className="vg-section__title">Firme autorizate în orașele mari</h2>
+            <h2 className="vg-section__title">Firme autorizate ANRE pe județ</h2>
             <p className="vg-section__sub">
-              Listing firme pentru fiecare județ din România. Click pe oraș ca să vezi ofertele locale.
+              Directorul oficial al firmelor autorizate ANRE. Click pe județul tău ca să vezi ofertele locale.
             </p>
           </div>
 
@@ -173,58 +285,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA BAND — MAGAZIN */}
+      {/* FAQ — SEO-focused */}
       <section className="vg-section">
-        <div className="container">
-          <div className="vg-cta-band">
-            <h2>Detectoare de gaze certificate EN50194</h2>
-            <p>Protejează-ți familia cu detector cu electrovalvă automată. Livrare rapidă în toată țara.</p>
-            <Link href="/magazin" className="vg-btn-lg">Vezi produsele →</Link>
+        <div className="container" style={{ maxWidth: 860 }}>
+          <div className="vg-section__head">
+            <p className="vg-section__kicker">Întrebări frecvente</p>
+            <h2 className="vg-section__title">Tot ce vrei să știi despre verificarea gazelor</h2>
+            <p className="vg-section__sub">
+              Răspunsuri directe pentru proprietari, asociații și firme. Dacă nu găsești ce cauți,{" "}
+              <Link href="/contact" style={{ color: "var(--accent-700)", fontWeight: 600 }}>scrie-ne</Link>.
+            </p>
+          </div>
+
+          <div className="vg-faq">
+            {FAQ.map((item, i) => (
+              <details key={i} className="vg-faq__item" open={i === 0}>
+                <summary className="vg-faq__q">{item.q}</summary>
+                <div className="vg-faq__a">{item.a}</div>
+              </details>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 28 }}>
+            <Link href="/utile" className="vg-btn vg-btn--outline">
+              Vezi toate cele 20 de ghiduri utile →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* UTILE */}
+      {/* CTA BAND — MAGAZIN */}
       <section className="vg-section" style={{ background: "var(--surface-2)" }}>
         <div className="container">
-          <div className="vg-section__head">
-            <p className="vg-section__kicker">Ghiduri utile</p>
-            <h2 className="vg-section__title">Tot ce trebuie să știi</h2>
-            <p className="vg-section__sub">
-              20 articole explicate simplu: prețuri, proceduri, sancțiuni, cum alegi firma potrivită.
-            </p>
-          </div>
-
-          <ul className="vg-cats" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
-            <li>
-              <Link href="/utile/cat-costa-verificarea-instalatiei-de-gaze-2026" className="vg-cat">
-                <div className="vg-cat__icon">💰</div>
-                <h3 className="vg-cat__title">Cât costă verificarea în 2026</h3>
-                <p className="vg-cat__desc">80-250 lei apartament, 150-400 lei casă. Ce influențează costul.</p>
-                <span className="vg-cat__link">Citește →</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/utile/amenzi-verificare-gaze-neefectuata" className="vg-cat">
-                <div className="vg-cat__icon">⚠️</div>
-                <h3 className="vg-cat__title">Amenzi dacă întârzii verificarea</h3>
-                <p className="vg-cat__desc">Până la 5.000 lei + suspendare furnizare gaz de la Distrigaz/Delgaz.</p>
-                <span className="vg-cat__link">Citește →</span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/utile/diferenta-verificare-vs-revizie-gaze" className="vg-cat">
-                <div className="vg-cat__icon">📋</div>
-                <h3 className="vg-cat__title">Verificare vs revizie — diferența</h3>
-                <p className="vg-cat__desc">Verificarea la 2 ani vs revizia la 10 ani. Tabel comparativ.</p>
-                <span className="vg-cat__link">Citește →</span>
-              </Link>
-            </li>
-          </ul>
-          <div style={{ textAlign: "center", marginTop: 24 }}>
-            <Link href="/utile" className="vg-btn vg-btn--outline">
-              Vezi toate cele 20 de ghiduri →
-            </Link>
+          <div className="vg-cta-band">
+            <h2>Detectoare de gaze certificate EN 50194 + EN 50291</h2>
+            <p>Protejează-ți familia cu detector de gaz metan + CO cu electrovalvă automată de închidere. Livrare rapidă în toată România, instalare cu firmă ANRE.</p>
+            <Link href="/magazin" className="vg-btn-lg">Vezi produsele →</Link>
           </div>
         </div>
       </section>
@@ -236,10 +332,10 @@ export default function HomePage() {
             <h2>Ești firmă autorizată ANRE?</h2>
             <p>
               Listează-te gratuit și primești programări de la clienți din județul tău.
-              Fără Google Ads, fără comisioane pe intervenție.
+              Fără Google Ads, fără comisioane pe intervenție. 1.743 firme sunt deja pe platformă.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/inregistrare?firm=1" className="vg-btn-lg">Înscrie firma →</Link>
+              <Link href="/inregistrare?firm=1" className="vg-btn-lg">Înscrie firma gratuit →</Link>
               <Link href="/abonamente" className="vg-btn-lg" style={{ background: "rgba(255,255,255,.2)", color: "#fff" }}>
                 Vezi planurile
               </Link>
