@@ -88,7 +88,7 @@ export default function Page() {
                 icon: "📅",
                 title: "Programezi online gratuit",
                 bullets: [
-                  "Apeși „Programează online" pe cardul firmei",
+                  'Apeși „Programează online" pe cardul firmei',
                   "Completezi adresa și data preferată",
                   "Primești referință unică VG-XXXX-XXXX",
                   "Firma te contactează în 24h pentru confirmare",

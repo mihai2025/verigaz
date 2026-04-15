@@ -23,7 +23,7 @@ const B2B_FAQ = [
   },
   {
     q: "Cum ajung clienții la firma mea?",
-    a: "Apari în rezultatele de căutare Google pentru „verificare gaze {oraș}" și „revizie instalație gaze {localitate}" — SEO programatic acoperă 42 de județe × 7 categorii × 13.854 localități. Clienții completează formularul de programare direct pe cardul firmei tale.",
+    a: 'Apari în rezultatele de căutare Google pentru „verificare gaze {oraș}" și „revizie instalație gaze {localitate}" — SEO programatic acoperă 42 de județe × 7 categorii × 13.854 localități. Clienții completează formularul de programare direct pe cardul firmei tale.',
   },
   {
     q: "Cum primesc banii de la clienți?",
@@ -85,7 +85,7 @@ export default function Page() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
             {[
-              { icon: "❌", t: "Google Ads e scump", d: "10-30 lei / click pentru „verificare gaze Cluj". 90% bounce rate. Nu e sustenabil." },
+              { icon: "❌", t: "Google Ads e scump", d: '10-30 lei / click pentru „verificare gaze Cluj". 90% bounce rate. Nu e sustenabil.' },
               { icon: "❌", t: "Site web izolat", d: "Chiar dacă ai site, nu apari pe căutări locale fără SEO complex + backlinks." },
               { icon: "❌", t: "Recomandări din gură", d: "Lent, limitat la zona geografică proprie, nu scalabil." },
               { icon: "❌", t: "Facebook / WhatsApp ad-hoc", d: "Documentele circulă în fotografii, clienții pierd scadențele — și tu pierzi repeat business." },
