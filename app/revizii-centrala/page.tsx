@@ -191,7 +191,7 @@ export default async function Page() {
               <Link href="/magazin" className="vg-cat">
                 <div className="vg-cat__icon">📡</div>
                 <h3 className="vg-cat__title">Detector gaze + CO</h3>
-                <p className="vg-cat__desc">Protecție suplimentară — detectează scurgeri în <30 secunde.</p>
+                <p className="vg-cat__desc">Protecție suplimentară — detectează scurgeri în sub 30 secunde.</p>
                 <span className="vg-cat__link">Vezi produse →</span>
               </Link>
             </li>
