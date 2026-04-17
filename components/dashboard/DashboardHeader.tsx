@@ -101,7 +101,6 @@ function buildMenu(role: Props["role"], firmId: string | null, pendingClaims: nu
     ]
   }
 
-  // Utilizator fără firmă
   return [
     { kind: "link", href: "/dashboard", label: "Acasă" },
     { kind: "link", href: "/dashboard/cont", label: "Contul meu" },
@@ -114,30 +113,76 @@ function Badge({ count }: { count?: number }) {
   return <span className="dash-hdr__badge">{count}</span>
 }
 
+function Dropdown({
+  label,
+  items,
+  active,
+  onNavigate,
+}: {
+  label: string
+  items: Array<{ href: string; label: string; badge?: number }>
+  active: boolean
+  onNavigate: () => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function handler(e: MouseEvent) {
+      if (!ref.current) return
+      if (!ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    // Setăm listener-ul pe următorul tick ca să nu se închidă imediat
+    const t = setTimeout(() => document.addEventListener("mousedown", handler), 0)
+    return () => {
+      clearTimeout(t)
+      document.removeEventListener("mousedown", handler)
+    }
+  }, [open])
+
+  return (
+    <div className={`dash-hdr__dropdown ${open ? "is-open" : ""}`} ref={ref}>
+      <button
+        type="button"
+        className={`dash-hdr__link dash-hdr__dropdown-btn ${active ? "is-active" : ""}`}
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {label}
+        <span className="dash-hdr__caret" aria-hidden="true">▾</span>
+      </button>
+      {open && (
+        <div className="dash-hdr__dropdown-panel" role="menu">
+          {items.map((sub) => (
+            <Link
+              key={sub.href}
+              href={sub.href}
+              role="menuitem"
+              className="dash-hdr__dropdown-link"
+              onClick={() => {
+                setOpen(false)
+                onNavigate()
+              }}
+            >
+              <span>{sub.label}</span>
+              <Badge count={sub.badge} />
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function DashboardHeader({ role, firmId, userName, pendingClaims = 0, pendingOrders = 0 }: Props) {
   const pathname = usePathname() ?? ""
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const menu = buildMenu(role, firmId, pendingClaims, pendingOrders)
 
-  // Închide dropdown la click afară
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpenDropdown(null)
-      }
-    }
-    if (openDropdown) {
-      document.addEventListener("mousedown", handleClickOutside)
-      return () => document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [openDropdown])
-
-  // Închide pe schimbare de pathname
-  useEffect(() => {
-    setOpenDropdown(null)
     setMobileOpen(false)
   }, [pathname])
 
@@ -151,11 +196,10 @@ export function DashboardHeader({ role, firmId, userName, pendingClaims = 0, pen
   }
 
   return (
-    <header className="dash-hdr" ref={containerRef}>
+    <header className="dash-hdr">
       <div className="dash-hdr__inner">
-        <Link href="/dashboard" className="dash-hdr__brand">
+        <Link href="/" className="dash-hdr__brand" title="verificari-gaze.ro">
           <span className="dash-hdr__brand-mark">V</span>
-          <span className="dash-hdr__brand-text">verigaz · dashboard</span>
         </Link>
 
         <nav className={`dash-hdr__nav ${mobileOpen ? "is-open" : ""}`} aria-label="Navigare dashboard">
@@ -172,37 +216,14 @@ export function DashboardHeader({ role, firmId, userName, pendingClaims = 0, pen
                 </Link>
               )
             }
-            const dropdownKey = `dd-${idx}`
-            const isOpen = openDropdown === dropdownKey
-            const active = isDropdownActive(item.items)
             return (
-              <div key={idx} className={`dash-hdr__dropdown ${isOpen ? "is-open" : ""}`}>
-                <button
-                  type="button"
-                  className={`dash-hdr__link dash-hdr__dropdown-btn ${active ? "is-active" : ""}`}
-                  aria-expanded={isOpen}
-                  aria-haspopup="true"
-                  onClick={() => setOpenDropdown(isOpen ? null : dropdownKey)}
-                >
-                  {item.label}
-                  <span className="dash-hdr__caret" aria-hidden="true">▾</span>
-                </button>
-                {isOpen && (
-                  <div className="dash-hdr__dropdown-panel" role="menu">
-                    {item.items.map((sub) => (
-                      <Link
-                        key={sub.href}
-                        href={sub.href}
-                        role="menuitem"
-                        className={`dash-hdr__dropdown-link ${isActive(sub.href) ? "is-active" : ""}`}
-                      >
-                        <span>{sub.label}</span>
-                        <Badge count={sub.badge} />
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <Dropdown
+                key={idx}
+                label={item.label}
+                items={item.items}
+                active={isDropdownActive(item.items)}
+                onNavigate={() => setMobileOpen(false)}
+              />
             )
           })}
         </nav>
