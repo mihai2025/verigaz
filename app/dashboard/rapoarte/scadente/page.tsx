@@ -41,18 +41,37 @@ export default async function Page({ searchParams }: Props) {
 
   const admin = getServiceRoleSupabase()
 
-  // 1. Echipamentele firmei = cele de pe proprietăți unde firma a avut booking
-  const { data: bks } = await admin
-    .from("bookings")
-    .select("property_id")
-    .eq("firm_id", firmId)
-  const propertyIds = [...new Set((bks ?? []).map((b) => b.property_id as string))]
+  // 1. Clienții firmei (UNION: bookings + contracts + firm_customer_links)
+  const [bksRes, ctRes, linkRes] = await Promise.all([
+    admin.from("bookings").select("property_id, customer_id").eq("firm_id", firmId),
+    admin.from("contracts").select("customer_id").eq("firm_id", firmId),
+    admin.from("firm_customer_links").select("customer_id").eq("firm_id", firmId),
+  ])
+  const customerIds = [...new Set([
+    ...(bksRes.data ?? []).map((b) => b.customer_id as string),
+    ...(ctRes.data ?? []).map((c) => c.customer_id as string),
+    ...(linkRes.data ?? []).map((l) => l.customer_id as string),
+  ].filter(Boolean))]
+
+  // Load properties pentru acești clienți (batching)
+  const propertyIdsFromBk = (bksRes.data ?? []).map((b) => b.property_id as string).filter(Boolean)
+  let propertyIds: string[] = [...new Set(propertyIdsFromBk)]
+  if (customerIds.length > 0) {
+    const CHUNK = 200
+    const allProps: Array<{ id: string }> = []
+    for (let i = 0; i < customerIds.length; i += CHUNK) {
+      const slice = customerIds.slice(i, i + CHUNK)
+      const { data } = await admin.from("properties").select("id").in("customer_id", slice)
+      if (data) allProps.push(...(data as Array<{ id: string }>))
+    }
+    propertyIds = [...new Set([...propertyIds, ...allProps.map((p) => p.id)])]
+  }
 
   if (propertyIds.length === 0) {
     return (
       <div className="dash-page">
         <h1 className="dash-title">Raport scadențe</h1>
-        <p className="dash-note">Nu ai încă adrese asociate firmei. Așteaptă prima programare.</p>
+        <p className="dash-note">Nu ai încă adrese asociate firmei. Adaugă clienți + adrese din pagina /dashboard/clienti.</p>
       </div>
     )
   }
@@ -61,37 +80,49 @@ export default async function Page({ searchParams }: Props) {
   maxDate.setDate(maxDate.getDate() + windowDays)
   const maxDateIso = maxDate.toISOString().slice(0, 10)
 
-  const { data: equipsRaw } = await admin
-    .from("property_equipments")
-    .select("id, property_id, brand, model, serial_number, installation_date, " +
-            "last_verificare_at, next_verificare_due, last_revizie_at, next_revizie_due, " +
-            "equipment_types:equipment_type_id(nume, slug), " +
-            "firm_equipment_types:firm_equipment_type_id(nume)")
-    .in("property_id", propertyIds)
-    .eq("is_active", true)
+  // Batching pentru .in() (PostgREST URL limit ~ 30KB)
+  const CHUNK = 200
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const equips: any[] = []
+  for (let i = 0; i < propertyIds.length; i += CHUNK) {
+    const { data } = await admin
+      .from("property_equipments")
+      .select("id, property_id, brand, model, serial_number, installation_date, " +
+              "last_verificare_at, next_verificare_due, last_revizie_at, next_revizie_due, " +
+              "equipment_types:equipment_type_id(nume, slug), " +
+              "firm_equipment_types:firm_equipment_type_id(nume)")
+      .in("property_id", propertyIds.slice(i, i + CHUNK))
+      .eq("is_active", true)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (data) equips.push(...(data as any[]))
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const equips = (equipsRaw ?? []) as any[]
-
-  const { data: propsRaw } = await admin
-    .from("properties")
-    .select("id, customer_id, address, block_name, apartment, " +
-            "judete:judet_id(nume), localitati:localitate_id(nume)")
-    .in("id", propertyIds)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const props = (propsRaw ?? []) as any[]
+  const props: any[] = []
+  for (let i = 0; i < propertyIds.length; i += CHUNK) {
+    const { data } = await admin
+      .from("properties")
+      .select("id, customer_id, address, block_name, apartment, " +
+              "judete:judet_id(nume), localitati:localitate_id(nume)")
+      .in("id", propertyIds.slice(i, i + CHUNK))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (data) props.push(...(data as any[]))
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const propById = new Map<string, any>()
   for (const p of props) propById.set(p.id, p)
 
-  const customerIds = [...new Set(props.map((p) => p.customer_id as string))]
-  const { data: custsRaw } = customerIds.length
-    ? await admin.from("customers")
-        .select("id, full_name, first_name, last_name, company_name, customer_type, phone")
-        .in("id", customerIds)
-    : { data: [] }
+  const propCustIds = [...new Set(props.map((p) => p.customer_id as string))]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const custs = (custsRaw ?? []) as any[]
+  const custs: any[] = []
+  for (let i = 0; i < propCustIds.length; i += CHUNK) {
+    const { data } = await admin
+      .from("customers")
+      .select("id, full_name, first_name, last_name, company_name, customer_type, phone")
+      .in("id", propCustIds.slice(i, i + CHUNK))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (data) custs.push(...(data as any[]))
+  }
   const custById = new Map<string, Record<string, unknown>>()
   for (const c of custs) custById.set(c.id, c)
 

@@ -207,125 +207,129 @@ export default function ClientiClient({
             : `Niciun client găsit${search ? ` pentru "${search}"` : ""}.`}
         </p>
       ) : (
-        visibleCustomers.map((c) => {
-          const custProps = properties.filter((p) => p.customer_id === c.id)
-          return (
-            <section key={c.id} className="dash-card">
-              <header className="dash-client-header">
-                <div>
-                  <h2>{custName(c)}</h2>
-                  <span className="dash-subtle">
-                    {c.customer_type === "individual" ? "persoană fizică" : c.customer_type === "association" ? "asociație" : "firmă"}
-                    {" · "}
+        <div className="clienti-list">
+          {visibleCustomers.map((c) => {
+            const custProps = properties.filter((p) => p.customer_id === c.id)
+            const custEquipments = equipments.filter((e) =>
+              custProps.some((p) => p.id === e.property_id)
+            )
+            // Cel mai apropiat due date (verificare sau revizie) active
+            let nextDue: { date: Date; label: string } | null = null
+            for (const eq of custEquipments) {
+              if (!eq.is_active) continue
+              for (const [dateStr, label] of [
+                [eq.next_verificare_due, "verificare"],
+                [eq.next_revizie_due, "revizie"],
+              ] as [string | null, string][]) {
+                if (!dateStr) continue
+                const d = new Date(dateStr)
+                if (!nextDue || d < nextDue.date) nextDue = { date: d, label }
+              }
+            }
+            const dueClass = nextDue
+              ? (nextDue.date.getTime() - Date.now() < 0 ? "overdue"
+                : nextDue.date.getTime() - Date.now() < 30 * 86400000 ? "soon" : "ok")
+              : null
+
+            return (
+              <details key={c.id} className="clienti-row">
+                <summary className="clienti-row__summary">
+                  <span className="clienti-row__name">{custName(c)}</span>
+                  <span className="clienti-row__meta">
                     <a href={`tel:${c.phone}`}>{c.phone}</a>
-                    {c.email && <> · {c.email}</>}
-                    {c.cnp && <> · CNP {c.cnp}</>}
-                    {c.cui && <> · CUI {c.cui}</>}
+                    {c.email && <span className="clienti-row__email"> · {c.email}</span>}
                   </span>
-                </div>
-                <div className="dash-actions-row">
+                  <span className="clienti-row__badges">
+                    <span className="pill pill--addr" title="adrese">{custProps.length} 📍</span>
+                    <span className="pill pill--eq" title="echipamente">{custEquipments.length} ⚙</span>
+                    {nextDue && (
+                      <span className={`pill pill--due pill--${dueClass}`} title={`Scadență ${nextDue.label}`}>
+                        {nextDue.date.toLocaleDateString("ro-RO")}
+                      </span>
+                    )}
+                  </span>
                   <Link
                     href={`/dashboard/clienti/${c.id}`}
-                    className="dash-btn dash-btn--primary"
-                    title="Fișă client completă cu istoric și export PDF"
+                    className="dash-btn dash-btn--ghost clienti-row__fisa"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    📋 Fișă client
+                    Fișă →
                   </Link>
-                </div>
-              </header>
+                </summary>
 
-              {custProps.length === 0 ? (
-                <p className="dash-note">Clientul nu are adrese înregistrate.</p>
-              ) : (
-                custProps.map((p) => {
-                  const addrEquipments = equipments.filter((e) => e.property_id === p.id)
-                  const isAddingNew = editing?.propertyId === p.id && editing?.equipmentId === null
-                  return (
-                    <div key={p.id} className="dash-property">
-                      <h3 className="dash-property__addr">{addressText(p)}</h3>
-
-                      {addrEquipments.length === 0 ? (
-                        <p className="dash-note">Nu sunt echipamente înregistrate pe această adresă.</p>
-                      ) : (
-                        <table className="dash-table">
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th>Tip</th>
-                              <th>Marcă/Model</th>
-                              <th>Serie</th>
-                              <th>Instalat</th>
-                              <th>Scadență verificare</th>
-                              <th>Scadență revizie</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {addrEquipments.map((eq) => {
-                              const isEditing = editing?.equipmentId === eq.id
-                              const typeLabel = eq.firm_equipment_type_id
-                                ? catalog.find((c) => c.firmEquipmentId === eq.firm_equipment_type_id)?.nume
-                                : catalog.find((c) => c.defaultEquipmentId === eq.equipment_type_id)?.nume
-                              return (
-                                <>
-                                  <tr key={eq.id} className={!eq.is_active ? "dash-row--inactive" : ""}>
-                                    <td>{bulletIcon(getBulletForEquipment(eq))}</td>
-                                    <td>{typeLabel ?? "—"}</td>
-                                    <td>{[eq.brand, eq.model].filter(Boolean).join(" ") || "—"}</td>
-                                    <td>{eq.serial_number ? <code>{eq.serial_number}</code> : "—"}</td>
-                                    <td>
-                                      {eq.installation_date
-                                        ? new Date(eq.installation_date).toLocaleDateString("ro-RO")
-                                        : eq.manufacture_date
-                                          ? `fab. ${new Date(eq.manufacture_date).toLocaleDateString("ro-RO")}`
-                                          : "—"}
-                                    </td>
-                                    <td>
-                                      {eq.next_verificare_due
-                                        ? new Date(eq.next_verificare_due).toLocaleDateString("ro-RO")
-                                        : "—"}
-                                    </td>
-                                    <td>
-                                      {eq.next_revizie_due
-                                        ? new Date(eq.next_revizie_due).toLocaleDateString("ro-RO")
-                                        : "—"}
-                                    </td>
-                                    <td>
-                                      <div className="dash-actions-row">
-                                        <button
-                                          type="button"
-                                          disabled={pending}
-                                          className="dash-btn dash-btn--ghost"
-                                          onClick={() =>
-                                            setEditing(
-                                              isEditing
-                                                ? null
-                                                : { propertyId: p.id, equipmentId: eq.id },
-                                            )
+                {custProps.length === 0 ? (
+                  <p className="dash-note" style={{ margin: "8px 14px" }}>Fără adrese.</p>
+                ) : (
+                  <div className="clienti-row__details">
+                    {custProps.map((p) => {
+                      const addrEqs = equipments.filter((e) => e.property_id === p.id)
+                      const isAddingNew = editing?.propertyId === p.id && editing?.equipmentId === null
+                      return (
+                        <div key={p.id} className="clienti-addr">
+                          <div className="clienti-addr__head">
+                            <span className="clienti-addr__text">📍 {addressText(p)}</span>
+                            <button
+                              type="button"
+                              disabled={pending}
+                              className="dash-btn dash-btn--ghost dash-btn--small"
+                              onClick={() =>
+                                setEditing(isAddingNew ? null : { propertyId: p.id, equipmentId: null })
+                              }
+                            >
+                              {isAddingNew ? "Anulează" : "+ Echipament"}
+                            </button>
+                          </div>
+                          {addrEqs.length > 0 && (
+                            <ul className="clienti-eq-list">
+                              {addrEqs.map((eq) => {
+                                const isEditing = editing?.equipmentId === eq.id
+                                const typeLabel = eq.firm_equipment_type_id
+                                  ? catalog.find((c) => c.firmEquipmentId === eq.firm_equipment_type_id)?.nume
+                                  : catalog.find((c) => c.defaultEquipmentId === eq.equipment_type_id)?.nume
+                                const brandModel = [eq.brand, eq.model].filter(Boolean).join(" ")
+                                return (
+                                  <li key={eq.id} className={`clienti-eq ${!eq.is_active ? "is-inactive" : ""}`}>
+                                    <span className="clienti-eq__bullet">{bulletIcon(getBulletForEquipment(eq))}</span>
+                                    <span className="clienti-eq__type">{typeLabel ?? "—"}</span>
+                                    {brandModel && <span className="clienti-eq__bm">{brandModel}</span>}
+                                    {eq.serial_number && <code className="clienti-eq__sn">{eq.serial_number}</code>}
+                                    {eq.next_verificare_due && (
+                                      <span className="clienti-eq__due" title="Scadență verificare">
+                                        V: {new Date(eq.next_verificare_due).toLocaleDateString("ro-RO")}
+                                      </span>
+                                    )}
+                                    {eq.next_revizie_due && (
+                                      <span className="clienti-eq__due" title="Scadență revizie">
+                                        R: {new Date(eq.next_revizie_due).toLocaleDateString("ro-RO")}
+                                      </span>
+                                    )}
+                                    <button
+                                      type="button"
+                                      disabled={pending}
+                                      className="dash-btn dash-btn--ghost dash-btn--small"
+                                      onClick={() =>
+                                        setEditing(isEditing ? null : { propertyId: p.id, equipmentId: eq.id })
+                                      }
+                                    >
+                                      {isEditing ? "✕" : "✎"}
+                                    </button>
+                                    {eq.is_active && (
+                                      <button
+                                        type="button"
+                                        disabled={pending}
+                                        className="dash-btn dash-btn--ghost dash-btn--small"
+                                        title="Dezactivează"
+                                        onClick={() => {
+                                          if (confirm("Dezactivezi echipamentul?")) {
+                                            run(deactivateEquipment(eq.id))
                                           }
-                                        >
-                                          {isEditing ? "Anulează" : "Editează"}
-                                        </button>
-                                        {eq.is_active && (
-                                          <button
-                                            type="button"
-                                            disabled={pending}
-                                            className="dash-btn dash-btn--ghost"
-                                            onClick={() => {
-                                              if (confirm("Dezactivezi echipamentul?")) {
-                                                run(deactivateEquipment(eq.id))
-                                              }
-                                            }}
-                                          >
-                                            Dezactivează
-                                          </button>
-                                        )}
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  {isEditing && (
-                                    <tr>
-                                      <td colSpan={8}>
+                                        }}
+                                      >
+                                        🗑
+                                      </button>
+                                    )}
+                                    {isEditing && (
+                                      <div className="clienti-eq__form">
                                         <EquipmentForm
                                           propertyId={p.id}
                                           equipment={eq}
@@ -333,45 +337,33 @@ export default function ClientiClient({
                                           pending={pending}
                                           onSubmit={(ev) => onSubmitEquipment(ev, eq.id)}
                                         />
-                                      </td>
-                                    </tr>
-                                  )}
-                                </>
-                              )
-                            })}
-                          </tbody>
-                        </table>
-                      )}
-
-                      <div className="dash-actions-row">
-                        <button
-                          type="button"
-                          disabled={pending}
-                          className="dash-btn dash-btn--primary"
-                          onClick={() =>
-                            setEditing(isAddingNew ? null : { propertyId: p.id, equipmentId: null })
-                          }
-                        >
-                          {isAddingNew ? "Anulează" : "+ Adaugă echipament"}
-                        </button>
-                      </div>
-
-                      {isAddingNew && (
-                        <EquipmentForm
-                          propertyId={p.id}
-                          equipment={null}
-                          catalog={catalog}
-                          pending={pending}
-                          onSubmit={(ev) => onSubmitEquipment(ev, null)}
-                        />
-                      )}
-                    </div>
-                  )
-                })
-              )}
-            </section>
-          )
-        })
+                                      </div>
+                                    )}
+                                  </li>
+                                )
+                              })}
+                            </ul>
+                          )}
+                          {isAddingNew && (
+                            <div className="clienti-eq__form">
+                              <EquipmentForm
+                                propertyId={p.id}
+                                equipment={null}
+                                catalog={catalog}
+                                pending={pending}
+                                onSubmit={(ev) => onSubmitEquipment(ev, null)}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </details>
+            )
+          })}
+        </div>
       )}
     </>
   )
