@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
-import { getPlanPrices, getSmsTariffCents } from "@/lib/settings/appSettings"
+import { getPlanPrices, getSmsTariffCents, getGestiuneSettings } from "@/lib/settings/appSettings"
 import { PLANS } from "@/lib/plans/plans"
 import PlanuriClient from "./PlanuriClient"
 
@@ -16,7 +16,7 @@ export default async function PlanuriPage() {
   const { role } = await getUserRole(data.user.id)
   if (role !== "admin") redirect("/dashboard")
 
-  const [prices, tariff] = await Promise.all([getPlanPrices(), getSmsTariffCents()])
+  const [prices, tariff, gestiune] = await Promise.all([getPlanPrices(), getSmsTariffCents(), getGestiuneSettings()])
 
   return (
     <div className="dash-page">
@@ -28,6 +28,7 @@ export default async function PlanuriPage() {
       <PlanuriClient
         initialPrices={prices}
         initialTariffCents={tariff}
+        initialGestiune={gestiune}
         plans={{
           free: { nume: PLANS.free.nume, tagline: PLANS.free.tagline },
           start: { nume: PLANS.start.nume, tagline: PLANS.start.tagline },

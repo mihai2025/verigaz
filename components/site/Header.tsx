@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/verificari-centrala", label: "Centrale termice" },
   { href: "/magazin", label: "Magazin" },
   { href: "/utile", label: "Ghiduri utile" },
+  { href: "/platforma", label: "Platformă gestiune" },
   { href: "/abonamente", label: "Pentru firme" },
 ]
 

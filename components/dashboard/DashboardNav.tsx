@@ -39,10 +39,14 @@ export function DashboardNav({ role, firmId, pendingClaims = 0, pendingOrders = 
             <li><Link href="/dashboard/salariati">Salariați</Link></li>
             <li><Link href="/dashboard/echipamente">Echipamente (catalog)</Link></li>
             <li><Link href="/dashboard/clienti">Clienți & adrese</Link></li>
+            <li><Link href="/dashboard/contracte">Contracte</Link></li>
             <li><Link href="/dashboard/programari">Programări</Link></li>
+            <li><Link href="/dashboard/fise-de-lucru">Fișe de lucru</Link></li>
             <li><Link href="/dashboard/notificari">Notificări</Link></li>
             <li><Link href="/dashboard/documente">Documente emise</Link></li>
             <li className="dash-nav__sep">Rapoarte</li>
+            <li><Link href="/dashboard/rapoarte/contracte">Contracte</Link></li>
+            <li><Link href="/dashboard/rapoarte/interventii">Intervenții pe tip</Link></li>
             <li><Link href="/dashboard/rapoarte/revizii">Revizii (10 ani)</Link></li>
             <li><Link href="/dashboard/rapoarte/verificari">Verificări</Link></li>
             <li><Link href="/dashboard/rapoarte/tehnicieni">Tehnicieni</Link></li>

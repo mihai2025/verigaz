@@ -6,7 +6,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { PLANS, PLAN_ORDER } from "@/lib/plans/plans"
 import { DOMAIN } from "@/lib/config/domain"
-import { getPlanPrices } from "@/lib/settings/appSettings"
+import { getPlanPrices, getGestiuneSettings, getSmsTariffCents } from "@/lib/settings/appSettings"
 
 export const metadata: Metadata = {
   title: `Abonamente pentru firme autorizate ANRE — ${DOMAIN.brandName}`,
@@ -35,11 +35,20 @@ const FEATURES: Feature[] = [
 ]
 
 export default async function Page() {
-  const prices = await getPlanPrices()
+  const [prices, gestiune, smsTariffCents] = await Promise.all([
+    getPlanPrices(),
+    getGestiuneSettings(),
+    getSmsTariffCents(),
+  ])
   const priceOf = (key: string): number => {
     if (key === "free") return 0
     return (prices as Record<string, number>)[key] ?? PLANS[key as keyof typeof PLANS].priceYearly
   }
+  const smsTariffLei = (smsTariffCents / 100).toFixed(2)
+  const monthsFromAnnual = gestiune.monthlyFee > 0
+    ? +(gestiune.annualFee / gestiune.monthlyFee).toFixed(1)
+    : 12
+  const monthsSaved = Math.max(0, +(12 - monthsFromAnnual).toFixed(1))
   return (
     <>
       <section className="vg-hero">
@@ -197,6 +206,70 @@ export default async function Page() {
                 programări. Clientul plătește firma direct, fără intermediere.
               </p>
             </details>
+          </div>
+        </div>
+      </section>
+
+      {/* GESTIUNE PLATFORM CARD */}
+      <section className="vg-section" style={{ background: "var(--surface-2)" }}>
+        <div className="container" style={{ maxWidth: 900 }}>
+          <div className="vg-section__head">
+            <p className="vg-section__kicker">Nou: Platformă de gestiune</p>
+            <h2 className="vg-section__title">Software operațional pentru firma ta</h2>
+            <p className="vg-section__sub">
+              Separat de vizibilitate — gestionează clienți, contracte, programări, echipe, documente,
+              SMS automate și rapoarte. Plătești lunar sau anual (cu {monthsSaved > 0 ? `${monthsSaved} luni` : "reducere"} reducere).
+            </p>
+          </div>
+
+          <div style={{ maxWidth: 560, margin: "0 auto", padding: 28, background: "#fff", border: "2px solid var(--accent-400)", borderRadius: 16, boxShadow: "0 8px 28px rgba(20, 132, 155, .08)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: "var(--text-900)" }}>Platformă de gestiune</div>
+                <div style={{ fontSize: 13, color: "var(--text-600)", marginTop: 2 }}>Contracte · fișe de lucru · rapoarte · SMS automate</div>
+              </div>
+              <span style={{ padding: "4px 10px", borderRadius: 999, background: "var(--accent-600)", color: "#fff", fontSize: 11, fontWeight: 800 }}>NOU</span>
+            </div>
+
+            {/* Preț lunar + anual side-by-side */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 18 }}>
+              <div style={{ padding: 16, background: "var(--surface-2)", borderRadius: 10, textAlign: "center" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "var(--text-600)", letterSpacing: 0.5 }}>Lunar</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "var(--accent-700)", marginTop: 4 }}>{gestiune.monthlyFee}</div>
+                <div style={{ fontSize: 12, color: "var(--text-600)" }}>lei / lună</div>
+              </div>
+              <div style={{ padding: 16, background: "linear-gradient(135deg, var(--accent-50), #fff)", border: "1px solid var(--accent-400)", borderRadius: 10, textAlign: "center", position: "relative" }}>
+                {monthsSaved > 0 && (
+                  <span style={{ position: "absolute", top: -8, right: 8, padding: "2px 8px", borderRadius: 999, background: "#1e6b34", color: "#fff", fontSize: 10, fontWeight: 800, letterSpacing: 0.3 }}>
+                    -{monthsSaved} luni
+                  </span>
+                )}
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "var(--text-600)", letterSpacing: 0.5 }}>Anual</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "var(--accent-700)", marginTop: 4 }}>{gestiune.annualFee}</div>
+                <div style={{ fontSize: 12, color: "var(--text-600)" }}>lei / an</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 13, color: "var(--text-600)", textAlign: "center", marginBottom: 16 }}>
+              + <strong>{smsTariffLei} lei/segment SMS</strong> · {gestiune.smsIncluded} SMS/lună incluse
+            </div>
+
+            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px", display: "grid", gap: 6, fontSize: 14, color: "var(--text-700)" }}>
+              {[
+                "Clienți & adrese nelimitate",
+                "Contracte cu tracking scadență + perioadă (2/10 ani)",
+                "Programări + fișe de lucru per tehnician",
+                "Certificate PDF cu SHA-256 + QR",
+                "SMS reminder-e automate (incluse în fee)",
+                "Rapoarte lunare contracte + facturare SMS",
+              ].map((f, i) => (
+                <li key={i} style={{ paddingLeft: 22, position: "relative" }}>
+                  <span style={{ position: "absolute", left: 0, color: "var(--accent-600)", fontWeight: 700 }}>✓</span>{f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/platforma" style={{ display: "block", textAlign: "center", padding: "12px 20px", borderRadius: 10, background: "linear-gradient(135deg, var(--accent-600), var(--accent-700))", color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none" }}>
+              Vezi detalii + demo →
+            </Link>
           </div>
         </div>
       </section>

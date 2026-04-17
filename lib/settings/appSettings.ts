@@ -62,3 +62,44 @@ export function getPlanPriceFromMap(prices: PlanPrices, key: PlanKey): number {
   if (key === "free") return 0
   return prices[key] ?? PLANS[key].priceYearly
 }
+
+// ── Gestiune (monthly platform fee) ──
+
+export type GestiuneSettings = {
+  monthlyFee: number     // lei/lună
+  annualFee: number      // lei/an (default: monthlyFee × 10 — adică 2 luni reducere)
+  smsIncluded: number    // nr SMS incluse în fee
+}
+
+const DEFAULT_GESTIUNE: GestiuneSettings = { monthlyFee: 199, annualFee: 1990, smsIncluded: 50 }
+
+export async function getGestiuneSettings(): Promise<GestiuneSettings> {
+  const admin = getServiceRoleSupabase()
+  const [feeRes, annualRes, smsRes] = await Promise.all([
+    admin.from("app_settings").select("value").eq("key", "gestiune_monthly_fee").maybeSingle(),
+    admin.from("app_settings").select("value").eq("key", "gestiune_annual_fee").maybeSingle(),
+    admin.from("app_settings").select("value").eq("key", "gestiune_sms_included").maybeSingle(),
+  ])
+  const fee = (feeRes.data as { value?: unknown } | null)?.value
+  const annual = (annualRes.data as { value?: unknown } | null)?.value
+  const sms = (smsRes.data as { value?: unknown } | null)?.value
+  const monthlyFee = typeof fee === "number" && fee >= 0 ? fee : DEFAULT_GESTIUNE.monthlyFee
+  return {
+    monthlyFee,
+    annualFee: typeof annual === "number" && annual >= 0 ? annual : monthlyFee * 10,
+    smsIncluded: typeof sms === "number" && sms >= 0 ? sms : DEFAULT_GESTIUNE.smsIncluded,
+  }
+}
+
+export async function setGestiuneSettings(
+  settings: GestiuneSettings,
+  userId: string | null,
+): Promise<void> {
+  const admin = getServiceRoleSupabase()
+  const ts = new Date().toISOString()
+  await Promise.all([
+    admin.from("app_settings").upsert({ key: "gestiune_monthly_fee", value: settings.monthlyFee, updated_at: ts, updated_by: userId }),
+    admin.from("app_settings").upsert({ key: "gestiune_annual_fee", value: settings.annualFee, updated_at: ts, updated_by: userId }),
+    admin.from("app_settings").upsert({ key: "gestiune_sms_included", value: settings.smsIncluded, updated_at: ts, updated_by: userId }),
+  ])
+}

@@ -2,17 +2,18 @@
 
 import { useState, useTransition } from "react"
 import { saveSettings } from "./actions"
-import type { PlanPrices } from "@/lib/settings/appSettings"
+import type { PlanPrices, GestiuneSettings } from "@/lib/settings/appSettings"
 
 type PlanMeta = { nume: string; tagline: string }
 
 type Props = {
   initialPrices: PlanPrices
   initialTariffCents: number
+  initialGestiune: GestiuneSettings
   plans: { free: PlanMeta; start: PlanMeta; plus: PlanMeta; premium: PlanMeta }
 }
 
-export default function PlanuriClient({ initialPrices, initialTariffCents, plans }: Props) {
+export default function PlanuriClient({ initialPrices, initialTariffCents, initialGestiune, plans }: Props) {
   const [pending, startTransition] = useTransition()
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null)
 
@@ -93,6 +94,55 @@ export default function PlanuriClient({ initialPrices, initialTariffCents, plans
             defaultValue={initialPrices.premium}
             required
           />
+        </label>
+      </fieldset>
+
+      <fieldset className="dash-fieldset">
+        <legend>Platformă de gestiune</legend>
+        <label className="dash-field">
+          <span>
+            Fee lunar <em>(actual: {initialGestiune.monthlyFee} lei/lună)</em>
+          </span>
+          <input
+            name="gestiune_monthly_fee"
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={initialGestiune.monthlyFee}
+            required
+          />
+        </label>
+        <label className="dash-field">
+          <span>
+            Fee anual <em>(actual: {initialGestiune.annualFee} lei/an; sugerat: {initialGestiune.monthlyFee * 10} lei — 2 luni reducere)</em>
+          </span>
+          <input
+            name="gestiune_annual_fee"
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={initialGestiune.annualFee}
+            required
+          />
+          <small style={{ color: "var(--text-500)" }}>
+            Dacă pui exact fee-ul lunar × 10 (adică 2 luni gratis), anualul e cu 2 luni reducere față de plata lunară.
+          </small>
+        </label>
+        <label className="dash-field">
+          <span>
+            SMS incluse / lună <em>(actual: {initialGestiune.smsIncluded})</em>
+          </span>
+          <input
+            name="gestiune_sms_included"
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={initialGestiune.smsIncluded}
+            required
+          />
+          <small style={{ color: "var(--text-500)" }}>
+            Nr. SMS-uri incluse gratuit în fee-ul lunar. Peste limita aceasta, se aplică tariful per segment de mai jos.
+          </small>
         </label>
       </fieldset>
 
