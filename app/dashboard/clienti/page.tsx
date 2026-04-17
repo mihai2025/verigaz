@@ -45,16 +45,19 @@ export default async function Page() {
 
   const propertyIdsFromBookings = [...new Set((bksRes.data ?? []).map((b) => b.property_id as string).filter(Boolean))]
 
-  // Încarcă toate properties pentru acești clienți (nu doar cele din bookings)
+  // Încarcă toate properties pentru acești clienți (batching pentru URL limit)
   let allPropertyIds = propertyIdsFromBookings
   if (customerIds.length > 0) {
-    const { data: allProps } = await admin
-      .from("properties")
-      .select("id")
-      .in("customer_id", customerIds)
+    const allProps: Array<{ id: string }> = []
+    const CHUNK = 200
+    for (let i = 0; i < customerIds.length; i += CHUNK) {
+      const slice = customerIds.slice(i, i + CHUNK)
+      const { data } = await admin.from("properties").select("id").in("customer_id", slice)
+      if (data) allProps.push(...(data as Array<{ id: string }>))
+    }
     allPropertyIds = [...new Set([
       ...propertyIdsFromBookings,
-      ...(allProps ?? []).map((p) => p.id as string),
+      ...allProps.map((p) => p.id),
     ])]
   }
   const propertyIds = allPropertyIds
@@ -84,40 +87,51 @@ export default async function Page() {
   }
 
   // 2. Încarcă customers + properties + equipments + reminders
-  const [custRes, propRes, equipRes, remRes, catalog] = await Promise.all([
-    admin
-      .from("customers")
-      .select("id, full_name, first_name, last_name, company_name, customer_type, phone, email, cnp, cui")
-      .in("id", customerIds),
-    admin
-      .from("properties")
-      .select("id, customer_id, address, block_name, apartment, floor, " +
-              "judete:judet_id(nume), localitati:localitate_id(nume)")
-      .in("id", propertyIds),
-    admin
-      .from("property_equipments")
-      .select("id, property_id, equipment_type_id, firm_equipment_type_id, " +
-              "brand, model, serial_number, manufacture_date, installation_date, " +
-              "last_verificare_at, next_verificare_due, last_revizie_at, next_revizie_due, " +
-              "observations, is_active")
-      .in("property_id", propertyIds),
-    admin
-      .from("reminders")
-      .select("id, equipment_id, property_id, reminder_type, status, scheduled_for, " +
-              "sent_at, response_at, response_booking_id")
-      .eq("firm_id", firmId)
-      .in("property_id", propertyIds),
+  // IMPORTANT: .in() cu multe UUID-uri (>200) depășește limita URL PostgREST.
+  // Batchuim în chunks de 200.
+  async function fetchInChunks<T>(
+    table: string, column: string, ids: string[], select: string,
+    extraEq?: { col: string; val: string }
+  ): Promise<T[]> {
+    if (ids.length === 0) return []
+    const CHUNK = 200
+    const out: T[] = []
+    for (let i = 0; i < ids.length; i += CHUNK) {
+      const slice = ids.slice(i, i + CHUNK)
+      let q = admin.from(table).select(select).in(column, slice)
+      if (extraEq) q = q.eq(extraEq.col, extraEq.val)
+      const { data, error } = await q
+      if (error) throw new Error(`fetchInChunks(${table}): ${error.message}`)
+      if (data) out.push(...(data as T[]))
+    }
+    return out
+  }
+
+  const [customers, properties, equipments, reminders, catalog] = await Promise.all([
+    fetchInChunks(
+      "customers", "id", customerIds,
+      "id, full_name, first_name, last_name, company_name, customer_type, phone, email, cnp, cui",
+    ),
+    fetchInChunks(
+      "properties", "id", propertyIds,
+      "id, customer_id, address, block_name, apartment, floor, " +
+      "judete:judet_id(nume), localitati:localitate_id(nume)",
+    ),
+    fetchInChunks(
+      "property_equipments", "property_id", propertyIds,
+      "id, property_id, equipment_type_id, firm_equipment_type_id, " +
+      "brand, model, serial_number, manufacture_date, installation_date, " +
+      "last_verificare_at, next_verificare_due, last_revizie_at, next_revizie_due, " +
+      "observations, is_active",
+    ),
+    fetchInChunks(
+      "reminders", "property_id", propertyIds,
+      "id, equipment_id, property_id, reminder_type, status, scheduled_for, " +
+      "sent_at, response_at, response_booking_id",
+      { col: "firm_id", val: firmId },
+    ),
     getFirmEquipmentCatalog(firmId),
   ])
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const customers = (custRes.data ?? []) as any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const properties = (propRes.data ?? []) as any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const equipments = (equipRes.data ?? []) as any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const reminders = (remRes.data ?? []) as any[]
 
   return (
     <div className="dash-page">
