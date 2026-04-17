@@ -16,7 +16,6 @@ async function requireFirm() {
   return { ok: true as const, userId: data.user.id, firmId, admin: getServiceRoleSupabase() }
 }
 
-const PERIOD_TYPES = ["2_ani", "10_ani", "anual", "custom"] as const
 const STATUSES = ["activ", "reziliat", "suspendat"] as const
 
 async function syncContractEquipments(
@@ -41,8 +40,6 @@ export async function upsertContract(
   const propertyIdRaw = String(formData.get("property_id") ?? "").trim()
   const propertyId = propertyIdRaw || null
   const contractNumber = String(formData.get("contract_number") ?? "").trim() || null
-  const periodTypeRaw = String(formData.get("period_type") ?? "").trim()
-  const periodType = periodTypeRaw || null
   const startDate = String(formData.get("start_date") ?? "").trim()
   const expiryDateRaw = String(formData.get("expiry_date") ?? "").trim()
   const expiryDate = expiryDateRaw || null
@@ -52,9 +49,6 @@ export async function upsertContract(
   const notes = String(formData.get("notes") ?? "").trim() || null
 
   if (!customerId) return { ok: false, error: "Clientul e obligatoriu." }
-  if (periodType && !PERIOD_TYPES.includes(periodType as (typeof PERIOD_TYPES)[number])) {
-    return { ok: false, error: "Tipul de perioadă e invalid." }
-  }
   if (!STATUSES.includes(status as (typeof STATUSES)[number])) {
     return { ok: false, error: "Status invalid." }
   }
@@ -79,7 +73,6 @@ export async function upsertContract(
     customer_id: customerId,
     property_id: propertyId,
     contract_number: contractNumber,
-    period_type: periodType,
     start_date: startDate,
     expiry_date: expiryDate,
     monthly_fee: monthlyFee,
@@ -149,9 +142,10 @@ export async function changeContractStatus(
   return { ok: true }
 }
 
-type CreateCustomerResult = { ok: true; customerId: string; propertyId: string } | { ok: false; error: string }
+type CreateCustomerResult = { ok: true; customerId: string } | { ok: false; error: string }
+type AddPropertyResult = { ok: true; propertyId: string } | { ok: false; error: string }
 
-export async function createCustomerAndProperty(formData: FormData): Promise<CreateCustomerResult> {
+export async function createCustomer(formData: FormData): Promise<CreateCustomerResult> {
   const ctx = await requireFirm()
   if (!ctx.ok) return ctx
 
@@ -181,98 +175,118 @@ export async function createCustomerAndProperty(formData: FormData): Promise<Cre
     ? [firstName, lastName].filter(Boolean).join(" ")
     : (companyName ?? "")
 
-  const propertyType = String(formData.get("property_type") ?? "apartment").trim()
-  const address = String(formData.get("address") ?? "").trim()
-  const judetIdRaw = String(formData.get("judet_id") ?? "").trim()
-  const localitateText = String(formData.get("localitate_text") ?? "").trim() || null
-  const blockName = String(formData.get("block_name") ?? "").trim() || null
-  const apartment = String(formData.get("apartment") ?? "").trim() || null
-
-  if (!address) return { ok: false, error: "Adresa e obligatorie." }
-
-  // Caută client existent după telefon
+  // Dedup după telefon
   const { data: existing } = await ctx.admin
     .from("customers")
     .select("id")
     .eq("phone", phone)
     .maybeSingle()
 
-  let customerId: string
   if (existing) {
-    customerId = existing.id as string
-  } else {
-    const { data: newCust, error: custErr } = await ctx.admin
-      .from("customers")
-      .insert({
-        phone,
-        email,
-        customer_type: customerType,
-        full_name: fullName,
-        first_name: firstName,
-        last_name: lastName,
-        company_name: companyName,
-        cnp,
-        cui,
-      })
-      .select("id")
-      .single()
-    if (custErr || !newCust) return { ok: false, error: custErr?.message ?? "Eroare la creare client." }
-    customerId = newCust.id as string
+    await writeAudit({
+      actorUserId: ctx.userId,
+      actorRole: "firm_owner",
+      action: "customer.link_existing",
+      entityType: "customers",
+      entityId: existing.id as string,
+      summary: fullName,
+    })
+    revalidatePath("/dashboard/contracte")
+    return { ok: true, customerId: existing.id as string }
   }
 
-  // Încearcă să găsești property existent la aceeași adresă pentru acest client
+  const { data: newCust, error: custErr } = await ctx.admin
+    .from("customers")
+    .insert({
+      phone,
+      email,
+      customer_type: customerType,
+      full_name: fullName,
+      first_name: firstName,
+      last_name: lastName,
+      company_name: companyName,
+      cnp,
+      cui,
+    })
+    .select("id")
+    .single()
+  if (custErr || !newCust) return { ok: false, error: custErr?.message ?? "Eroare la creare client." }
+
+  await writeAudit({
+    actorUserId: ctx.userId,
+    actorRole: "firm_owner",
+    action: "customer.create",
+    entityType: "customers",
+    entityId: newCust.id as string,
+    summary: fullName,
+  })
+
+  revalidatePath("/dashboard/contracte")
+  return { ok: true, customerId: newCust.id as string }
+}
+
+export async function addPropertyForCustomer(customerId: string, formData: FormData): Promise<AddPropertyResult> {
+  const ctx = await requireFirm()
+  if (!ctx.ok) return ctx
+  if (!customerId) return { ok: false, error: "Clientul e obligatoriu." }
+
+  // Verifică că clientul există
+  const { data: cust } = await ctx.admin.from("customers").select("id").eq("id", customerId).maybeSingle()
+  if (!cust) return { ok: false, error: "Clientul nu există." }
+
+  const propertyType = String(formData.get("property_type") ?? "apartment").trim()
+  const address = String(formData.get("address") ?? "").trim()
+  const judetIdRaw = String(formData.get("judet_id") ?? "").trim()
+  const localitateIdRaw = String(formData.get("localitate_id") ?? "").trim()
+  const blockName = String(formData.get("block_name") ?? "").trim() || null
+  const stair = String(formData.get("stair") ?? "").trim() || null
+  const apartment = String(formData.get("apartment") ?? "").trim() || null
+  const floor = String(formData.get("floor") ?? "").trim() || null
+
+  if (!address) return { ok: false, error: "Adresa e obligatorie." }
+
+  const judetId = judetIdRaw ? Number(judetIdRaw) : null
+  const localitateId = localitateIdRaw ? Number(localitateIdRaw) : null
+
+  // Dedup: aceeași (customer_id, address) nu se dublează
   const { data: existingProp } = await ctx.admin
     .from("properties")
     .select("id")
     .eq("customer_id", customerId)
     .eq("address", address)
     .maybeSingle()
-
-  let propertyId: string
   if (existingProp) {
-    propertyId = existingProp.id as string
-  } else {
-    // Încearcă rezolvare localitate după text + judet (exact match, insensitive)
-    let localitateId: number | null = null
-    const judetId = judetIdRaw ? Number(judetIdRaw) : null
-    if (localitateText && judetId) {
-      const { data: loc } = await ctx.admin
-        .from("localitati")
-        .select("id")
-        .eq("judet_id", judetId)
-        .ilike("nume", localitateText)
-        .maybeSingle()
-      if (loc) localitateId = loc.id as number
-    }
-
-    const { data: newProp, error: propErr } = await ctx.admin
-      .from("properties")
-      .insert({
-        customer_id: customerId,
-        property_type: propertyType,
-        address,
-        judet_id: judetId,
-        localitate_id: localitateId,
-        block_name: blockName,
-        apartment,
-      })
-      .select("id")
-      .single()
-    if (propErr || !newProp) return { ok: false, error: propErr?.message ?? "Eroare la creare adresă." }
-    propertyId = newProp.id as string
+    return { ok: true, propertyId: existingProp.id as string }
   }
+
+  const { data: newProp, error: propErr } = await ctx.admin
+    .from("properties")
+    .insert({
+      customer_id: customerId,
+      property_type: propertyType,
+      address,
+      judet_id: judetId,
+      localitate_id: localitateId,
+      block_name: blockName,
+      stair,
+      apartment,
+      floor,
+    })
+    .select("id")
+    .single()
+  if (propErr || !newProp) return { ok: false, error: propErr?.message ?? "Eroare la creare adresă." }
 
   await writeAudit({
     actorUserId: ctx.userId,
     actorRole: "firm_owner",
-    action: existing ? "customer.link_via_contract" : "customer.create_via_contract",
-    entityType: "customers",
-    entityId: customerId,
-    summary: fullName,
+    action: "property.create",
+    entityType: "properties",
+    entityId: newProp.id as string,
+    summary: address,
   })
 
   revalidatePath("/dashboard/contracte")
-  return { ok: true, customerId, propertyId }
+  return { ok: true, propertyId: newProp.id as string }
 }
 
 export async function deleteContract(contractId: string): Promise<Result> {

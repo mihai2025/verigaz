@@ -31,7 +31,7 @@ export default async function Page() {
   const [contractsRes, custRes, propRes, equipRes, contractEquipRes, judeteRes] = await Promise.all([
     admin
       .from("contracts")
-      .select("id, contract_number, customer_id, property_id, period_type, " +
+      .select("id, contract_number, customer_id, property_id, " +
               "start_date, expiry_date, monthly_fee, total_amount, status, notes, " +
               "signed_at, cancelled_at, created_at")
       .eq("firm_id", firmId)

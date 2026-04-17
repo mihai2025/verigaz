@@ -39,7 +39,7 @@ export default async function Page() {
       .limit(500),
     admin
       .from("contracts")
-      .select("id, contract_number, customer_id, property_id, period_type")
+      .select("id, contract_number, customer_id, property_id")
       .eq("firm_id", firmId)
       .in("status", ["activ", "suspendat"]),
     admin
