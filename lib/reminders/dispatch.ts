@@ -58,12 +58,11 @@ export async function dispatchDueReminders(
   const { data: due, error } = await admin
     .from("reminders")
     .select(
-      "id, reminder_type, scheduled_for, channel, customer_id, property_id, firm_id, related_booking_id, contract_id, equipment_id, " +
+      "id, reminder_type, scheduled_for, channel, customer_id, property_id, firm_id, related_booking_id, equipment_id, " +
       "customers(full_name, phone, email), " +
       "properties(address, block_name, apartment, next_verificare_due, next_revizie_due, " +
       "  judete:judet_id(nume), localitati:localitate_id(nume)), " +
       "gas_firms(slug, brand_name, legal_name, phone), " +
-      "contracts(contract_number, expiry_date, period_type), " +
       "property_equipments(brand, model, " +
       "  equipment_types:equipment_type_id(slug, nume), " +
       "  firm_equipment_types:firm_equipment_type_id(nume, service_category_slug))",
@@ -85,8 +84,14 @@ export async function dispatchDueReminders(
     const customer = Array.isArray(r.customers) ? r.customers[0] : r.customers
     const property = Array.isArray(r.properties) ? r.properties[0] : r.properties
     const firm = Array.isArray(r.gas_firms) ? r.gas_firms[0] : r.gas_firms
-    const contract = Array.isArray(r.contracts) ? r.contracts[0] : r.contracts
     const equipment = Array.isArray(r.property_equipments) ? r.property_equipments[0] : r.property_equipments
+
+    // Contract-based reminders (contract_service) sunt deprecated — se sare peste.
+    if (r.reminder_type === "contract_service") {
+      result.skipped += 1
+      await markReminder(admin, r.id, "skipped", { error: "contract_service deprecated — scadențele se iau din echipamente." }, dryRun)
+      continue
+    }
 
     if (!customer || !property) {
       result.skipped += 1
@@ -98,7 +103,6 @@ export async function dispatchDueReminders(
     let dueIso: string | null = null
     if (r.reminder_type === "verificare_24m") dueIso = property.next_verificare_due ?? null
     else if (r.reminder_type === "revizie_120m") dueIso = property.next_revizie_due ?? null
-    else if (r.reminder_type === "contract_service") dueIso = contract?.expiry_date ?? null
     // Pentru celelalte tipuri scadența reală = scheduled_for + 30 zile (advance_days)
     const dueDate = dueIso
       ? formatDateRo(dueIso)
@@ -148,16 +152,11 @@ export async function dispatchDueReminders(
         : r.reminder_type === "revizie_120m" ? "revizie-instalatie"
         : r.reminder_type === "iscir_centrala" ? "verificare-centrala"
         : r.reminder_type === "service_detector_12m" ? "service-detector"
-        : r.reminder_type === "contract_service"
-          ? (contract?.period_type === "10_ani" ? "revizie-instalatie" : "verificare-instalatie")
-          : ""
+        : ""
       const longUrl = firm
         ? `https://verificari-gaze.ro/programare-rapida?firma=${firm.slug}${serviceSlug ? `&serviciu=${serviceSlug}` : ""}`
         : "https://verificari-gaze.ro/servicii-gaze"
       const extraVars: Record<string, string> = {}
-      if (r.reminder_type === "contract_service" && contract) {
-        extraVars.CONTRACT = contract.contract_number ?? `#${String(r.contract_id).slice(0, 8)}`
-      }
       // Dacă echipamentul specific e cunoscut, override ECHIPAMENT cu denumirea lui
       if (equipmentLabel) {
         extraVars.ECHIPAMENT = equipmentLabel

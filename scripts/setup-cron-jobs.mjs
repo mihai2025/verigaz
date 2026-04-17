@@ -88,23 +88,6 @@ const JOBS = [
     },
   },
   {
-    title: "verigaz · check contracts expiring",
-    url: `${SITE_URL}/api/cron/check-contracts`,
-    requestMethod: 0,
-    saveResponses: true,
-    extendedData: {
-      headers: { "X-Cron-Secret": CRON_SECRET },
-    },
-    schedule: {
-      timezone: "Europe/Bucharest",
-      hours: [4],
-      minutes: [0],
-      mdays: [-1],
-      months: [-1],
-      wdays: [-1],
-    },
-  },
-  {
     title: "verigaz · check equipments due",
     url: `${SITE_URL}/api/cron/check-equipments`,
     requestMethod: 0,

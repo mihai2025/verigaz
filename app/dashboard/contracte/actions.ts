@@ -17,7 +17,7 @@ async function requireFirm() {
 }
 
 const PERIOD_TYPES = ["2_ani", "10_ani", "anual", "custom"] as const
-const STATUSES = ["activ", "expirat", "reziliat", "suspendat"] as const
+const STATUSES = ["activ", "reziliat", "suspendat"] as const
 
 async function syncContractEquipments(
   admin: ReturnType<typeof getServiceRoleSupabase>,
@@ -41,24 +41,26 @@ export async function upsertContract(
   const propertyIdRaw = String(formData.get("property_id") ?? "").trim()
   const propertyId = propertyIdRaw || null
   const contractNumber = String(formData.get("contract_number") ?? "").trim() || null
-  const periodType = String(formData.get("period_type") ?? "").trim()
+  const periodTypeRaw = String(formData.get("period_type") ?? "").trim()
+  const periodType = periodTypeRaw || null
   const startDate = String(formData.get("start_date") ?? "").trim()
-  const expiryDate = String(formData.get("expiry_date") ?? "").trim()
+  const expiryDateRaw = String(formData.get("expiry_date") ?? "").trim()
+  const expiryDate = expiryDateRaw || null
   const monthlyFeeRaw = String(formData.get("monthly_fee") ?? "").trim()
   const totalAmountRaw = String(formData.get("total_amount") ?? "").trim()
   const status = String(formData.get("status") ?? "activ").trim()
   const notes = String(formData.get("notes") ?? "").trim() || null
 
   if (!customerId) return { ok: false, error: "Clientul e obligatoriu." }
-  if (!PERIOD_TYPES.includes(periodType as (typeof PERIOD_TYPES)[number])) {
+  if (periodType && !PERIOD_TYPES.includes(periodType as (typeof PERIOD_TYPES)[number])) {
     return { ok: false, error: "Tipul de perioadă e invalid." }
   }
   if (!STATUSES.includes(status as (typeof STATUSES)[number])) {
     return { ok: false, error: "Status invalid." }
   }
-  if (!startDate || !expiryDate) return { ok: false, error: "Data de început și cea de expirare sunt obligatorii." }
-  if (new Date(expiryDate) <= new Date(startDate)) {
-    return { ok: false, error: "Data de expirare trebuie să fie după data de început." }
+  if (!startDate) return { ok: false, error: "Data de început e obligatorie." }
+  if (expiryDate && new Date(expiryDate) <= new Date(startDate)) {
+    return { ok: false, error: "Data de expirare (opțională) trebuie să fie după data de început." }
   }
 
   const monthlyFee = monthlyFeeRaw ? Number(monthlyFeeRaw) : null
@@ -119,7 +121,7 @@ export async function upsertContract(
 
 export async function changeContractStatus(
   contractId: string,
-  newStatus: "activ" | "expirat" | "reziliat" | "suspendat",
+  newStatus: "activ" | "reziliat" | "suspendat",
   reason: string | null,
 ): Promise<Result> {
   const ctx = await requireFirm()

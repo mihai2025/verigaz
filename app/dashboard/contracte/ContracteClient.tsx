@@ -16,14 +16,12 @@ const PERIOD_LABELS: Record<string, string> = {
 
 const STATUS_LABELS: Record<string, string> = {
   activ: "Activ",
-  expirat: "Expirat",
   reziliat: "Reziliat",
   suspendat: "Suspendat",
 }
 
 const STATUS_COLORS: Record<string, string> = {
   activ: "#1e6b34",
-  expirat: "#a87400",
   reziliat: "#a01818",
   suspendat: "#555",
 }
@@ -47,11 +45,6 @@ function formatDate(d: string | null | undefined): string {
   return new Date(d).toLocaleDateString("ro-RO")
 }
 
-function daysUntil(d: string): number {
-  const ms = new Date(d).getTime() - Date.now()
-  return Math.round(ms / (1000 * 60 * 60 * 24))
-}
-
 export default function ContracteClient({
   contracts,
   customers,
@@ -73,7 +66,6 @@ export default function ContracteClient({
   const [prefillCustomer, setPrefillCustomer] = useState<{ customerId: string; propertyId: string } | null>(null)
   const [search, setSearch] = useState("")
   const [filterStatus, setFilterStatus] = useState<string>("")
-  const [filterPeriod, setFilterPeriod] = useState<string>("")
 
   const customerById = useMemo(() => {
     const m = new Map<string, Row>()
@@ -90,7 +82,6 @@ export default function ContracteClient({
   const visible = useMemo(() => {
     return contracts.filter((c) => {
       if (filterStatus && c.status !== filterStatus) return false
-      if (filterPeriod && c.period_type !== filterPeriod) return false
       if (search.trim()) {
         const q = search.toLowerCase()
         const cust = customerById.get(c.customer_id)
@@ -107,17 +98,12 @@ export default function ContracteClient({
       }
       return true
     })
-  }, [contracts, filterStatus, filterPeriod, search, customerById, propertyById])
+  }, [contracts, filterStatus, search, customerById, propertyById])
 
   const counts = useMemo(() => {
-    const c = { total: contracts.length, activ: 0, expirat: 0, reziliat: 0, suspendat: 0, aproape_expirate: 0 }
-    const now = Date.now()
+    const c = { total: contracts.length, activ: 0, reziliat: 0, suspendat: 0 }
     for (const x of contracts) {
       c[x.status as keyof typeof c] = (c[x.status as keyof typeof c] ?? 0) + 1
-      if (x.status === "activ") {
-        const days = (new Date(x.expiry_date).getTime() - now) / (1000 * 60 * 60 * 24)
-        if (days > 0 && days <= 60) c.aproape_expirate++
-      }
     }
     return c
   }, [contracts])
@@ -164,10 +150,12 @@ export default function ContracteClient({
       <div className="dash-stats-row" style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 20 }}>
         <div className="dash-stat"><strong>{counts.total}</strong><span>total</span></div>
         <div className="dash-stat" style={{ color: STATUS_COLORS.activ }}><strong>{counts.activ}</strong><span>activ</span></div>
-        <div className="dash-stat" style={{ color: "#a87400" }}><strong>{counts.aproape_expirate}</strong><span>expiră &lt; 60 zile</span></div>
-        <div className="dash-stat" style={{ color: STATUS_COLORS.expirat }}><strong>{counts.expirat}</strong><span>expirate</span></div>
+        <div className="dash-stat" style={{ color: STATUS_COLORS.suspendat }}><strong>{counts.suspendat}</strong><span>suspendate</span></div>
         <div className="dash-stat" style={{ color: STATUS_COLORS.reziliat }}><strong>{counts.reziliat}</strong><span>reziliate</span></div>
       </div>
+      <p className="dash-subtle" style={{ marginTop: -12, marginBottom: 16, fontSize: 13 }}>
+        Scadențele reale sunt pe echipamente — vezi <a href="/dashboard/rapoarte/scadente">raportul de scadențe</a>.
+      </p>
 
       <div className="dash-search-bar no-print" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
         <input
@@ -181,10 +169,6 @@ export default function ContracteClient({
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
           <option value="">Toate statusurile</option>
           {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </select>
-        <select value={filterPeriod} onChange={(e) => setFilterPeriod(e.target.value)}>
-          <option value="">Toate perioadele</option>
-          {Object.entries(PERIOD_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
         </select>
         <button
           type="button"
@@ -241,9 +225,8 @@ export default function ContracteClient({
               <th>Nr. contract</th>
               <th>Client</th>
               <th>Adresă</th>
-              <th>Tip</th>
               <th>Început</th>
-              <th>Scadență</th>
+              <th>Echipamente</th>
               <th>Status</th>
               <th>Tarif</th>
               <th></th>
@@ -254,26 +237,19 @@ export default function ContracteClient({
               const cust = customerById.get(c.customer_id)
               const prop = c.property_id ? propertyById.get(c.property_id) : null
               const isEditing = editing && editing !== "new" && editing.id === c.id
-              const days = daysUntil(c.expiry_date)
+              const equipCount = (c._equipment_ids ?? []).length
               return (
                 <Fragment key={c.id}>
                   <tr>
                     <td><code>{c.contract_number || "—"}</code></td>
                     <td>{custName(cust)}</td>
                     <td style={{ fontSize: 12 }}>{addressText(prop) || "—"}</td>
-                    <td>{PERIOD_LABELS[c.period_type] ?? c.period_type}</td>
                     <td>{formatDate(c.start_date)}</td>
                     <td>
-                      {formatDate(c.expiry_date)}
-                      {c.status === "activ" && days >= 0 && days <= 60 && (
-                        <div style={{ fontSize: 11, color: "#a87400" }}>
-                          {days === 0 ? "expiră azi" : `în ${days} zile`}
-                        </div>
-                      )}
-                      {c.status === "activ" && days < 0 && (
-                        <div style={{ fontSize: 11, color: STATUS_COLORS.expirat }}>
-                          expirat de {Math.abs(days)} zile
-                        </div>
+                      {equipCount > 0 ? (
+                        <span>{equipCount} echip.</span>
+                      ) : (
+                        <span style={{ color: "#888", fontStyle: "italic" }}>toate</span>
                       )}
                     </td>
                     <td>
@@ -327,7 +303,7 @@ export default function ContracteClient({
                   </tr>
                   {isEditing && (
                     <tr>
-                      <td colSpan={9}>
+                      <td colSpan={8}>
                         <ContractForm
                           contract={c}
                           customers={customers}
@@ -437,29 +413,35 @@ function ContractForm({
           <input name="contract_number" defaultValue={contract?.contract_number ?? ""} maxLength={40} />
         </label>
         <label className="dash-field">
-          <span>Tip perioadă *</span>
-          <select name="period_type" defaultValue={contract?.period_type ?? "2_ani"} required>
-            {Object.entries(PERIOD_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-        </label>
-        <label className="dash-field">
           <span>Status</span>
           <select name="status" defaultValue={contract?.status ?? "activ"}>
             {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
         </label>
-      </div>
-
-      <div className="booking-row">
         <label className="dash-field">
           <span>Data început *</span>
           <input name="start_date" type="date" defaultValue={contract?.start_date ?? ""} required />
         </label>
-        <label className="dash-field">
-          <span>Data expirare *</span>
-          <input name="expiry_date" type="date" defaultValue={contract?.expiry_date ?? ""} required />
-        </label>
       </div>
+
+      <details style={{ marginBottom: 12 }}>
+        <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--text-600)" }}>
+          Opțional: tip perioadă + dată expirare (contractele se auto-reînnoiesc dacă lipsesc)
+        </summary>
+        <div className="booking-row" style={{ marginTop: 10 }}>
+          <label className="dash-field">
+            <span>Tip perioadă</span>
+            <select name="period_type" defaultValue={contract?.period_type ?? ""}>
+              <option value="">—</option>
+              {Object.entries(PERIOD_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </label>
+          <label className="dash-field">
+            <span>Data expirare</span>
+            <input name="expiry_date" type="date" defaultValue={contract?.expiry_date ?? ""} />
+          </label>
+        </div>
+      </details>
 
       <div className="booking-row">
         <label className="dash-field">
