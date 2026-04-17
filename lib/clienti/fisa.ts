@@ -76,15 +76,14 @@ export async function loadFisaClient(
 ): Promise<FisaClient | null> {
   const admin = getServiceRoleSupabase()
 
-  // Verifică că firma are cel puțin un booking cu acest customer (autorizare)
-  const { data: bk } = await admin
-    .from("bookings")
-    .select("id")
-    .eq("firm_id", firmId)
-    .eq("customer_id", customerId)
-    .limit(1)
-    .maybeSingle()
-  if (!bk) return null
+  // Autorizare: firma trebuie să aibă cel puțin unul dintre:
+  // booking / contract / firm_customer_links cu acest customer.
+  const [bkRes, ctRes, linkRes] = await Promise.all([
+    admin.from("bookings").select("id").eq("firm_id", firmId).eq("customer_id", customerId).limit(1).maybeSingle(),
+    admin.from("contracts").select("id").eq("firm_id", firmId).eq("customer_id", customerId).limit(1).maybeSingle(),
+    admin.from("firm_customer_links").select("customer_id").eq("firm_id", firmId).eq("customer_id", customerId).limit(1).maybeSingle(),
+  ])
+  if (!bkRes.data && !ctRes.data && !linkRes.data) return null
 
   const [custRes, firmRes, propRes, catalog] = await Promise.all([
     admin
