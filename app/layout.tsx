@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
 import { DOMAIN } from "@/lib/config/domain"
 import { CookieBanner } from "@/components/site/CookieBanner"
-import { Header } from "@/components/site/Header"
-import { Footer } from "@/components/site/Footer"
+import { SiteShell } from "@/components/site/SiteShell"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
@@ -80,9 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
-        <Header user={headerUser} />
-        <main className="vg-main">{children}</main>
-        <Footer />
+        <SiteShell headerUser={headerUser}>{children}</SiteShell>
         <CookieBanner />
       </body>
     </html>

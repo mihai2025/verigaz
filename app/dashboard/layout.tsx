@@ -6,7 +6,7 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
-import { DashboardNav } from "@/components/dashboard/DashboardNav"
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader"
 import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner"
 
 export const metadata: Metadata = {
@@ -53,11 +53,28 @@ export default async function DashboardLayout({
       ? await getAdminBadgeCounts()
       : { pendingClaims: 0, pendingOrders: 0 }
 
+  // Obține numele user-ului pentru chip-ul din header
+  let userName: string | null = null
+  try {
+    const admin = getServiceRoleSupabase()
+    const { data: prof } = await admin
+      .from("profiles")
+      .select("full_name")
+      .eq("user_id", data.user.id)
+      .maybeSingle()
+    const fullName = (prof as { full_name: string | null } | null)?.full_name ?? null
+    if (fullName) userName = fullName.trim().split(/\s+/)[0] ?? null
+    else if (data.user.email) userName = data.user.email.split("@")[0]
+  } catch {
+    userName = data.user.email?.split("@")[0] ?? null
+  }
+
   return (
     <div className="dash-layout">
-      <DashboardNav
+      <DashboardHeader
         role={userRole.role}
         firmId={userRole.firmId}
+        userName={userName}
         pendingClaims={badges.pendingClaims}
         pendingOrders={badges.pendingOrders}
       />
