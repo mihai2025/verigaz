@@ -1463,10 +1463,26 @@
 .dash-hdr__dropdown {
   position: relative;
 }
+/* Hide native <summary> marker */
+.dash-hdr__dropdown > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.dash-hdr__dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+.dash-hdr__dropdown > summary::marker {
+  display: none;
+  content: "";
+}
 .dash-hdr__dropdown-btn .dash-hdr__caret {
   font-size: 10px;
   margin-left: 2px;
   opacity: .7;
+  transition: transform .15s;
+}
+.dash-hdr__dropdown[open] > summary .dash-hdr__caret {
+  transform: rotate(180deg);
 }
 .dash-hdr__dropdown-panel {
   position: absolute;

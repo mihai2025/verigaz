@@ -124,55 +124,48 @@ function Dropdown({
   active: boolean
   onNavigate: () => void
 }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDetailsElement>(null)
 
+  // Închide dropdown pe click în afară
   useEffect(() => {
-    if (!open) return
     function handler(e: MouseEvent) {
-      if (!ref.current) return
-      if (!ref.current.contains(e.target as Node)) setOpen(false)
+      const d = ref.current
+      if (!d || !d.open) return
+      if (!d.contains(e.target as Node)) d.open = false
     }
-    // Setăm listener-ul pe următorul tick ca să nu se închidă imediat
-    const t = setTimeout(() => document.addEventListener("mousedown", handler), 0)
-    return () => {
-      clearTimeout(t)
-      document.removeEventListener("mousedown", handler)
-    }
-  }, [open])
+    document.addEventListener("click", handler)
+    return () => document.removeEventListener("click", handler)
+  }, [])
+
+  function handleItemClick() {
+    if (ref.current) ref.current.open = false
+    onNavigate()
+  }
 
   return (
-    <div className={`dash-hdr__dropdown ${open ? "is-open" : ""}`} ref={ref}>
-      <button
-        type="button"
+    <details className="dash-hdr__dropdown" ref={ref}>
+      <summary
         className={`dash-hdr__link dash-hdr__dropdown-btn ${active ? "is-active" : ""}`}
-        aria-expanded={open}
         aria-haspopup="true"
-        onClick={() => setOpen((v) => !v)}
       >
         {label}
         <span className="dash-hdr__caret" aria-hidden="true">▾</span>
-      </button>
-      {open && (
-        <div className="dash-hdr__dropdown-panel" role="menu">
-          {items.map((sub) => (
-            <Link
-              key={sub.href}
-              href={sub.href}
-              role="menuitem"
-              className="dash-hdr__dropdown-link"
-              onClick={() => {
-                setOpen(false)
-                onNavigate()
-              }}
-            >
-              <span>{sub.label}</span>
-              <Badge count={sub.badge} />
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+      </summary>
+      <div className="dash-hdr__dropdown-panel" role="menu">
+        {items.map((sub) => (
+          <Link
+            key={sub.href}
+            href={sub.href}
+            role="menuitem"
+            className="dash-hdr__dropdown-link"
+            onClick={handleItemClick}
+          >
+            <span>{sub.label}</span>
+            <Badge count={sub.badge} />
+          </Link>
+        ))}
+      </div>
+    </details>
   )
 }
 
