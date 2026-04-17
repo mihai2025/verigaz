@@ -48,15 +48,83 @@ export async function upsertPropertyEquipment(
     return { ok: false, error: "Alege tipul de echipament." }
   }
 
+  const installationDate = String(formData.get("installation_date") ?? "").trim() || null
+  const manufactureDate = String(formData.get("manufacture_date") ?? "").trim() || null
+  const lastVerificareAt = String(formData.get("last_verificare_at") ?? "").trim() || null
+  const lastRevizieAt = String(formData.get("last_revizie_at") ?? "").trim() || null
+  const nextVerificareDueForm = String(formData.get("next_verificare_due") ?? "").trim() || null
+  const nextRevizieDueForm = String(formData.get("next_revizie_due") ?? "").trim() || null
+
+  // Auto-calcul scadențe dacă nu sunt completate manual și ai luni de referință din catalog
+  const eqTypeId = equipmentTypeRaw ? Number(equipmentTypeRaw) : null
+  const firmEqTypeId = firmEquipmentTypeRaw || null
+  let verificareMonths: number | null = null
+  let revizieMonths: number | null = null
+  if (firmEqTypeId) {
+    const { data: fet } = await ctx.admin
+      .from("firm_equipment_types")
+      .select("verificare_months, revizie_months, equipment_type_id")
+      .eq("id", firmEqTypeId)
+      .maybeSingle()
+    if (fet) {
+      verificareMonths = (fet.verificare_months as number | null) ?? null
+      revizieMonths = (fet.revizie_months as number | null) ?? null
+      // Fallback la default catalog dacă firm override e gol
+      if ((verificareMonths == null || revizieMonths == null) && fet.equipment_type_id) {
+        const { data: def } = await ctx.admin
+          .from("equipment_types")
+          .select("verificare_months, revizie_months")
+          .eq("id", fet.equipment_type_id)
+          .maybeSingle()
+        if (def) {
+          verificareMonths = verificareMonths ?? ((def.verificare_months as number | null) ?? null)
+          revizieMonths = revizieMonths ?? ((def.revizie_months as number | null) ?? null)
+        }
+      }
+    }
+  } else if (eqTypeId != null) {
+    const { data: def } = await ctx.admin
+      .from("equipment_types")
+      .select("verificare_months, revizie_months")
+      .eq("id", eqTypeId)
+      .maybeSingle()
+    if (def) {
+      verificareMonths = (def.verificare_months as number | null) ?? null
+      revizieMonths = (def.revizie_months as number | null) ?? null
+    }
+  }
+
+  function addMonths(iso: string, months: number): string {
+    const d = new Date(iso)
+    d.setMonth(d.getMonth() + months)
+    return d.toISOString().slice(0, 10)
+  }
+
+  let nextVerificareDue = nextVerificareDueForm
+  if (!nextVerificareDue && verificareMonths != null) {
+    const base = lastVerificareAt ?? installationDate ?? manufactureDate
+    if (base) nextVerificareDue = addMonths(base, verificareMonths)
+  }
+
+  let nextRevizieDue = nextRevizieDueForm
+  if (!nextRevizieDue && revizieMonths != null) {
+    const base = lastRevizieAt ?? installationDate ?? manufactureDate
+    if (base) nextRevizieDue = addMonths(base, revizieMonths)
+  }
+
   const payload: Record<string, unknown> = {
     property_id: propertyId,
-    equipment_type_id: equipmentTypeRaw ? Number(equipmentTypeRaw) : null,
-    firm_equipment_type_id: firmEquipmentTypeRaw || null,
+    equipment_type_id: eqTypeId,
+    firm_equipment_type_id: firmEqTypeId,
     brand: String(formData.get("brand") ?? "").trim() || null,
     model: String(formData.get("model") ?? "").trim() || null,
     serial_number: String(formData.get("serial_number") ?? "").trim() || null,
-    manufacture_date: String(formData.get("manufacture_date") ?? "").trim() || null,
-    installation_date: String(formData.get("installation_date") ?? "").trim() || null,
+    manufacture_date: manufactureDate,
+    installation_date: installationDate,
+    last_verificare_at: lastVerificareAt,
+    last_revizie_at: lastRevizieAt,
+    next_verificare_due: nextVerificareDue,
+    next_revizie_due: nextRevizieDue,
     observations: String(formData.get("observations") ?? "").trim() || null,
     is_active: formData.get("is_active") !== "off",
   }

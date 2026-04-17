@@ -374,6 +374,35 @@ function EquipmentForm({
           <input name="installation_date" type="date" defaultValue={equipment?.installation_date ?? ""} />
         </label>
       </div>
+
+      <div className="booking-row">
+        <label className="dash-field">
+          <span>Ultima verificare</span>
+          <input name="last_verificare_at" type="date" defaultValue={equipment?.last_verificare_at ?? ""} />
+        </label>
+        <label className="dash-field">
+          <span>Scadență următoare verificare</span>
+          <input name="next_verificare_due" type="date" defaultValue={equipment?.next_verificare_due ?? ""} />
+          <small style={{ color: "var(--text-500)" }}>
+            Gol = auto-calcul pe baza ultimei verificări + luni din catalog (ex: 24 luni).
+          </small>
+        </label>
+      </div>
+
+      <div className="booking-row">
+        <label className="dash-field">
+          <span>Ultima revizie</span>
+          <input name="last_revizie_at" type="date" defaultValue={equipment?.last_revizie_at ?? ""} />
+        </label>
+        <label className="dash-field">
+          <span>Scadență următoare revizie</span>
+          <input name="next_revizie_due" type="date" defaultValue={equipment?.next_revizie_due ?? ""} />
+          <small style={{ color: "var(--text-500)" }}>
+            Gol = auto-calcul pe baza ultimei revizii + luni din catalog (ex: 120 luni).
+          </small>
+        </label>
+      </div>
+
       <label className="dash-field">
         <span>Observații</span>
         <textarea name="observations" rows={2} maxLength={500} defaultValue={equipment?.observations ?? ""} />

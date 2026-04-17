@@ -58,12 +58,15 @@ export async function dispatchDueReminders(
   const { data: due, error } = await admin
     .from("reminders")
     .select(
-      "id, reminder_type, scheduled_for, channel, customer_id, property_id, firm_id, related_booking_id, contract_id, " +
+      "id, reminder_type, scheduled_for, channel, customer_id, property_id, firm_id, related_booking_id, contract_id, equipment_id, " +
       "customers(full_name, phone, email), " +
       "properties(address, block_name, apartment, next_verificare_due, next_revizie_due, " +
       "  judete:judet_id(nume), localitati:localitate_id(nume)), " +
       "gas_firms(slug, brand_name, legal_name, phone), " +
-      "contracts(contract_number, expiry_date, period_type)",
+      "contracts(contract_number, expiry_date, period_type), " +
+      "property_equipments(brand, model, " +
+      "  equipment_types:equipment_type_id(slug, nume), " +
+      "  firm_equipment_types:firm_equipment_type_id(nume, service_category_slug))",
     )
     .eq("status", "queued")
     .lte("scheduled_for", now)
@@ -83,6 +86,7 @@ export async function dispatchDueReminders(
     const property = Array.isArray(r.properties) ? r.properties[0] : r.properties
     const firm = Array.isArray(r.gas_firms) ? r.gas_firms[0] : r.gas_firms
     const contract = Array.isArray(r.contracts) ? r.contracts[0] : r.contracts
+    const equipment = Array.isArray(r.property_equipments) ? r.property_equipments[0] : r.property_equipments
 
     if (!customer || !property) {
       result.skipped += 1
@@ -100,11 +104,26 @@ export async function dispatchDueReminders(
       ? formatDateRo(dueIso)
       : formatDateRo(new Date(new Date(r.scheduled_for).getTime() + 30 * 86400000).toISOString())
 
+    // Adresa completă — include localitate pentru clienți cu mai multe adrese
+    const localitate = property.localitati?.nume ?? (Array.isArray(property.localitati) ? property.localitati[0]?.nume : null)
     const addr = [
       property.address,
       property.block_name && `bl. ${property.block_name}`,
       property.apartment && `ap. ${property.apartment}`,
+      localitate,
     ].filter(Boolean).join(", ")
+
+    // Denumirea specifică a echipamentului (centrală Ariston, detector, instalație gaz)
+    let equipmentLabel: string | null = null
+    if (equipment) {
+      const eqType = Array.isArray(equipment.equipment_types) ? equipment.equipment_types[0] : equipment.equipment_types
+      const firmEqType = Array.isArray(equipment.firm_equipment_types) ? equipment.firm_equipment_types[0] : equipment.firm_equipment_types
+      const baseName = (firmEqType?.nume ?? eqType?.nume ?? "").toLowerCase()
+      const brandModel = [equipment.brand, equipment.model].filter(Boolean).join(" ").trim()
+      equipmentLabel = brandModel
+        ? `${baseName || "echipament"} ${brandModel}`
+        : baseName || null
+    }
 
     const firmName = firm ? (firm.brand_name || firm.legal_name) : null
     const firmPhone = firm?.phone ?? null
@@ -138,6 +157,10 @@ export async function dispatchDueReminders(
       const extraVars: Record<string, string> = {}
       if (r.reminder_type === "contract_service" && contract) {
         extraVars.CONTRACT = contract.contract_number ?? `#${String(r.contract_id).slice(0, 8)}`
+      }
+      // Dacă echipamentul specific e cunoscut, override ECHIPAMENT cu denumirea lui
+      if (equipmentLabel) {
+        extraVars.ECHIPAMENT = equipmentLabel
       }
       const composed = await composeReminderSms({
         reminderType: r.reminder_type,
