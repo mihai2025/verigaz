@@ -2,7 +2,7 @@
 
 import { Fragment, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { upsertContract, changeContractStatus, deleteContract } from "./actions"
+import { upsertContract, changeContractStatus, deleteContract, createCustomerAndProperty } from "./actions"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any
@@ -57,16 +57,20 @@ export default function ContracteClient({
   customers,
   properties,
   equipments,
+  judete,
 }: {
   contracts: Row[]
   customers: Row[]
   properties: Row[]
   equipments: Row[]
+  judete: Row[]
 }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState<Row | null | "new">(null)
+  const [creatingCustomer, setCreatingCustomer] = useState(false)
+  const [prefillCustomer, setPrefillCustomer] = useState<{ customerId: string; propertyId: string } | null>(null)
   const [search, setSearch] = useState("")
   const [filterStatus, setFilterStatus] = useState<string>("")
   const [filterPeriod, setFilterPeriod] = useState<string>("")
@@ -130,7 +134,27 @@ export default function ContracteClient({
   function onSubmit(e: React.FormEvent<HTMLFormElement>, contractId: string | null) {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
-    run(upsertContract(contractId, fd), () => setEditing(null))
+    run(upsertContract(contractId, fd), () => {
+      setEditing(null)
+      setPrefillCustomer(null)
+    })
+  }
+
+  function onSubmitCreateCustomer(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const fd = new FormData(e.currentTarget)
+    startTransition(async () => {
+      setError(null)
+      const res = await createCustomerAndProperty(fd)
+      if (!res.ok) {
+        setError(res.error ?? "Eroare.")
+        return
+      }
+      setCreatingCustomer(false)
+      setPrefillCustomer({ customerId: res.customerId, propertyId: res.propertyId })
+      setEditing("new")
+      router.refresh()
+    })
   }
 
   return (
@@ -164,19 +188,41 @@ export default function ContracteClient({
         </select>
         <button
           type="button"
+          className="dash-btn dash-btn--ghost"
+          onClick={() => { setCreatingCustomer(!creatingCustomer); setEditing(null) }}
+          disabled={pending}
+        >
+          {creatingCustomer ? "Anulează client" : "+ Client nou"}
+        </button>
+        <button
+          type="button"
           className="dash-btn dash-btn--primary"
-          onClick={() => setEditing(editing === "new" ? null : "new")}
+          onClick={() => { setEditing(editing === "new" ? null : "new"); setCreatingCustomer(false) }}
           disabled={pending}
         >
           {editing === "new" ? "Anulează" : "+ Contract nou"}
         </button>
       </div>
 
+      {creatingCustomer && (
+        <div className="dash-card" style={{ marginBottom: 20 }}>
+          <h3>Client nou + adresă</h3>
+          <p className="dash-subtle" style={{ marginBottom: 10 }}>
+            După salvare, pre-umplem formularul de contract cu datele acestui client.
+          </p>
+          <NewCustomerForm
+            judete={judete}
+            pending={pending}
+            onSubmit={onSubmitCreateCustomer}
+          />
+        </div>
+      )}
+
       {editing === "new" && (
         <div className="dash-card" style={{ marginBottom: 20 }}>
-          <h3>Contract nou</h3>
+          <h3>Contract nou{prefillCustomer ? " (client proaspăt creat)" : ""}</h3>
           <ContractForm
-            contract={null}
+            contract={prefillCustomer ? { customer_id: prefillCustomer.customerId, property_id: prefillCustomer.propertyId } as Row : null}
             customers={customers}
             properties={properties}
             equipments={equipments}
@@ -433,6 +479,113 @@ function ContractForm({
 
       <button type="submit" disabled={pending} className="dash-btn dash-btn--primary">
         {pending ? "Se salvează…" : contract ? "Salvează" : "Adaugă contract"}
+      </button>
+    </form>
+  )
+}
+
+function NewCustomerForm({
+  judete,
+  pending,
+  onSubmit,
+}: {
+  judete: Row[]
+  pending: boolean
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+}) {
+  const [customerType, setCustomerType] = useState<string>("individual")
+
+  return (
+    <form onSubmit={onSubmit} className="dash-form" style={{ padding: "0.75rem", background: "#f0f9ff" }}>
+      <div className="booking-row">
+        <label className="dash-field">
+          <span>Tip client *</span>
+          <select name="customer_type" value={customerType} onChange={(e) => setCustomerType(e.target.value)} required>
+            <option value="individual">Persoană fizică</option>
+            <option value="association">Asociație proprietari</option>
+            <option value="business">Firmă / PFA</option>
+          </select>
+        </label>
+        <label className="dash-field">
+          <span>Telefon *</span>
+          <input name="phone" type="tel" required maxLength={30} placeholder="07xx xxx xxx" />
+        </label>
+        <label className="dash-field">
+          <span>Email</span>
+          <input name="email" type="email" maxLength={120} />
+        </label>
+      </div>
+
+      {customerType === "individual" ? (
+        <div className="booking-row">
+          <label className="dash-field">
+            <span>Prenume *</span>
+            <input name="first_name" required maxLength={60} />
+          </label>
+          <label className="dash-field">
+            <span>Nume *</span>
+            <input name="last_name" required maxLength={60} />
+          </label>
+          <label className="dash-field">
+            <span>CNP (opțional)</span>
+            <input name="cnp" maxLength={13} pattern="\d{13}" />
+          </label>
+        </div>
+      ) : (
+        <div className="booking-row">
+          <label className="dash-field">
+            <span>Denumire {customerType === "association" ? "asociație" : "firmă"} *</span>
+            <input name="company_name" required maxLength={160} />
+          </label>
+          <label className="dash-field">
+            <span>CUI</span>
+            <input name="cui" maxLength={20} />
+          </label>
+        </div>
+      )}
+
+      <div className="booking-row">
+        <label className="dash-field">
+          <span>Tip imobil</span>
+          <select name="property_type" defaultValue="apartment">
+            <option value="apartment">Apartament</option>
+            <option value="house">Casă</option>
+            <option value="building">Bloc</option>
+            <option value="office">Birou / Sediu</option>
+            <option value="association">Scară / Asociație</option>
+          </select>
+        </label>
+        <label className="dash-field">
+          <span>Județ</span>
+          <select name="judet_id" defaultValue="">
+            <option value="">—</option>
+            {judete.map((j) => <option key={j.id} value={j.id}>{j.nume}</option>)}
+          </select>
+        </label>
+        <label className="dash-field">
+          <span>Localitate</span>
+          <input name="localitate_text" maxLength={120} placeholder="ex: Cluj-Napoca" />
+        </label>
+      </div>
+
+      <label className="dash-field">
+        <span>Adresă (stradă + număr) *</span>
+        <input name="address" required maxLength={200} />
+      </label>
+
+      <div className="booking-row">
+        <label className="dash-field">
+          <span>Bloc</span>
+          <input name="block_name" maxLength={30} />
+        </label>
+        <label className="dash-field">
+          <span>Apartament</span>
+          <input name="apartment" maxLength={10} />
+        </label>
+      </div>
+
+      <button type="submit" disabled={pending} className="dash-btn dash-btn--primary">
+        {pending ? "Se salvează…" : "Salvează client + continuă cu contract"}
       </button>
     </form>
   )

@@ -28,7 +28,7 @@ export default async function Page() {
 
   const admin = getServiceRoleSupabase()
 
-  const [contractsRes, custRes, propRes, equipRes, contractEquipRes] = await Promise.all([
+  const [contractsRes, custRes, propRes, equipRes, contractEquipRes, judeteRes] = await Promise.all([
     admin
       .from("contracts")
       .select("id, contract_number, customer_id, property_id, period_type, " +
@@ -49,6 +49,7 @@ export default async function Page() {
     admin
       .from("contract_equipments")
       .select("contract_id, equipment_id"),
+    admin.from("judete").select("id, nume").order("nume"),
   ])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,6 +90,8 @@ export default async function Page() {
 
   const filteredCustomers = customers.filter((c) => firmCustomerIds.has(c.id))
   const filteredProperties = properties.filter((p) => firmPropertyIds.has(p.id))
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const judete = (judeteRes.data ?? []) as any[]
 
   return (
     <div className="dash-page">
@@ -103,6 +106,7 @@ export default async function Page() {
         customers={filteredCustomers}
         properties={filteredProperties}
         equipments={equipments}
+        judete={judete}
       />
     </div>
   )

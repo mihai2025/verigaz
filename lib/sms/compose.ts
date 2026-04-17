@@ -66,6 +66,7 @@ export type SmsComposeInput = {
   dueDateISO: string | null       // ISO string, va fi formatat DD.MM.YYYY
   bookingLongUrl: string           // URL lung pentru programare (se shortenează)
   bookingRef?: string              // fallback în locul link-ului
+  extraVars?: Record<string, string | null | undefined>  // ex: { CONTRACT: "C-2026-0001" }
 }
 
 export async function composeReminderSms(input: SmsComposeInput): Promise<{
@@ -92,6 +93,7 @@ export async function composeReminderSms(input: SmsComposeInput): Promise<{
     ADRESA: input.customerAddress ?? "",
     LINK: linkValue,
     REF: input.bookingRef ?? "",
+    ...(input.extraVars ?? {}),
   })
 
   // Normalizează: dubluri de spații, trim, diacritice
