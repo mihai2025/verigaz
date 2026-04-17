@@ -183,6 +183,7 @@ export async function createCustomer(formData: FormData): Promise<CreateCustomer
     .maybeSingle()
 
   if (existing) {
+    await linkFirmCustomer(ctx.admin, ctx.firmId, existing.id as string, ctx.userId)
     await writeAudit({
       actorUserId: ctx.userId,
       actorRole: "firm_owner",
@@ -192,6 +193,7 @@ export async function createCustomer(formData: FormData): Promise<CreateCustomer
       summary: fullName,
     })
     revalidatePath("/dashboard/contracte")
+    revalidatePath("/dashboard/clienti")
     return { ok: true, customerId: existing.id as string }
   }
 
@@ -212,6 +214,7 @@ export async function createCustomer(formData: FormData): Promise<CreateCustomer
     .single()
   if (custErr || !newCust) return { ok: false, error: custErr?.message ?? "Eroare la creare client." }
 
+  await linkFirmCustomer(ctx.admin, ctx.firmId, newCust.id as string, ctx.userId)
   await writeAudit({
     actorUserId: ctx.userId,
     actorRole: "firm_owner",
@@ -222,7 +225,19 @@ export async function createCustomer(formData: FormData): Promise<CreateCustomer
   })
 
   revalidatePath("/dashboard/contracte")
+  revalidatePath("/dashboard/clienti")
   return { ok: true, customerId: newCust.id as string }
+}
+
+async function linkFirmCustomer(
+  admin: ReturnType<typeof getServiceRoleSupabase>,
+  firmId: string,
+  customerId: string,
+  userId: string,
+) {
+  await admin
+    .from("firm_customer_links")
+    .upsert({ firm_id: firmId, customer_id: customerId, added_by: userId }, { onConflict: "firm_id,customer_id" })
 }
 
 export async function addPropertyForCustomer(customerId: string, formData: FormData): Promise<AddPropertyResult> {
@@ -233,6 +248,9 @@ export async function addPropertyForCustomer(customerId: string, formData: FormD
   // Verifică că clientul există
   const { data: cust } = await ctx.admin.from("customers").select("id").eq("id", customerId).maybeSingle()
   if (!cust) return { ok: false, error: "Clientul nu există." }
+
+  // Asigură linkul firm↔customer (dacă firma adaugă adresă, îl consideră clientul ei)
+  await linkFirmCustomer(ctx.admin, ctx.firmId, customerId, ctx.userId)
 
   const propertyType = String(formData.get("property_type") ?? "apartment").trim()
   const address = String(formData.get("address") ?? "").trim()
@@ -286,6 +304,7 @@ export async function addPropertyForCustomer(customerId: string, formData: FormD
   })
 
   revalidatePath("/dashboard/contracte")
+  revalidatePath("/dashboard/clienti")
   return { ok: true, propertyId: newProp.id as string }
 }
 

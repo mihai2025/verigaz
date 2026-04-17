@@ -27,20 +27,55 @@ export default async function Page() {
 
   const admin = getServiceRoleSupabase()
 
-  // 1. Găsește customers asociați acestei firme (prin istorie bookings)
-  const { data: bks } = await admin
-    .from("bookings")
-    .select("customer_id, property_id")
-    .eq("firm_id", firmId)
+  // 1. Clienții firmei — UNION: bookings + contracts + firm_customer_links
+  const [bksRes, contractsRes, linksRes] = await Promise.all([
+    admin.from("bookings").select("customer_id, property_id").eq("firm_id", firmId),
+    admin.from("contracts").select("customer_id, property_id").eq("firm_id", firmId),
+    admin.from("firm_customer_links").select("customer_id").eq("firm_id", firmId),
+  ])
 
-  const customerIds = [...new Set((bks ?? []).map((b) => b.customer_id as string))]
-  const propertyIds = [...new Set((bks ?? []).map((b) => b.property_id as string))]
+  const customerIds = [...new Set([
+    ...((bksRes.data ?? []).map((b) => b.customer_id as string)),
+    ...((contractsRes.data ?? []).map((c) => c.customer_id as string)),
+    ...((linksRes.data ?? []).map((l) => l.customer_id as string)),
+  ].filter(Boolean))]
+
+  const propertyIdsFromBookings = [...new Set((bksRes.data ?? []).map((b) => b.property_id as string).filter(Boolean))]
+
+  // Încarcă toate properties pentru acești clienți (nu doar cele din bookings)
+  let allPropertyIds = propertyIdsFromBookings
+  if (customerIds.length > 0) {
+    const { data: allProps } = await admin
+      .from("properties")
+      .select("id")
+      .in("customer_id", customerIds)
+    allPropertyIds = [...new Set([
+      ...propertyIdsFromBookings,
+      ...(allProps ?? []).map((p) => p.id as string),
+    ])]
+  }
+  const propertyIds = allPropertyIds
+
+  // Pregătire județe + empty-state handled in ClientiClient (pentru buton nou)
+  const { data: judeteData } = await admin.from("judete").select("id, nume").order("nume")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const judete = (judeteData ?? []) as any[]
 
   if (customerIds.length === 0) {
     return (
       <div className="dash-page">
-        <h1 className="dash-title">Clienți</h1>
-        <p className="dash-note">Nu ai încă clienți. Așteaptă prima programare.</p>
+        <h1 className="dash-title">Clienți & echipamente</h1>
+        <p className="dash-subtle">
+          Toți clienții firmei tale, cu adresele și echipamentele instalate.
+        </p>
+        <ClientiClient
+          customers={[]}
+          properties={[]}
+          equipments={[]}
+          reminders={[]}
+          catalog={await getFirmEquipmentCatalog(firmId)}
+          judete={judete}
+        />
       </div>
     )
   }
@@ -95,6 +130,7 @@ export default async function Page() {
         equipments={equipments}
         reminders={reminders}
         catalog={catalog}
+        judete={judete}
       />
     </div>
   )
