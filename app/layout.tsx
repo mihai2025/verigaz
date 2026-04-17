@@ -72,7 +72,7 @@ async function getHeaderUser() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headerUser = await getHeaderUser()
   return (
-    <html lang="ro">
+    <html lang="ro-RO">
       <head>
         <link rel="preconnect" href={`https://${DOMAIN.cdnDomain}`} />
         <link rel="dns-prefetch" href={`https://${DOMAIN.cdnDomain}`} />
