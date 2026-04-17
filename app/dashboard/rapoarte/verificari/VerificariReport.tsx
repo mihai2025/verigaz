@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import type { VerificareRow } from "@/lib/reports/verificari"
 import type { EquipmentType } from "@/lib/equipment/catalog"
 import { addVerificareManual, deleteVerificare, updateVerificare } from "./actions"
+import DateInput from "@/components/ui/DateInput"
 
 type Filters = {
   search: string
@@ -170,11 +171,11 @@ export default function VerificariReport({
         <div className="report-daterange">
           <label>
             <span>De la</span>
-            <input type="date" value={filters.dateFrom} onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })} />
+            <DateInput value={filters.dateFrom} onChange={(iso) => setFilters({ ...filters, dateFrom: iso })} />
           </label>
           <label>
             <span>Până la</span>
-            <input type="date" value={filters.dateTo} onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })} />
+            <DateInput value={filters.dateTo} onChange={(iso) => setFilters({ ...filters, dateTo: iso })} />
           </label>
         </div>
         <fieldset className="report-mode">
@@ -330,11 +331,11 @@ export default function VerificariReport({
                             <div className="booking-row">
                               <label className="dash-field">
                                 <span>Data verificării</span>
-                                <input name="issued_at" type="date" defaultValue={r.issuedAt.slice(0, 10)} />
+                                <DateInput name="issued_at" defaultValue={r.issuedAt.slice(0, 10)} />
                               </label>
                               <label className="dash-field">
                                 <span>Valabilitate (expiră)</span>
-                                <input name="valid_until" type="date" defaultValue={r.validUntil?.slice(0, 10) ?? ""} />
+                                <DateInput name="valid_until" defaultValue={r.validUntil?.slice(0, 10) ?? ""} />
                               </label>
                               <label className="dash-field">
                                 <span>Tehnician</span>
@@ -400,7 +401,7 @@ function AddVerificareForm({
         </label>
         <label className="dash-field">
           <span>Data verificării *</span>
-          <input name="issued_at" type="date" required />
+          <DateInput name="issued_at" required />
         </label>
         <label className="dash-field">
           <span>Valabilitate (luni)</span>
@@ -493,11 +494,11 @@ function AddVerificareForm({
             <div className="booking-row">
               <label className="dash-field">
                 <span>Data achiziție/instalare</span>
-                <input name="equipment_install_date" type="date" />
+                <DateInput name="equipment_install_date" />
               </label>
               <label className="dash-field">
                 <span>Data fabricație</span>
-                <input name="equipment_manufacture_date" type="date" />
+                <DateInput name="equipment_manufacture_date" />
               </label>
             </div>
           </>

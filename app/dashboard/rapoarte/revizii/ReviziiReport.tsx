@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import type { ReviziaRow } from "@/lib/reports/revizii"
 import { addRevizieManual, deleteRevizie, updateRevizie } from "./actions"
+import DateInput from "@/components/ui/DateInput"
 
 type Filters = {
   search: string
@@ -182,18 +183,16 @@ export default function ReviziiReport({
         <div className="report-daterange">
           <label>
             <span>De la</span>
-            <input
-              type="date"
+            <DateInput
               value={filters.dateFrom}
-              onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+              onChange={(iso) => setFilters({ ...filters, dateFrom: iso })}
             />
           </label>
           <label>
             <span>Până la</span>
-            <input
-              type="date"
+            <DateInput
               value={filters.dateTo}
-              onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+              onChange={(iso) => setFilters({ ...filters, dateTo: iso })}
             />
           </label>
         </div>
@@ -247,7 +246,7 @@ export default function ReviziiReport({
               </label>
               <label className="dash-field">
                 <span>Data reviziei *</span>
-                <input name="issued_at" type="date" required />
+                <DateInput name="issued_at" required />
               </label>
               <label className="dash-field">
                 <span>Tehnician</span>
@@ -389,11 +388,11 @@ export default function ReviziiReport({
                             <div className="booking-row">
                               <label className="dash-field">
                                 <span>Data reviziei</span>
-                                <input name="issued_at" type="date" defaultValue={r.issuedAt.slice(0, 10)} />
+                                <DateInput name="issued_at" defaultValue={r.issuedAt.slice(0, 10)} />
                               </label>
                               <label className="dash-field">
                                 <span>Valabilitate (expiră)</span>
-                                <input name="valid_until" type="date" defaultValue={r.validUntil?.slice(0, 10) ?? ""} />
+                                <DateInput name="valid_until" defaultValue={r.validUntil?.slice(0, 10) ?? ""} />
                               </label>
                               <label className="dash-field">
                                 <span>Tehnician</span>

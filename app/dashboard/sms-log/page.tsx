@@ -6,6 +6,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
+import DateInput from "@/components/ui/DateInput"
 
 type SP = {
   firm?: string
@@ -133,11 +134,11 @@ export default async function SmsLogPage({
         <div className="booking-row">
           <label className="dash-field">
             <span>De la</span>
-            <input type="date" name="from" defaultValue={sp.from ?? ""} />
+            <DateInput name="from" defaultValue={sp.from ?? ""} />
           </label>
           <label className="dash-field">
             <span>Până la</span>
-            <input type="date" name="to" defaultValue={sp.to ?? ""} />
+            <DateInput name="to" defaultValue={sp.to ?? ""} />
           </label>
         </div>
         <div style={{ display: "flex", gap: 8 }}>

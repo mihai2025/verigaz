@@ -6,6 +6,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
+import DateInput from "@/components/ui/DateInput"
 
 const WORK_TYPE_LABELS: Record<string, string> = {
   verificare: "Verificare",
@@ -114,11 +115,11 @@ export default async function Page({ searchParams }: Props) {
       <form method="get" className="dash-search-bar no-print" style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 20, flexWrap: "wrap" }}>
         <label style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <span>De la:</span>
-          <input type="date" name="from" defaultValue={from} />
+          <DateInput name="from" defaultValue={from} />
         </label>
         <label style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <span>Până la:</span>
-          <input type="date" name="to" defaultValue={to} />
+          <DateInput name="to" defaultValue={to} />
         </label>
         <button type="submit" className="dash-btn dash-btn--primary">Aplică</button>
       </form>

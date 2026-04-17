@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { upsertContract, changeContractStatus, deleteContract, createCustomer, addPropertyForCustomer } from "./actions"
+import DateInput from "@/components/ui/DateInput"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any
@@ -452,7 +453,7 @@ function ContractForm({
         </label>
         <label className="dash-field">
           <span>Data început *</span>
-          <input name="start_date" type="date" defaultValue={contract?.start_date ?? ""} required />
+          <DateInput name="start_date" defaultValue={contract?.start_date ?? ""} required />
         </label>
       </div>
 
@@ -463,7 +464,7 @@ function ContractForm({
         <div className="booking-row" style={{ marginTop: 10 }}>
           <label className="dash-field">
             <span>Data expirare</span>
-            <input name="expiry_date" type="date" defaultValue={contract?.expiry_date ?? ""} />
+            <DateInput name="expiry_date" defaultValue={contract?.expiry_date ?? ""} />
           </label>
         </div>
       </details>

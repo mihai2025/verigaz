@@ -3,6 +3,7 @@
 import { Fragment, useMemo, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { upsertWorkSheet, deleteWorkSheet } from "./actions"
+import DateInput from "@/components/ui/DateInput"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any
@@ -180,10 +181,9 @@ export default function FiseClient({
           <option value="">Toți tehnicienii</option>
           {technicians.map((t) => <option key={t.id} value={t.id}>{t.full_name}</option>)}
         </select>
-        <input
-          type="date"
+        <DateInput
           value={filterDate}
-          onChange={(e) => setFilterDate(e.target.value)}
+          onChange={(iso) => setFilterDate(iso)}
         />
         <button
           type="button"
@@ -336,7 +336,7 @@ function SheetForm({
       <div className="booking-row">
         <label className="dash-field">
           <span>Data *</span>
-          <input name="work_date" type="date" defaultValue={sheet?.work_date ?? new Date().toISOString().slice(0, 10)} required />
+          <DateInput name="work_date" defaultValue={sheet?.work_date ?? new Date().toISOString().slice(0, 10)} required />
         </label>
         <label className="dash-field">
           <span>Tip intervenție *</span>

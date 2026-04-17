@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { TehnicianBookingRow } from "@/lib/reports/tehnicieni"
+import DateInput from "@/components/ui/DateInput"
 
 type Filters = {
   tech: string          // "" = all, "unassigned" = neasignate, uuid = specific
@@ -114,18 +115,16 @@ export default function TehnicieniReport({
         <div className="report-daterange">
           <label>
             <span>De la</span>
-            <input
-              type="date"
+            <DateInput
               value={filters.dateFrom}
-              onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+              onChange={(iso) => setFilters({ ...filters, dateFrom: iso })}
             />
           </label>
           <label>
             <span>Până la</span>
-            <input
-              type="date"
+            <DateInput
               value={filters.dateTo}
-              onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+              onChange={(iso) => setFilters({ ...filters, dateTo: iso })}
             />
           </label>
         </div>

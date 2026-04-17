@@ -5,6 +5,7 @@ import Link from "next/link"
 import { createBooking } from "./actions"
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser"
 import { slugifyRO } from "@/lib/utils/slugify"
+import DateInput from "@/components/ui/DateInput"
 
 type Firm = {
   id: string
@@ -210,7 +211,7 @@ export default function ProgramareClient({
         <div className="booking-row">
           <label className="booking-field">
             <span>Data preferată</span>
-            <input type="date" name="preferred_date" />
+            <DateInput name="preferred_date" />
           </label>
           <label className="booking-field">
             <span>Intervalul orar</span>

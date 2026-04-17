@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, useTransition } from "react"
 import { createBooking } from "@/app/programare/actions"
+import DateInput from "@/components/ui/DateInput"
 
 type Firm = {
   id: string
@@ -90,7 +91,7 @@ export default function ProgramareRapidaClient({
         <div className="booking-row">
           <label className="booking-field">
             <span>Data preferată *</span>
-            <input type="date" name="preferred_date" required />
+            <DateInput name="preferred_date" required />
           </label>
           <label className="booking-field">
             <span>Interval orar *</span>

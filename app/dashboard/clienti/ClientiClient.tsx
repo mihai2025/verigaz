@@ -7,6 +7,7 @@ import type { EquipmentType } from "@/lib/equipment/catalog"
 import { resolveBullet, type ReminderBullet } from "@/lib/reminders/status"
 import { upsertPropertyEquipment, deactivateEquipment } from "./actions"
 import { createCustomer, addPropertyForCustomer } from "../contracte/actions"
+import DateInput from "@/components/ui/DateInput"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any
@@ -430,22 +431,22 @@ function EquipmentForm({
       <div className="booking-row">
         <label className="dash-field">
           <span>Data fabricației</span>
-          <input name="manufacture_date" type="date" defaultValue={equipment?.manufacture_date ?? ""} />
+          <DateInput name="manufacture_date" defaultValue={equipment?.manufacture_date ?? ""} />
         </label>
         <label className="dash-field">
           <span>Data instalării</span>
-          <input name="installation_date" type="date" defaultValue={equipment?.installation_date ?? ""} />
+          <DateInput name="installation_date" defaultValue={equipment?.installation_date ?? ""} />
         </label>
       </div>
 
       <div className="booking-row">
         <label className="dash-field">
           <span>Ultima verificare</span>
-          <input name="last_verificare_at" type="date" defaultValue={equipment?.last_verificare_at ?? ""} />
+          <DateInput name="last_verificare_at" defaultValue={equipment?.last_verificare_at ?? ""} />
         </label>
         <label className="dash-field">
           <span>Scadență următoare verificare</span>
-          <input name="next_verificare_due" type="date" defaultValue={equipment?.next_verificare_due ?? ""} />
+          <DateInput name="next_verificare_due" defaultValue={equipment?.next_verificare_due ?? ""} />
           <small style={{ color: "var(--text-500)" }}>
             Gol = auto-calcul pe baza ultimei verificări + luni din catalog (ex: 24 luni).
           </small>
@@ -455,11 +456,11 @@ function EquipmentForm({
       <div className="booking-row">
         <label className="dash-field">
           <span>Ultima revizie</span>
-          <input name="last_revizie_at" type="date" defaultValue={equipment?.last_revizie_at ?? ""} />
+          <DateInput name="last_revizie_at" defaultValue={equipment?.last_revizie_at ?? ""} />
         </label>
         <label className="dash-field">
           <span>Scadență următoare revizie</span>
-          <input name="next_revizie_due" type="date" defaultValue={equipment?.next_revizie_due ?? ""} />
+          <DateInput name="next_revizie_due" defaultValue={equipment?.next_revizie_due ?? ""} />
           <small style={{ color: "var(--text-500)" }}>
             Gol = auto-calcul pe baza ultimei revizii + luni din catalog (ex: 120 luni).
           </small>
