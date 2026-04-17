@@ -1,33 +1,64 @@
 // app/api/debug/env-check/route.ts
-// Public debug — arată dacă env vars critice sunt setate și testează o query
-// SERVICE_ROLE (fără auth). Șterge după debug.
+// Reproduce EXACT logica din /dashboard/clienti pentru user id specificat.
+// Șterge după debug.
 import { NextResponse } from "next/server"
 import { getServiceRoleSupabase } from "@/lib/supabase/server"
+import { getUserRole } from "@/lib/auth/getUserRole"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
-export async function GET() {
-  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ""
-  const out: Record<string, unknown> = {
-    env: {
-      has_service_role: !!svcKey,
-      service_role_prefix: svcKey.slice(0, 15),
-      service_role_length: svcKey.length,
-      service_role_looks_like_jwt: svcKey.startsWith("eyJ"),
-      supabase_url: process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL,
-    },
-  }
+const GMAIL_USER_ID = "2069d785-4311-4aba-a1a7-882b09786b30"
+
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+  const userId = url.searchParams.get("uid") ?? GMAIL_USER_ID
+
+  const out: Record<string, unknown> = {}
 
   try {
+    const role = await getUserRole(userId)
+    out.role = role
+
+    if (role.role !== "firm_owner" || !role.firmId) {
+      out.early_return = "not firm_owner"
+      return NextResponse.json(out)
+    }
+
     const admin = getServiceRoleSupabase()
-    const res = await admin.from("customers").select("id", { count: "exact", head: true })
-    out.customers_count_via_service_role = { count: res.count ?? null, error: res.error?.message ?? null }
-    const res2 = await admin.from("firm_customer_links").select("*", { count: "exact", head: true }).eq("firm_id", "08919a0d-30b4-46f2-b3cf-4024f459cb47")
-    out.links_count_ad_instal = { count: res2.count ?? null, error: res2.error?.message ?? null }
+    const [bksRes, contractsRes, linksRes] = await Promise.all([
+      admin.from("bookings").select("customer_id, property_id").eq("firm_id", role.firmId),
+      admin.from("contracts").select("customer_id, property_id").eq("firm_id", role.firmId),
+      admin.from("firm_customer_links").select("customer_id").eq("firm_id", role.firmId),
+    ])
+
+    out.bookings = { count: bksRes.data?.length ?? 0, error: bksRes.error?.message ?? null }
+    out.contracts = { count: contractsRes.data?.length ?? 0, error: contractsRes.error?.message ?? null }
+    out.links = { count: linksRes.data?.length ?? 0, error: linksRes.error?.message ?? null }
+
+    const customerIds = [...new Set([
+      ...(bksRes.data ?? []).map((b) => b.customer_id as string),
+      ...(contractsRes.data ?? []).map((c) => c.customer_id as string),
+      ...(linksRes.data ?? []).map((l) => l.customer_id as string),
+    ].filter(Boolean))]
+
+    out.customerIds_count = customerIds.length
+    out.customerIds_sample = customerIds.slice(0, 3)
+
+    if (customerIds.length > 0) {
+      const custRes = await admin
+        .from("customers")
+        .select("id, full_name, phone")
+        .in("id", customerIds)
+      out.customers = { count: custRes.data?.length ?? 0, error: custRes.error?.message ?? null, sample: custRes.data?.slice(0, 3) }
+
+      const propRes = await admin.from("properties").select("id").in("customer_id", customerIds)
+      out.properties = { count: propRes.data?.length ?? 0, error: propRes.error?.message ?? null }
+    }
   } catch (e) {
     out.error = (e as Error).message
+    out.stack = (e as Error).stack?.split("\n").slice(0, 5)
   }
 
-  return NextResponse.json(out)
+  return NextResponse.json(out, { status: 200 })
 }
