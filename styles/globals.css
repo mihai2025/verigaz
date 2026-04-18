@@ -1774,6 +1774,127 @@
   font-size: 11px;
 }
 
+/* ===== Offer Request Modal ===== */
+.offer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: offer-fade .15s ease-out;
+}
+@keyframes offer-fade { from { opacity: 0 } to { opacity: 1 } }
+.offer-modal__box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 100%;
+  padding: 28px 24px 20px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+  animation: offer-slide .2s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+@keyframes offer-slide { from { transform: translateY(16px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+.offer-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-700);
+  transition: background .12s;
+}
+.offer-modal__close:hover { background: #e2e8f0; }
+.offer-modal__title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: var(--text-900);
+  padding-right: 32px;
+  line-height: 1.25;
+}
+.offer-modal__sub {
+  font-size: 14px;
+  color: var(--text-600);
+  margin: 0 0 18px;
+}
+.offer-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.offer-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.offer-modal__field > span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-800);
+}
+.offer-modal__field input,
+.offer-modal__field select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background: #fff;
+}
+.offer-modal__field input:focus,
+.offer-modal__field select:focus {
+  outline: none;
+  border-color: var(--accent-600);
+  box-shadow: 0 0 0 3px rgba(20, 132, 155, .15);
+}
+.offer-modal__row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 500px) { .offer-modal__row { grid-template-columns: 1fr; } }
+.offer-modal__submit { width: 100%; margin-top: 4px; }
+.offer-modal__err {
+  padding: 10px 12px;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.offer-modal__note {
+  font-size: 12px;
+  color: var(--text-500);
+  text-align: center;
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+.offer-modal__success { text-align: center; padding: 12px 0; }
+.offer-modal__success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 36px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.offer-modal__success h3 { margin: 0 0 8px; font-size: 20px; color: var(--text-900); }
+.offer-modal__success p { margin: 0 0 18px; color: var(--text-700); font-size: 14px; }
+
 /* ===== Firma profile: ascunde vg-header pe mobil (dublare cu firmaMobileHeader) ===== */
 @media (max-width: 1023px) {
   body:has(.firmaMobileHeader) .vg-header { display: none !important; }

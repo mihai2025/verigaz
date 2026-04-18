@@ -122,6 +122,8 @@ export default async function FirmProfilePage({
       sediu_localitate_nume: l?.nume ?? null,
       sediu_judet_nume: j?.nume ?? null,
       sediu_judet_slug: j?.nume ? slugifyRO(j.nume) : null,
+      sediu_judet_id: (f.sediu_judet_id as number | null) ?? null,
+      sediu_localitate_id: (f.sediu_localitate_id as number | null) ?? null,
       anre_authorization_no: (f.anre_authorization_no as string | null) ?? null,
       anre_category: (f.anre_category as string | null) ?? null,
       anre_valid_until: (f.anre_valid_until as string | null) ?? null,

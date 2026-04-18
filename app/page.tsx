@@ -9,6 +9,7 @@ import { CATEGORY_PAGES } from "@/lib/servicii-gaze/links"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { faqJsonLd } from "@/lib/seo/jsonld"
 import { getServiceRoleSupabase } from "@/lib/supabase/server"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 async function getFirmCount(): Promise<number> {
   try {
@@ -126,9 +127,11 @@ export default async function HomePage() {
           </form>
 
           <div className="vg-hero__ctas">
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează verificarea →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere rapid ofertă →"
+              source="home_hero"
+            />
             <Link href="/servicii-gaze" className="vg-btn vg-btn--outline vg-btn--lg">
               Vezi firme pe județ
             </Link>

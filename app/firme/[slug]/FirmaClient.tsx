@@ -5,6 +5,7 @@ import { FirmaMobileHeader } from "@/components/firma/FirmaMobileHeader"
 import { FirmaHero } from "@/components/firma/FirmaHero"
 import { FirmaAside } from "@/components/firma/FirmaAside"
 import { FirmaStickyCta } from "@/components/firma/FirmaStickyCta"
+import FirmaOfferAutoModal from "@/components/leads/FirmaOfferAutoModal"
 
 export type FirmaClientData = {
   firm: {
@@ -27,6 +28,8 @@ export type FirmaClientData = {
     sediu_localitate_nume: string | null
     sediu_judet_nume: string | null
     sediu_judet_slug: string | null
+    sediu_judet_id: number | null
+    sediu_localitate_id: number | null
     anre_authorization_no: string | null
     anre_category: string | null
     anre_valid_until: string | null
@@ -52,6 +55,12 @@ export default function FirmaClient({ data }: { data: FirmaClientData }) {
     <main className="page firmaPage">
       <FirmaMobileHeader firm={firm} />
       <FirmaStickyCta firm={firm} />
+      <FirmaOfferAutoModal
+        firmSlug={firm.slug}
+        firmName={firm.name}
+        judetId={firm.sediu_judet_id}
+        localitateId={firm.sediu_localitate_id}
+      />
 
       <div className="container firmaContainer">
         <div className="firmaGrid">

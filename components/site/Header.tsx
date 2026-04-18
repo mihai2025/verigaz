@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 const NAV_LINKS = [
   { href: "/servicii-gaze", label: "Firme & servicii" },
@@ -64,7 +65,7 @@ export function Header({ user }: { user?: AuthUser }) {
           ) : (
             <Link href="/login" className="vg-btn vg-btn--ghost">Autentificare</Link>
           )}
-          <Link href="/programare" className="vg-btn vg-btn--primary">Programează</Link>
+          <OfferRequestButton className="vg-btn vg-btn--primary" label="Cere rapid ofertă" source="header" />
           <button
             type="button"
             className="vg-menu-toggle"
