@@ -80,6 +80,17 @@ export function FirmListItem({ f, index = 0 }: { f: FirmListRow; index?: number 
           </div>
         </div>
 
+        {(f.sediu_localitate_nume || f.sediu_judet_nume) && (
+          <div className="sv-geo" style={{ fontSize: 13, color: "var(--text-600)", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+              <path d="M12 22s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Zm0-9.3a2.7 2.7 0 1 1 0-5.4 2.7 2.7 0 0 1 0 5.4Z" fill="currentColor" />
+            </svg>
+            <span>
+              {[f.sediu_localitate_nume, f.sediu_judet_nume].filter(Boolean).join(", ")}
+            </span>
+          </div>
+        )}
+
         {f.anre_authorization_no && (
           <div className="sv-anre" style={{ fontSize: 12, color: "var(--text-500)", marginTop: 2 }}>
             Aut. ANRE: <code>{f.anre_authorization_no}</code>

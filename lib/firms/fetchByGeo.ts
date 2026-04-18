@@ -30,6 +30,8 @@ export type FirmListRow = {
   website: string | null
   sediu_judet_id: number | null
   sediu_localitate_id: number | null
+  sediu_judet_nume: string | null
+  sediu_localitate_nume: string | null
   anre_authorization_no: string | null
 }
 
@@ -75,6 +77,7 @@ export async function fetchFirmsByGeo(
       "id, slug, brand_name, legal_name, plan, short_description, logo_url, cover_url, " +
       "phone, whatsapp, facebook_url, instagram_url, website, " +
       "sediu_judet_id, sediu_localitate_id, anre_authorization_no, " +
+      "judete:sediu_judet_id(nume), localitati:sediu_localitate_id(nume), " +
       "firm_services(service_categories(slug))",
       { count: "exact" },
     )
@@ -117,24 +120,30 @@ export async function fetchFirmsByGeo(
     return nameA.localeCompare(nameB, "ro")
   })
 
-  return rows.map((f) => ({
-    id:                   String(f.id),
-    slug:                 String(f.slug),
-    brand_name:           (f.brand_name as string | null) ?? null,
-    legal_name:           String(f.legal_name),
-    plan:                 String(f.plan ?? "free"),
-    short_description:    (f.short_description as string | null) ?? null,
-    logo_url:             (f.logo_url as string | null) ?? null,
-    cover_url:            (f.cover_url as string | null) ?? null,
-    phone:                (f.phone as string | null) ?? null,
-    whatsapp:             (f.whatsapp as string | null) ?? null,
-    facebook_url:         (f.facebook_url as string | null) ?? null,
-    instagram_url:        (f.instagram_url as string | null) ?? null,
-    website:              (f.website as string | null) ?? null,
-    sediu_judet_id:       (f.sediu_judet_id as number | null) ?? null,
-    sediu_localitate_id:  (f.sediu_localitate_id as number | null) ?? null,
-    anre_authorization_no: (f.anre_authorization_no as string | null) ?? null,
-  }))
+  return rows.map((f) => {
+    const jud = Array.isArray(f.judete) ? f.judete[0] : f.judete
+    const loc = Array.isArray(f.localitati) ? f.localitati[0] : f.localitati
+    return {
+      id:                   String(f.id),
+      slug:                 String(f.slug),
+      brand_name:           (f.brand_name as string | null) ?? null,
+      legal_name:           String(f.legal_name),
+      plan:                 String(f.plan ?? "free"),
+      short_description:    (f.short_description as string | null) ?? null,
+      logo_url:             (f.logo_url as string | null) ?? null,
+      cover_url:            (f.cover_url as string | null) ?? null,
+      phone:                (f.phone as string | null) ?? null,
+      whatsapp:             (f.whatsapp as string | null) ?? null,
+      facebook_url:         (f.facebook_url as string | null) ?? null,
+      instagram_url:        (f.instagram_url as string | null) ?? null,
+      website:              (f.website as string | null) ?? null,
+      sediu_judet_id:       (f.sediu_judet_id as number | null) ?? null,
+      sediu_localitate_id:  (f.sediu_localitate_id as number | null) ?? null,
+      sediu_judet_nume:     (jud?.nume as string | null) ?? null,
+      sediu_localitate_nume:(loc?.nume as string | null) ?? null,
+      anre_authorization_no: (f.anre_authorization_no as string | null) ?? null,
+    }
+  })
 }
 
 // ── Geo resolvers reutilizate de paginile de listing ──
