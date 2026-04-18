@@ -40,8 +40,9 @@ export function FirmListItem({ f, index = 0 }: { f: FirmListRow; index?: number 
     isPremium ? "sv-firmPremium" : isPlus ? "sv-firmPlus" : plan === "start" ? "sv-firmStart" : "sv-firmFree"
   }`
 
-  const tel  = telLink(f.phone || f.whatsapp)
-  const wa   = waLink(f.whatsapp || f.phone)
+  // Plan Free → call/WhatsApp dezactivate (doar cerere prin modal)
+  const tel  = isPaid ? telLink(f.phone || f.whatsapp) : null
+  const wa   = isPaid ? waLink(f.whatsapp || f.phone) : null
   const site = isPaid ? f.website : null
 
   const profileHref = `/firme/${encodeURIComponent(f.slug)}`

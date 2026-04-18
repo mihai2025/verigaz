@@ -7,6 +7,7 @@ import Link from "next/link"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
 import { getUserRole } from "@/lib/auth/getUserRole"
 import DateInput from "@/components/ui/DateInput"
+import SmsLogActions from "./SmsLogActions"
 
 type SP = {
   firm?: string
@@ -53,7 +54,8 @@ export default async function SmsLogPage({
   let query = admin
     .from("sms_logs")
     .select(
-      "id, phone, template_key, provider, status, booking_id, reminder_id, firm_id, customer_id, lead_id, cost_cents, segments, direction, created_at, error_message",
+      "id, phone, template_key, provider, status, booking_id, reminder_id, firm_id, customer_id, lead_id, cost_cents, segments, direction, created_at, error_message, " +
+      "leads(id, full_name, phone, judet_id, localitate_id, service_categories(nume), judete:judet_id(nume), localitati:localitate_id(nume))",
       { count: "exact" },
     )
     .order("created_at", { ascending: false })
@@ -65,19 +67,42 @@ export default async function SmsLogPage({
   if (sp.to) query = query.lte("created_at", sp.to)
 
   const { data, count } = await query
-  const rows = (data as Array<{
-    id: string
-    phone: string | null
-    template_key: string | null
-    provider: string | null
-    status: string | null
-    firm_id: string | null
-    cost_cents: number | null
-    segments: number | null
-    direction: string | null
-    created_at: string
-    error_message: string | null
-  }> | null) ?? []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rows = (data as any[]) ?? []
+
+  // Pt fiecare rând cu lead, pre-load lista candidati firme în localitate (pt retry-to-firm)
+  const candidateMap = new Map<string, Array<{ id: string; label: string }>>()
+  const leadsWithLoc = rows.filter((r) => {
+    const lead = Array.isArray(r.leads) ? r.leads[0] : r.leads
+    return lead?.judet_id
+  })
+  if (leadsWithLoc.length > 0) {
+    const judetLocPairs = [...new Set(leadsWithLoc.map((r) => {
+      const l = Array.isArray(r.leads) ? r.leads[0] : r.leads
+      return `${l.judet_id}:${l.localitate_id ?? ""}`
+    }))]
+    for (const pair of judetLocPairs) {
+      const [jud, loc] = pair.split(":")
+      const judetId = Number(jud)
+      const locId = loc ? Number(loc) : null
+      let q = admin
+        .from("gas_firms")
+        .select("id, brand_name, legal_name, plan, phone")
+        .eq("is_active", true)
+        .eq("verification_status", "approved")
+        .not("phone", "is", null)
+        .limit(30)
+      if (locId) q = q.eq("sediu_localitate_id", locId)
+      else q = q.eq("sediu_judet_id", judetId)
+      const { data: firms } = await q
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const opts = ((firms ?? []) as any[]).map((f) => ({
+        id: f.id as string,
+        label: `${f.brand_name || f.legal_name} (${f.plan ?? "free"})`,
+      }))
+      candidateMap.set(pair, opts)
+    }
+  }
 
   // Totals (pe filtrul curent, toate paginile)
   let totalsQuery = admin
@@ -171,35 +196,59 @@ export default async function SmsLogPage({
           <thead>
             <tr>
               <th>Dată</th>
-              <th>Firmă</th>
-              <th>Template</th>
-              <th>Telefon</th>
-              <th>Segmente</th>
-              <th>Cost</th>
+              <th>Firmă destinatară</th>
+              <th>Telefon firmă</th>
+              <th>Solicitant</th>
+              <th>Serviciu</th>
               <th>Status</th>
-              <th>Provider</th>
+              <th>Acțiuni</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={8} style={{ textAlign: "center", padding: 24, color: "var(--text-500)" }}>Nu există înregistrări.</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: "center", padding: 24, color: "var(--text-500)" }}>Nu există înregistrări.</td></tr>
             )}
-            {rows.map((r) => (
-              <tr key={r.id}>
-                <td>{new Date(r.created_at).toLocaleString("ro-RO")}</td>
-                <td>{r.firm_id ? firmMap.get(r.firm_id) ?? "—" : "—"}</td>
-                <td>{r.template_key ?? "—"}</td>
-                <td>{maskPhone(r.phone)}</td>
-                <td>{r.segments ?? 0}</td>
-                <td>{((r.cost_cents ?? 0) / 100).toFixed(2)} lei</td>
-                <td>
-                  <span className={`dash-status dash-status--${r.status === "failed" ? "rejected" : r.status === "pending" ? "pending" : "approved"}`}>
-                    {r.status ?? "—"}
-                  </span>
-                </td>
-                <td>{r.provider ?? "—"}</td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const lead = Array.isArray(r.leads) ? r.leads[0] : r.leads
+              const cat = lead ? (Array.isArray(lead.service_categories) ? lead.service_categories[0] : lead.service_categories) : null
+              const jud = lead ? (Array.isArray(lead.judete) ? lead.judete[0] : lead.judete) : null
+              const loc = lead ? (Array.isArray(lead.localitati) ? lead.localitati[0] : lead.localitati) : null
+              const firmName = r.firm_id ? firmMap.get(r.firm_id) ?? "—" : "—"
+              const candidates = lead ? candidateMap.get(`${lead.judet_id}:${lead.localitate_id ?? ""}`) ?? [] : []
+              return (
+                <tr key={r.id}>
+                  <td style={{ fontSize: 12 }}>{new Date(r.created_at).toLocaleString("ro-RO")}</td>
+                  <td>
+                    {firmName}
+                    <div style={{ fontSize: 11, color: "#888" }}>{r.template_key ?? "—"}</div>
+                  </td>
+                  <td><code style={{ fontSize: 12 }}>{r.phone ?? "—"}</code></td>
+                  <td>
+                    {lead ? (
+                      <>
+                        <div>{lead.full_name}</div>
+                        <div style={{ fontSize: 11, color: "#666" }}><code>{lead.phone}</code></div>
+                        {(loc?.nume || jud?.nume) && (
+                          <div style={{ fontSize: 11, color: "#888" }}>
+                            {[loc?.nume, jud?.nume].filter(Boolean).join(", ")}
+                          </div>
+                        )}
+                      </>
+                    ) : "—"}
+                  </td>
+                  <td style={{ fontSize: 13 }}>{cat?.nume ?? "—"}</td>
+                  <td>
+                    <span className={`dash-status dash-status--${r.status === "failed" ? "rejected" : r.status === "pending" ? "pending" : "approved"}`}>
+                      {r.status ?? "—"}
+                    </span>
+                    {r.error_message && <div style={{ fontSize: 10, color: "#a01818", marginTop: 2 }}>{r.error_message.slice(0, 60)}</div>}
+                  </td>
+                  <td>
+                    <SmsLogActions smsLogId={r.id} hasLead={!!lead} candidateFirms={candidates} />
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
