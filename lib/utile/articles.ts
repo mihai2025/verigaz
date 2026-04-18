@@ -1519,6 +1519,446 @@ const _ARTICLES: Article[] = [
       "inlocuire-contor-gaze-cum-se-face",
     ],
   },
+
+  // ── 21 — Cât costă verificare gaze București 2026 ──────────────────
+  {
+    slug: "cat-costa-verificare-gaze-bucuresti-2026",
+    title: "Cât costă verificarea gaze în București în 2026",
+    metaTitle: "Preț verificare gaze București 2026 — tarife reale",
+    metaDescription: "Verificare gaze București 2026: 100-250 lei pentru apartament, 180-400 lei casă. Comparație între sectoare + firme autorizate ANRE cu programare online.",
+    keywords: [
+      "verificare gaze bucuresti pret",
+      "cat costa verificare gaze bucuresti",
+      "firma verificare gaze bucuresti",
+      "tarif revizie gaze bucuresti 2026",
+      "verificare ANRE bucuresti",
+    ],
+    category: "preturi",
+    publishedAt: "2026-04-18",
+    intro:
+      "În București, prețul verificării instalației de gaze în 2026 pornește de la 100 lei pentru un apartament standard și ajunge la 400 lei pentru o casă cu mai multe puncte de consum. Variația se datorează sectorului, complexității instalației și suprataxelor pentru urgențe. Mai jos găsești prețurile reale pe sectoare + ce să verifici înainte să alegi firma.",
+    sections: [
+      {
+        heading: "Prețuri orientative pe sector (2026)",
+        paragraphs: [
+          { type: "list", items: [
+            "Sector 1 (Herăstrău, Dorobanți, Aviatorilor): 130-280 lei apartament",
+            "Sector 2 (Tei, Colentina, Pantelimon): 100-220 lei apartament",
+            "Sector 3 (Titan, Vitan, Dristor): 100-200 lei apartament",
+            "Sector 4 (Berceni, Tineretului, Unirii): 110-230 lei apartament",
+            "Sector 5 (Ferentari, Rahova, Giurgiului): 100-200 lei apartament",
+            "Sector 6 (Militari, Drumul Taberei, Crângași): 110-240 lei apartament",
+            "Case individuale (Pipera, Băneasa, Cotroceni): 200-400 lei",
+          ] },
+          "Prețul include deplasarea în sectorul respectiv + procesul-verbal ANRE + certificatul digital. Pentru intervenții suplimentare (reparații, înlocuire piese) se adaugă manopera și materialele.",
+        ],
+      },
+      {
+        heading: "Ce influențează prețul final în București",
+        paragraphs: [
+          "Trafic + zonă greu accesibilă — firmele taxează timpul de deplasare, iar în București orele de vârf pot adăuga 20-50 lei la deplasare.",
+          { type: "list", items: [
+            "Număr de aparate (aragaz + centrală + boiler = 3 puncte de control)",
+            "Starea instalației (dacă sunt reparații vechi sau scurgeri minore)",
+            "Urgența — programări în 24h pot avea suprataxă 30-50%",
+            "Sezonul — toamna (oct-nov) e cel mai aglomerat, prețurile pot crește cu 10-20%",
+            "Firma aleasă — de la mici ANRE cu 100 lei, până la firme premium cu 250+ lei",
+          ] },
+        ],
+      },
+      {
+        heading: "Cum alegi firma ANRE în București fără să fii păcălit",
+        paragraphs: [
+          "Cere întotdeauna numărul autorizației ANRE înainte de programare. Îl poți verifica gratuit pe site-ul ANRE (anre.ro). Toate firmele de pe verificari-gaze.ro sunt deja validate manual.",
+          { type: "list", items: [
+            "Prețuri sub 80 lei = probabil nu face testul complet, sari peste",
+            "Cere procesul-verbal oficial ANRE (nu pe hârtie albă)",
+            "Factură fiscală obligatorie",
+            "Certificat digital cu QR = bonus modern (poți verifica online valabilitatea)",
+          ] },
+        ],
+      },
+      {
+        heading: "Amenzile în București dacă nu faci verificarea",
+        paragraphs: [
+          "Distrigaz Sud (distribuitorul pentru majoritatea sectoarelor din București) poate suspenda furnizarea de gaz dacă nu prezinți certificat valabil de verificare tehnică. Suspendarea durează până la prezentarea certificatului nou — între timp nu ai gaz pentru aragaz, centrală sau boiler.",
+          "Amenzile ANRE pornesc de la 1.000 lei pentru persoane fizice și ajung la 10.000 lei pentru asociații de proprietari din blocuri mari (peste 40 apartamente).",
+        ],
+      },
+      {
+        heading: "Când trebuie programată verificarea",
+        paragraphs: [
+          "Fă programarea cu 2-4 săptămâni înainte să expire certificatul vechi. Toamna (sep-nov) e cel mai aglomerat sezon, deci dacă expiri în această perioadă, rezervă firmele din timp.",
+          "Pe verificari-gaze.ro poți compara prețurile a peste 200 firme autorizate din București într-un singur loc și programezi online — confirmare în 24h.",
+        ],
+      },
+    ],
+    ctas: [
+      { label: "Vezi firme autorizate ANRE în București →", href: "/servicii-gaze/bucuresti", variant: "primary" },
+      { label: "Programează verificarea acum", href: "/programare", variant: "ghost" },
+    ],
+    relatedSlugs: [
+      "cat-costa-verificarea-instalatiei-de-gaze-2026",
+      "preturi-orientative-servicii-gaze-2026",
+      "amenzi-verificare-gaze-neefectuata",
+    ],
+  },
+
+  // ── 22 — Cât costă verificare gaze Cluj 2026 ───────────────────────
+  {
+    slug: "cat-costa-verificare-gaze-cluj-2026",
+    title: "Cât costă verificarea gaze în Cluj în 2026",
+    metaTitle: "Preț verificare gaze Cluj-Napoca 2026 — tarife",
+    metaDescription: "Verificare gaze Cluj-Napoca 2026: 90-220 lei apartament, 150-350 lei casă. Lista cartierelor + firme autorizate ANRE cu programare online.",
+    keywords: [
+      "verificare gaze cluj pret",
+      "verificare gaze cluj napoca 2026",
+      "firma verificare gaze cluj",
+      "cat costa revizie gaze cluj",
+      "tarif verificare ANRE cluj",
+    ],
+    category: "preturi",
+    publishedAt: "2026-04-18",
+    intro:
+      "În Cluj-Napoca, verificarea instalației de gaze costă în 2026 între 90 și 220 lei pentru un apartament și 150-350 lei pentru o casă. Prețurile variază pe cartiere și în funcție de firma aleasă. Ghidul de mai jos îți arată exact ce să te aștepți și cum să eviți ofertele suspecte.",
+    sections: [
+      {
+        heading: "Prețuri verificare gaze pe cartiere Cluj-Napoca",
+        paragraphs: [
+          { type: "list", items: [
+            "Centru (Piața Unirii, Avram Iancu): 120-220 lei apartament",
+            "Mănăștur (Calea Florești, Primăverii): 90-180 lei apartament",
+            "Mărăști (21 Decembrie, Aurel Vlaicu): 100-200 lei apartament",
+            "Gheorgheni (Titulescu, Bună Ziua): 110-210 lei apartament",
+            "Zorilor (Observatorului, Republicii): 120-220 lei apartament",
+            "Grigorescu (Donath, Plopilor): 100-200 lei apartament",
+            "Case în Andrei Mureșanu, Bună Ziua, Gruia: 180-350 lei",
+          ] },
+        ],
+      },
+      {
+        heading: "Ce e inclus în preț în Cluj",
+        paragraphs: [
+          { type: "list", items: [
+            "Deplasarea în cartier (în oraș e inclusă; în suburbii se adaugă 30-50 km)",
+            "Test etanșeitate instalație + fiecare punct de consum",
+            "Verificare tiraj centrală + coș fum",
+            "Proces-verbal ANRE + factură fiscală",
+            "Certificat digital (la firmele moderne de pe platformă)",
+          ] },
+          "Nu e inclus: reparațiile (dacă descoperă scurgeri), înlocuirea pieselor uzate, intervenția ISU sau ANRE în caz de probleme majore.",
+        ],
+      },
+      {
+        heading: "Delgaz Grid — distribuitorul din Cluj",
+        paragraphs: [
+          "În Cluj-Napoca, distribuitorul e Delgaz Grid (nu Distrigaz Sud, care operează în sudul țării). Procesul-verbal de verificare trebuie prezentat la Delgaz dacă îți suspendă furnizarea sau la re-branșare.",
+          "Certificatul are valabilitate 24 luni de la data emiterii. Recomand să păstrezi și copie digitală + PDF-ul primit de la firmă.",
+        ],
+      },
+      {
+        heading: "Cum alegi firma fără risc",
+        paragraphs: [
+          "Pe verificari-gaze.ro sunt listate peste 80 firme autorizate ANRE active în Cluj. Fiecare are autorizația + categoria vizibile public + recenzii verificate.",
+          { type: "list", items: [
+            "Verifică autorizația ANRE în registrul oficial (anre.ro)",
+            "Cere oferta scrisă (SMS/email) cu prețul fix + ce include",
+            "Întreabă câte verificări face firma pe lună (volum mare = experiență)",
+            "Ideal: firmă cu sediul în Cluj (nu Alba sau Bistrița) — deplasarea e mai scumpă altfel",
+          ] },
+        ],
+      },
+      {
+        heading: "Ce să eviți la firmele din Cluj",
+        paragraphs: [
+          "Oferte telefonice nesolicitate (spam) — firmele serioase nu sună la rece, primesc programări online sau prin recomandări. Firmele care cer plata în avans înainte să vadă instalația — e semnal că nu au cod fiscal clar sau nu sunt autorizate.",
+        ],
+      },
+    ],
+    ctas: [
+      { label: "Vezi firme autorizate ANRE în Cluj →", href: "/servicii-gaze/cluj", variant: "primary" },
+      { label: "Programează verificarea acum", href: "/programare", variant: "ghost" },
+    ],
+    relatedSlugs: [
+      "cat-costa-verificarea-instalatiei-de-gaze-2026",
+      "cat-costa-verificare-gaze-bucuresti-2026",
+      "cum-aleg-o-firma-autorizata-anre",
+    ],
+  },
+
+  // ── 23 — Cât costă verificare gaze Iași 2026 ───────────────────────
+  {
+    slug: "cat-costa-verificare-gaze-iasi-2026",
+    title: "Cât costă verificarea gaze în Iași în 2026",
+    metaTitle: "Preț verificare gaze Iași 2026 — tarife reale Delgaz",
+    metaDescription: "Verificare gaze Iași 2026: 85-200 lei apartament, 130-320 lei casă. Zone + firme ANRE validate + programare online cu confirmare 24h.",
+    keywords: [
+      "verificare gaze iasi pret",
+      "verificare gaze iasi 2026",
+      "firma verificare gaze iasi",
+      "cat costa revizie gaze iasi",
+      "tarif verificare gaze Iași",
+    ],
+    category: "preturi",
+    publishedAt: "2026-04-18",
+    intro:
+      "Verificarea instalației de gaze în Iași costă în 2026 între 85 și 200 lei pentru un apartament și 130-320 lei pentru o casă individuală. Delgaz Grid e distribuitorul oficial în Moldova, iar prezentarea certificatului de verificare e obligatorie pentru a menține furnizarea. Iată prețurile reale + firmele validate pe zonele din Iași.",
+    sections: [
+      {
+        heading: "Prețuri verificare gaze pe zone Iași",
+        paragraphs: [
+          { type: "list", items: [
+            "Centru (Palas, Ștefan cel Mare): 110-200 lei apartament",
+            "Copou (Universitate, Titu Maiorescu): 100-180 lei apartament",
+            "Tătărași (Canta, Nicolina): 85-160 lei apartament",
+            "Alexandru cel Bun (Șoseaua Păcurari): 90-170 lei apartament",
+            "Dacia (Cantemir, Doamna Maria): 90-170 lei apartament",
+            "Bucium, Galata: 100-190 lei apartament",
+            "Case în Bucium, Copou, Galata: 150-320 lei",
+          ] },
+        ],
+      },
+      {
+        heading: "De ce e Iași mai ieftin decât București sau Cluj",
+        paragraphs: [
+          "Costurile operaționale sunt mai mici în Iași (chirie birou, combustibil deplasare, salarii tehnician), ceea ce duce la prețuri mai competitive cu ~15-20% față de capitală.",
+          "În plus, concurența e mare — peste 50 firme autorizate ANRE activează în județul Iași, iar prețurile rămân rezonabile.",
+        ],
+      },
+      {
+        heading: "Ce verifică firma în Iași",
+        paragraphs: [
+          { type: "list", items: [
+            "Etanșeitatea instalației cu manometru digital",
+            "Funcționarea aparatelor (aragaz, centrală, boiler, cuptor)",
+            "Tirajul coșului de fum (la centrala termică pe gaz)",
+            "Presiunea și debitul de gaz la fiecare punct",
+            "Starea robinetului general + arzătoarelor",
+            "Ventilația bucătăriei + detectorul de gaze (dacă există)",
+          ] },
+        ],
+      },
+      {
+        heading: "Cum să programezi verificarea",
+        paragraphs: [
+          "Pe verificari-gaze.ro alegi firma, vezi prețul public și disponibilitatea, apoi programezi în 2 minute. Firma te contactează în maxim 24h pentru confirmare dată exactă și oră.",
+          "Alternativa e telefonul — căutare în pagini aurii + 5-10 apeluri pentru comparație prețuri. Economisești ~30 min dacă folosești platforma.",
+        ],
+      },
+      {
+        heading: "Ce se întâmplă dacă expiri certificatul în Iași",
+        paragraphs: [
+          "Delgaz Grid monitorizează scadențele și poate trimite notificări prin poștă sau SMS (dacă ai datele actualizate). După expirare + 30-60 zile fără certificat nou, Delgaz suspendă furnizarea. Reluarea necesită noua verificare + taxă de re-branșare (150-300 lei).",
+          "Amenda ANRE pornește de la 1.000 lei pentru persoane fizice.",
+        ],
+      },
+    ],
+    ctas: [
+      { label: "Vezi firme autorizate ANRE în Iași →", href: "/servicii-gaze/iasi", variant: "primary" },
+      { label: "Programează verificarea acum", href: "/programare", variant: "ghost" },
+    ],
+    relatedSlugs: [
+      "cat-costa-verificarea-instalatiei-de-gaze-2026",
+      "cat-costa-verificare-gaze-bucuresti-2026",
+      "cat-costa-verificare-gaze-cluj-2026",
+    ],
+  },
+
+  // ── 24 — Ce se întâmplă dacă nu fac verificarea gaze ───────────────
+  {
+    slug: "ce-se-intampla-daca-nu-fac-verificarea-gaze",
+    title: "Ce se întâmplă dacă nu fac verificarea gazelor la timp",
+    metaTitle: "Ce se întâmplă dacă nu fac verificare gaze — consecințe",
+    metaDescription: "Neverificare gaze la timp: amendă 1.000-10.000 lei, oprire furnizare, pierdere asigurare, risc penal la accident. Ghid complet cu pași imediați.",
+    keywords: [
+      "nu am verificare gaze",
+      "ce se intampla daca nu fac verificare gaze",
+      "consecinte neverificare gaze",
+      "amenda neverificare instalatie gaze",
+      "oprire furnizare gaze",
+    ],
+    category: "legal",
+    publishedAt: "2026-04-18",
+    intro:
+      "Dacă nu faci verificarea tehnică a instalației de gaze la maxim 2 ani, rezulatele pot fi grave: amendă de la 1.000 lei, oprire imediată a furnizării de gaz de către distribuitor, pierderea acoperirii asigurării pentru locuință și — în cazul unui accident — răspundere penală. Iată exact ce riști și ce să faci dacă ai expirat deja.",
+    sections: [
+      {
+        heading: "1. Amendă ANRE (1.000-10.000 lei)",
+        paragraphs: [
+          "Conform ANRE Ord. 179/2015, persoanele fizice care nu efectuează verificarea în termen pot primi amenzi între 1.000 și 5.000 lei. Asociațiile de proprietari (pentru instalații comune) — între 5.000 și 10.000 lei.",
+          "Amenda se poate aplica de către ANRE, distribuitor sau ISU, în urma unei inspecții sau a unei sesizări.",
+        ],
+      },
+      {
+        heading: "2. Suspendare furnizare gaz",
+        paragraphs: [
+          "Distribuitorul (Distrigaz Sud, Delgaz Grid, E.On Gaz Distribuție) poate suspenda furnizarea gazului fără aviz prealabil dacă ești la peste 30-60 zile după expirarea certificatului.",
+          "Reluarea furnizării înseamnă: verificare nouă (100-200 lei) + taxă de re-branșare (150-350 lei) + eventual test suplimentar pentru siguranță (50-100 lei). Total: 300-650 lei în plus față de verificarea normală.",
+        ],
+      },
+      {
+        heading: "3. Pierderea asigurării locuinței",
+        paragraphs: [
+          "În cazul unui incident (scurgere, explozie, intoxicație CO), asiguratorul poate refuza plata daunelor dacă instalația nu avea certificat valid la momentul accidentului. Polițele standard de asigurare locuință includ această clauză.",
+          "Pentru un apartament de 200.000 lei, asta înseamnă că pierzi acoperirea pentru pagube materiale + eventual daune morale dacă afectează vecinii.",
+        ],
+      },
+      {
+        heading: "4. Răspundere penală în caz de accident",
+        paragraphs: [
+          "Dacă explozia sau intoxicația rănește sau omoară pe cineva, iar instalația nu avea certificat valid, riști răspundere penală pentru ucidere/vătămare din culpă (Codul Penal Art. 192-196). Pedeapsa: 6 luni-5 ani închisoare, în funcție de gravitate.",
+          { type: "quote", text: "Jurisprudența românească din ultimii 10 ani include zeci de cazuri de condamnare în care lipsa verificării tehnice a fost factor agravant." },
+        ],
+      },
+      {
+        heading: "5. Imposibilitate vânzare apartament",
+        paragraphs: [
+          "La tranzacțiile imobiliare, notarul și cumpărătorul cer certificatul valabil de verificare gaze. Fără el, vânzarea e blocată sau prețul poate scădea cu 2-5% (costul unei reparații + verificări urgente).",
+        ],
+      },
+      {
+        heading: "Ce să faci dacă ai expirat deja",
+        paragraphs: [
+          { type: "list", items: [
+            "Nu aștepta — fă verificarea imediat, nu în 2-3 săptămâni",
+            "Alege o firmă cu programare rapidă (24-48h)",
+            "Cere urgent procesul-verbal — îl prezinți dacă vine distribuitorul",
+            "Dacă ți-au oprit deja gazul: programezi verificare + contactezi distribuitorul pentru re-branșare",
+            "Păstrează PDF-ul oriunde (email, cloud) — îl poți prezenta oricând",
+          ] },
+        ],
+      },
+      {
+        heading: "Concluzie",
+        paragraphs: [
+          "Verificarea costă 80-250 lei. Consecințele lipsei ei: amenzi de până la 10.000 lei, oprire gaz, pierdere asigurare, risc penal. Raportul cost/beneficiu e clar — fă verificarea la timp.",
+        ],
+      },
+    ],
+    ctas: [
+      { label: "Programează verificarea ACUM (confirmare 24h)", href: "/programare", variant: "primary" },
+      { label: "Caută firmă autorizată ANRE în zona ta", href: "/servicii-gaze", variant: "ghost" },
+    ],
+    relatedSlugs: [
+      "amenzi-verificare-gaze-neefectuata",
+      "anre-ord-179-2015-explicat-pe-intelesul-tuturor",
+      "siguranta-instalatie-gaze-acasa-ghid-complet",
+    ],
+  },
+
+  // ── 25 — Amenzi neverificare gaze 2026 — lista completă ────────────
+  {
+    slug: "amenzi-neverificare-gaze-2026-lista-completa",
+    title: "Amenzi pentru neverificare gaze 2026 — lista completă",
+    metaTitle: "Amenzi neverificare gaze 2026 — cine, cât, când",
+    metaDescription: "Amenzi complete 2026 pentru neverificare gaze: 1.000-10.000 lei persoane fizice, până la 50.000 lei firme. Lista actualizată + procedura ANRE.",
+    keywords: [
+      "amenzi neverificare gaze 2026",
+      "amenda ANRE gaze 2026",
+      "sanctiuni verificare instalatie gaze",
+      "amenda oprire gaz",
+      "amenda asociatie proprietari gaze",
+    ],
+    category: "legal",
+    publishedAt: "2026-04-18",
+    intro:
+      "În 2026, amenzile pentru neefectuarea verificării tehnice a instalației de gaze variază între 1.000 lei (persoane fizice) și 50.000 lei (firme cu instalații industriale). Iată lista completă actualizată, pe categorii, cine le aplică și cum te poți proteja.",
+    sections: [
+      {
+        heading: "Cadrul legal 2026",
+        paragraphs: [
+          "Sancțiunile sunt reglementate de:",
+          { type: "list", items: [
+            "Legea 123/2012 privind energia electrică și gazele naturale",
+            "ANRE Ord. 179/2015 — verificare tehnică obligatorie la 2 ani",
+            "ANRE Ord. 5/2009 — cerințe pentru firme autorizate",
+            "OUG 69/2023 — update 2024 asupra cuantumurilor",
+          ] },
+        ],
+      },
+      {
+        heading: "Amenzi persoane fizice (apartament/casă)",
+        paragraphs: [
+          { type: "list", items: [
+            "Neverificare la 2 ani: 1.000-3.000 lei",
+            "Nereviziie la 10 ani: 2.000-5.000 lei",
+            "Utilizare instalație cu defecte grave identificate anterior: 3.000-5.000 lei",
+            "Blocare acces tehnician Delgaz/Distrigaz la verificare programată: 500-1.500 lei",
+            "Utilizare aparate ne-omologate pe instalația de gaz: 1.000-2.000 lei",
+          ] },
+        ],
+      },
+      {
+        heading: "Amenzi asociații de proprietari",
+        paragraphs: [
+          { type: "list", items: [
+            "Neverificare instalație comună (bloc): 5.000-10.000 lei",
+            "Nereviziie 10 ani la instalația comună: 7.000-15.000 lei",
+            "Neactualizare carte tehnică instalație: 2.000-5.000 lei",
+            "Neasigurare acces tehnicieni pentru verificare apartamente: 1.000-3.000 lei",
+          ] },
+          "Amenda se aplică administratorului sau președintelui asociației și se poate recupera de la proprietarii care au refuzat accesul.",
+        ],
+      },
+      {
+        heading: "Amenzi firme (restaurante, hoteluri, producție)",
+        paragraphs: [
+          { type: "list", items: [
+            "Firmă cu instalație gaz neașezată în carte tehnică: 5.000-15.000 lei",
+            "Restaurant/hotel fără verificare în termen: 10.000-30.000 lei",
+            "Fabrică cu gaz industrial fără certificat valid: 20.000-50.000 lei",
+            "Operare instalație fără autorizație ISCIR (centrală >50kW): 15.000-40.000 lei",
+          ] },
+        ],
+      },
+      {
+        heading: "Cine aplică amenzile",
+        paragraphs: [
+          { type: "list", items: [
+            "ANRE (Autoritatea Națională de Reglementare în domeniul Energiei) — control direct",
+            "ISU (Inspectoratul pentru Situații de Urgență) — la control PSI sau după incident",
+            "Distribuitorul (Distrigaz Sud/Delgaz Grid) — la constatarea lipsei certificat",
+            "Primăria (la asociații, prin polița locală) — rar, la sesizări cetățeni",
+          ] },
+        ],
+      },
+      {
+        heading: "Procedura după amendă",
+        paragraphs: [
+          "Primești proces-verbal de constatare (PVC). Ai 15 zile să o contesti la judecătorie dacă există motive. În paralel, trebuie să efectuezi verificarea în maxim 30 zile — altfel amenda se poate dubla.",
+          "După verificare, depui la organul care a amendat: copie proces-verbal verificare + certificat valid. Unele amenzi se pot reduce cu 50% dacă plătești în primele 48h.",
+        ],
+      },
+      {
+        heading: "Cum eviți amenda",
+        paragraphs: [
+          "Setează un reminder cu 60 zile înainte să expire certificatul. Pe verificari-gaze.ro, dacă ai programat prin platformă, primești automat SMS + email când se apropie scadența — gratuit.",
+          "Alternativă: calendar Google/Outlook cu notificare recurentă la 2 ani (pentru verificare) și 10 ani (pentru revizie).",
+        ],
+      },
+      {
+        heading: "Rezumat amenzi 2026",
+        paragraphs: [
+          { type: "list", items: [
+            "Persoană fizică: 1.000-5.000 lei",
+            "Asociație proprietari: 5.000-15.000 lei",
+            "Firmă mică: 10.000-30.000 lei",
+            "Firmă industrială: 20.000-50.000 lei",
+          ] },
+          "Verificarea costă 80-250 lei. E clar raportul cost/risc.",
+        ],
+      },
+    ],
+    ctas: [
+      { label: "Programează verificarea acum — evită amenda", href: "/programare", variant: "primary" },
+      { label: "Vezi firme ANRE disponibile în zona ta", href: "/servicii-gaze", variant: "ghost" },
+    ],
+    relatedSlugs: [
+      "ce-se-intampla-daca-nu-fac-verificarea-gaze",
+      "amenzi-verificare-gaze-neefectuata",
+      "anre-ord-179-2015-explicat-pe-intelesul-tuturor",
+    ],
+  },
 ]
 
 export const ARTICLES: Article[] = _ARTICLES

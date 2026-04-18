@@ -106,12 +106,12 @@ export default async function HomePage() {
         <div className="vg-hero__inner">
           <span className="vg-hero__eyebrow">ANRE Ord. 179/2015 · firme validate ANRE + ISCIR</span>
           <h1 className="vg-hero__title">
-            Verificare instalație gaze, <em>rapid și fără drumuri</em>
+            Verificare instalație gaze <em>— firme autorizate ANRE</em> în toată România
           </h1>
           <p className="vg-hero__sub">
-            {firmCountFmt} firme autorizate ANRE pentru verificări la 2 ani, revizii la 10 ani, montaj detectoare
-            gaze metan + CO și service centrală termică. Alege județul, programează în 2 minute și primește
-            certificat digital cu QR de verificare publică.
+            Găsește firmă ANRE pentru <strong>verificare instalație gaze la 2 ani</strong>,{" "}
+            <strong>revizie la 10 ani</strong>, montaj detectoare sau service centrală termică.
+            {" "}{firmCountFmt} firme active în 42 județe. Programare online gratuită + certificat digital cu QR.
           </p>
 
           <form method="get" action="/cauta" className="vg-search" role="search">
@@ -172,7 +172,7 @@ export default async function HomePage() {
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">Cum funcționează</p>
-            <h2 className="vg-section__title">De la căutare la certificat în 3 pași</h2>
+            <h2 className="vg-section__title">Verificare instalație gaze în 3 pași — de la căutare la certificat</h2>
             <p className="vg-section__sub">
               Fără telefoane pe necunoscute, fără documente pe hârtie, fără să pierzi din nou scadența.
             </p>
@@ -220,7 +220,7 @@ export default async function HomePage() {
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">De ce verificari-gaze.ro</p>
-            <h2 className="vg-section__title">Totul într-un singur loc, fără drumuri</h2>
+            <h2 className="vg-section__title">Singurul director cu firme autorizate ANRE + programare online</h2>
             <p className="vg-section__sub">
               Transparent, rapid, conform cu normele ANRE. Compari firme, programezi online și primești
               documente digitale fără formulare pe hârtie.
@@ -257,7 +257,7 @@ export default async function HomePage() {
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">Servicii disponibile</p>
-            <h2 className="vg-section__title">Ce poți programa astăzi</h2>
+            <h2 className="vg-section__title">Servicii gaze: verificare, revizie, montaj detectoare, service centrală</h2>
             <p className="vg-section__sub">
               De la verificarea obligatorie la 2 ani până la montajul detectorului de gaze —
               toate intervențiile pentru instalații și centrale termice, cu firme autorizate ANRE și ISCIR.
@@ -284,7 +284,7 @@ export default async function HomePage() {
         <div className="container">
           <div className="vg-section__head">
             <p className="vg-section__kicker">Acoperire națională</p>
-            <h2 className="vg-section__title">Firme autorizate ANRE pe județ</h2>
+            <h2 className="vg-section__title">Firme verificare gaze pe județ — toată România</h2>
             <p className="vg-section__sub">
               Directorul oficial al firmelor autorizate ANRE. Click pe județul tău ca să vezi ofertele locale.
             </p>
@@ -312,7 +312,7 @@ export default async function HomePage() {
         <div className="container" style={{ maxWidth: 860 }}>
           <div className="vg-section__head">
             <p className="vg-section__kicker">Întrebări frecvente</p>
-            <h2 className="vg-section__title">Tot ce vrei să știi despre verificarea gazelor</h2>
+            <h2 className="vg-section__title">Verificare instalație gaze 2026 — răspunsuri la întrebările tale</h2>
             <p className="vg-section__sub">
               Răspunsuri directe pentru proprietari, asociații și firme. Dacă nu găsești ce cauți,{" "}
               <Link href="/contact" style={{ color: "var(--accent-700)", fontWeight: 600 }}>scrie-ne</Link>.
