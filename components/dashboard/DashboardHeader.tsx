@@ -29,6 +29,7 @@ function buildMenu(role: Props["role"], firmId: string | null, pendingClaims: nu
           { href: "/dashboard/leads-admin", label: "Lead-uri" },
           { href: "/dashboard/reviews-admin", label: "Review-uri" },
           { href: "/dashboard/audit", label: "Audit log" },
+          { href: "/dashboard/pixeli-tracking", label: "Pixeli & Tracking" },
         ],
       },
       {
@@ -40,7 +41,6 @@ function buildMenu(role: Props["role"], firmId: string | null, pendingClaims: nu
         ],
       },
       { kind: "link", href: "/dashboard/planuri", label: "Planuri & tarife" },
-      { kind: "link", href: "/dashboard/pixeli-tracking", label: "Pixeli & Tracking" },
       { kind: "link", href: "/dashboard/magazin-comenzi", label: "Comenzi", badge: pendingOrders },
       {
         kind: "dropdown",
