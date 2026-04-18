@@ -11,8 +11,10 @@ const inter = Inter({
 import { CookieBanner } from "@/components/site/CookieBanner"
 import { SiteShell } from "@/components/site/SiteShell"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
+import { TrackingScripts } from "@/components/seo/TrackingScripts"
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/jsonld"
 import { createClient, getServiceRoleSupabase } from "@/lib/supabase/server"
+import { getTrackingSettings } from "@/lib/settings/appSettings"
 import "@/styles/globals.css"
 
 export const metadata: Metadata = {
@@ -78,7 +80,10 @@ async function getHeaderUser() {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headerUser = await getHeaderUser()
+  const [headerUser, tracking] = await Promise.all([
+    getHeaderUser(),
+    getTrackingSettings().catch(() => null),
+  ])
   return (
     <html lang="ro-RO" className={inter.variable}>
       <head>
@@ -87,6 +92,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
+        {tracking && <TrackingScripts settings={tracking} />}
         <SiteShell headerUser={headerUser}>{children}</SiteShell>
         <CookieBanner />
       </body>

@@ -103,3 +103,54 @@ export async function setGestiuneSettings(
     admin.from("app_settings").upsert({ key: "gestiune_sms_included", value: settings.smsIncluded, updated_at: ts, updated_by: userId }),
   ])
 }
+
+// ── Tracking & analytics pixels ──
+
+export type TrackingSettings = {
+  gaId: string                // G-XXXXXXXXXX (default G-ZELLPV8XTY)
+  fbPixelId: string           // 123456789012345 sau C1234567890
+  googleAdsId: string         // AW-123456789
+  googleAdsLabel: string      // AbCdEfGhIjK (conversion label)
+  snapchatPixelId: string     // abc123-def456
+  pinterestTagId: string      // 1234567890
+}
+
+const DEFAULT_TRACKING: TrackingSettings = {
+  gaId: "G-ZELLPV8XTY",
+  fbPixelId: "",
+  googleAdsId: "",
+  googleAdsLabel: "",
+  snapchatPixelId: "",
+  pinterestTagId: "",
+}
+
+export async function getTrackingSettings(): Promise<TrackingSettings> {
+  const admin = getServiceRoleSupabase()
+  const { data } = await admin
+    .from("app_settings")
+    .select("value")
+    .eq("key", "tracking_pixels")
+    .maybeSingle()
+  const v = (data as { value?: Partial<TrackingSettings> } | null)?.value ?? {}
+  return {
+    gaId: typeof v.gaId === "string" ? v.gaId : DEFAULT_TRACKING.gaId,
+    fbPixelId: typeof v.fbPixelId === "string" ? v.fbPixelId : "",
+    googleAdsId: typeof v.googleAdsId === "string" ? v.googleAdsId : "",
+    googleAdsLabel: typeof v.googleAdsLabel === "string" ? v.googleAdsLabel : "",
+    snapchatPixelId: typeof v.snapchatPixelId === "string" ? v.snapchatPixelId : "",
+    pinterestTagId: typeof v.pinterestTagId === "string" ? v.pinterestTagId : "",
+  }
+}
+
+export async function setTrackingSettings(
+  settings: TrackingSettings,
+  userId: string | null,
+): Promise<void> {
+  const admin = getServiceRoleSupabase()
+  await admin.from("app_settings").upsert({
+    key: "tracking_pixels",
+    value: settings,
+    updated_at: new Date().toISOString(),
+    updated_by: userId,
+  })
+}
