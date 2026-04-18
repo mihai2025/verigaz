@@ -98,6 +98,12 @@ export function FirmListItem({ f, index = 0 }: { f: FirmListRow; index?: number 
           </div>
         )}
 
+        {!isPaid && f.phone && (
+          <div style={{ fontSize: 12, color: "var(--text-500)", marginTop: 2 }}>
+            Tel: <code>{f.phone}</code>
+          </div>
+        )}
+
         <div className="sv-desc">
           {f.short_description ||
             "Firmă autorizată ANRE pentru verificări, revizii și servicii instalații gaze."}

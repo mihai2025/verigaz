@@ -5,7 +5,7 @@ import { PLANS, type PlanKey } from "@/lib/plans/plans"
 
 export type PlanPrices = { start: number; plus: number; premium: number }
 
-const DEFAULT_SMS_TARIFF_CENTS = 15
+const DEFAULT_SMS_TARIFF_CENTS = 61
 
 export async function getSmsTariffCents(): Promise<number> {
   const admin = getServiceRoleSupabase()

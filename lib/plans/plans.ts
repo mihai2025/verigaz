@@ -34,13 +34,13 @@ export const PLANS: Record<PlanKey, PlanDefinition> = {
     currency: "RON",
     stripePriceIdEnv: "",
     highlights: [
-      "Listare în directorul național",
-      "Până la 2 locații operare",
+      "Listare în directorul național (nume + autorizație + adresă + telefon vizibile)",
+      "1 locație operare (sediul firmei)",
       "Până la 3 categorii servicii",
-      "Primire programări prin platformă",
+      "NU primește cereri de ofertă / programări — doar listare",
     ],
     limits: {
-      maxFirmLocations: 2,
+      maxFirmLocations: 1,
       maxServiceCategories: 3,
       maxShopProducts: 0,
       premiumExclusivity: false,

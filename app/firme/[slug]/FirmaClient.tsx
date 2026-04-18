@@ -1,11 +1,11 @@
 "use client"
 
-import Link from "next/link"
 import { FirmaMobileHeader } from "@/components/firma/FirmaMobileHeader"
 import { FirmaHero } from "@/components/firma/FirmaHero"
 import { FirmaAside } from "@/components/firma/FirmaAside"
 import { FirmaStickyCta } from "@/components/firma/FirmaStickyCta"
 import FirmaOfferAutoModal from "@/components/leads/FirmaOfferAutoModal"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export type FirmaClientData = {
   firm: {
@@ -115,9 +115,15 @@ export default function FirmaClient({ data }: { data: FirmaClientData }) {
                   Formular de 2 minute. {firm.name} te contactează în 24h pentru confirmare.
                   Certificat digital + reminder automat la scadență.
                 </p>
-                <Link href={`/programare?firma=${encodeURIComponent(firm.slug)}`} className="firmaCtaBand__btn">
-                  Programează verificarea →
-                </Link>
+                <OfferRequestButton
+                  className="firmaCtaBand__btn"
+                  label="Cere ofertă"
+                  source="firma_cta_band"
+                  firmSlug={firm.slug}
+                  firmName={firm.name}
+                  defaultJudetId={firm.sediu_judet_id}
+                  defaultLocalitateId={firm.sediu_localitate_id}
+                />
               </div>
             </section>
           </div>

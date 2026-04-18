@@ -45,7 +45,7 @@ export function Footer() {
               <Link href="/servicii/revizie-instalatie">Revizie la 10 ani</Link>
               <Link href="/servicii/montaj-detector">Montaj detector</Link>
               <Link href="/servicii/reparatii-instalatie">Reparații</Link>
-              <Link href="/programare">Programează online</Link>
+              <Link href="/programare">Cere ofertă</Link>
             </nav>
           </div>
 

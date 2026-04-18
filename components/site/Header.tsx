@@ -39,7 +39,7 @@ export function Header({ user }: { user?: AuthUser }) {
       <div className="vg-header__inner">
         <Link href="/" className="vg-logo" aria-label="verificari-gaze.ro home">
           <span className="vg-logo__mark">V</span>
-          <span>verificari-gaze.ro</span>
+          <span className="vg-logo__text">verificari-gaze.ro</span>
         </Link>
 
         <nav className="vg-nav" aria-label="Navigare principală">

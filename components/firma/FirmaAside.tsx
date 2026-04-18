@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 type Firm = {
   slug: string
@@ -14,6 +14,8 @@ type Firm = {
   sediu_adresa: string | null
   sediu_localitate_nume: string | null
   sediu_judet_nume: string | null
+  sediu_judet_id?: number | null
+  sediu_localitate_id?: number | null
   anre_authorization_no: string | null
   anre_category: string | null
   anre_valid_until: string | null
@@ -88,9 +90,16 @@ export function FirmaAside({ firm }: { firm: Firm }) {
           </a>
         )}
 
-        <Link href={`/programare?firma=${encodeURIComponent(firm.slug)}`} className="firmaAsideBtn firmaAsideBtn--primary">
-          Programează online →
-        </Link>
+        <OfferRequestButton
+          className="firmaAsideBtn firmaAsideBtn--primary"
+          label="Cere ofertă"
+          source="firma_aside"
+          firmSlug={firm.slug}
+          firmName={firm.name}
+          defaultJudetId={firm.sediu_judet_id ?? null}
+          defaultLocalitateId={firm.sediu_localitate_id ?? null}
+        />
+
       </div>
 
       {/* LOCATION CARD */}

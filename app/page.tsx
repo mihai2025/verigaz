@@ -182,20 +182,22 @@ export default async function HomePage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-            {[
+            {([
               {
                 num: "1",
                 title: "Găsești firma potrivită",
                 desc: "Alegi județul + localitatea. Vezi firmele autorizate ANRE cu profil complet: autorizație, recenzii, telefon, adresă. Filtrezi pe categorie de serviciu.",
                 cta: "Caută firmă →",
-                href: "/servicii-gaze",
+                href: "/servicii-gaze" as string,
+                modal: false as boolean,
               },
               {
                 num: "2",
-                title: "Programezi online",
-                desc: "Formular de 2 minute. Alegi data preferată, confirmi adresa. Primești referință unică (VG-XXXX-XXXX) pe loc. Firma te contactează în 24h pentru confirmare.",
-                cta: "Programează →",
-                href: "/programare",
+                title: "Ceri ofertă în 2 minute",
+                desc: "Formular scurt: alegi județul + localitatea, descrii pe scurt nevoia. Firma autorizată te contactează în 24h cu oferta personalizată.",
+                cta: "Cere ofertă →",
+                href: "",
+                modal: true,
               },
               {
                 num: "3",
@@ -203,15 +205,24 @@ export default async function HomePage() {
                 desc: "După intervenție, firma emite certificatul ANRE în platformă — PDF cu hash SHA-256 + QR public. Cu 30 zile înainte de următoarea scadență primești SMS automat.",
                 cta: "Vezi ghid complet →",
                 href: "/cum-functioneaza",
+                modal: false,
               },
-            ].map((step) => (
+            ]).map((step) => (
               <div key={step.num} style={{ padding: 24, background: "#fff", border: "1px solid var(--border)", borderRadius: 14, position: "relative" }}>
                 <div style={{ position: "absolute", top: -16, left: 24, width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent-600), var(--accent-700))", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 }}>{step.num}</div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, margin: "12px 0 10px", color: "var(--text-900)" }}>{step.title}</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--text-600)", margin: "0 0 14px" }}>{step.desc}</p>
-                <Link href={step.href} style={{ color: "var(--accent-700)", fontWeight: 600, fontSize: 14, textDecoration: "none" }}>
-                  {step.cta}
-                </Link>
+                {step.modal ? (
+                  <OfferRequestButton
+                    className="vg-step-link"
+                    label={step.cta}
+                    source="home_step_card"
+                  />
+                ) : (
+                  <Link href={step.href} style={{ color: "var(--accent-700)", fontWeight: 600, fontSize: 14, textDecoration: "none" }}>
+                    {step.cta}
+                  </Link>
+                )}
               </div>
             ))}
           </div>

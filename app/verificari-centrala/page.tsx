@@ -7,6 +7,7 @@ import { slugifyRO } from "@/lib/utils/slugify"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/seo/jsonld"
 import { DOMAIN } from "@/lib/config/domain"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Verificare centrală termică (VTP) — firme autorizate ISCIR 2026",
@@ -90,9 +91,11 @@ export default async function Page() {
             De la <strong>150 lei</strong>.
           </p>
           <div className="vg-hero__ctas">
-            <Link href="/programare?serviciu=verificare-centrala" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează VTP →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source="verificari_centrala_hero"
+            />
             <Link href="#judete" className="vg-btn vg-btn--outline vg-btn--lg">
               Vezi firme pe județ
             </Link>
@@ -174,9 +177,11 @@ export default async function Page() {
           <div className="vg-cta-band">
             <h2>Programează VTP online în 2 minute</h2>
             <p>Firma te contactează în 24h pentru confirmare. Primești raport PDF cu QR după intervenție.</p>
-            <Link href="/programare?serviciu=verificare-centrala" className="vg-btn-lg">
-              Programează acum →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn-lg"
+              label="Cere ofertă"
+              source="verificari_centrala_mid"
+            />
           </div>
         </div>
       </section>
@@ -261,9 +266,11 @@ export default async function Page() {
           <div className="vg-cta-band vg-cta-band--gold">
             <h2>Nu amâna VTP — programează astăzi</h2>
             <p>Costă 150-300 lei, durează 1-2 ore, te scutește de riscuri de mii de lei.</p>
-            <Link href="/programare?serviciu=verificare-centrala" className="vg-btn-lg">
-              Programează VTP centrala →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn-lg"
+              label="Cere ofertă"
+              source="verificari_centrala_footer"
+            />
           </div>
         </div>
       </section>

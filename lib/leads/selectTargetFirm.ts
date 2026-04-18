@@ -27,6 +27,7 @@ export async function selectTargetFirm(opts: Opts): Promise<TargetFirm | null> {
   const admin = getServiceRoleSupabase()
 
   // 1) Override: dacă firma specificată are plan plătit, o folosim direct
+  //    (free NU primește cereri — cade în fallback pe zonă cu firme plătite)
   if (opts.firmSlug) {
     const { data: firm } = await admin
       .from("gas_firms")
@@ -35,11 +36,10 @@ export async function selectTargetFirm(opts: Opts): Promise<TargetFirm | null> {
       .eq("is_active", true)
       .eq("verification_status", "approved")
       .maybeSingle()
-    if (firm && firm.phone) return firm as TargetFirm
-    // Dacă firma n-are telefon, cădem în fallback pe zonă
+    if (firm && firm.phone && firm.plan && firm.plan !== "free") return firm as TargetFirm
   }
 
-  // 2) Caută firme active în aceeași localitate (dacă e specificată)
+  // 2) Caută firme plătite în aceeași localitate (exclude free)
   let candidates: TargetFirm[] = []
   if (opts.localitateId != null) {
     const { data } = await admin
@@ -48,11 +48,12 @@ export async function selectTargetFirm(opts: Opts): Promise<TargetFirm | null> {
       .eq("sediu_localitate_id", opts.localitateId)
       .eq("is_active", true)
       .eq("verification_status", "approved")
+      .neq("plan", "free")
       .not("phone", "is", null)
     if (data && data.length > 0) candidates = data as TargetFirm[]
   }
 
-  // 3) Fallback: firme în același județ
+  // 3) Fallback: firme plătite în același județ
   if (candidates.length === 0) {
     const { data } = await admin
       .from("gas_firms")
@@ -60,6 +61,7 @@ export async function selectTargetFirm(opts: Opts): Promise<TargetFirm | null> {
       .eq("sediu_judet_id", opts.judetId)
       .eq("is_active", true)
       .eq("verification_status", "approved")
+      .neq("plan", "free")
       .not("phone", "is", null)
       .limit(50)
     if (data && data.length > 0) candidates = data as TargetFirm[]

@@ -3,6 +3,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { DOMAIN } from "@/lib/config/domain"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Despre verificari-gaze.ro — platforma națională pentru siguranța gazelor",
@@ -27,9 +28,11 @@ export default function Page() {
             naturale și centrale termice — verificări obligatorii, revizii, montaj detector și service.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 20 }}>
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează verificarea →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source="despre_hero"
+            />
             <Link href="/contact" className="vg-btn vg-btn--outline vg-btn--lg">
               Contactează-ne
             </Link>

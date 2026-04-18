@@ -312,6 +312,29 @@
 }
 .vg-btn--outline:hover { background: var(--accent-600); color: #fff; }
 
+/* White button on dark background (CTA bands cu background gradient) */
+.vg-btn--onDark {
+  background: #fff;
+  color: var(--accent-700);
+  border-color: #fff;
+  font-weight: 700;
+}
+.vg-btn--onDark:hover { filter: brightness(0.96); }
+
+/* Link-like button (used inside step cards when we need a modal trigger styled as a text link) */
+.vg-step-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--accent-700);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.vg-step-link:hover { text-decoration: underline; }
+
 /* ===== Header (site nav) ===== */
 .vg-header {
   position: sticky;
@@ -349,6 +372,9 @@
   justify-content: center;
   font-weight: 800;
   font-size: 18px;
+}
+@media (max-width: 760px) {
+  .vg-logo__text { display: none; }
 }
 .vg-nav {
   flex: 1;
@@ -1786,6 +1812,13 @@
   justify-content: center;
   padding: 16px;
   animation: offer-fade .15s ease-out;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .offer-modal {
+    padding: 0;
+    align-items: flex-end;  /* anchor to bottom on mobile = mai aproape de pumn */
+  }
 }
 @keyframes offer-fade { from { opacity: 0 } to { opacity: 1 } }
 .offer-modal__box {
@@ -1797,8 +1830,22 @@
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
   animation: offer-slide .2s ease-out;
-  max-height: 90vh;
-  overflow-y: auto;
+  margin: auto;
+}
+@media (max-width: 600px) {
+  .offer-modal__box {
+    border-radius: 18px 18px 0 0;
+    padding: 22px 18px 16px;
+    max-width: 100%;
+    margin: 0;
+    animation: offer-slide-up .25s ease-out;
+    max-height: 92dvh;
+    overflow-y: auto;
+  }
+  @keyframes offer-slide-up {
+    from { transform: translateY(100%); opacity: 0 }
+    to { transform: translateY(0); opacity: 1 }
+  }
 }
 @keyframes offer-slide { from { transform: translateY(16px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
 .offer-modal__close {

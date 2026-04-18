@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import OfferRequestModal from "./OfferRequestModal"
 
-const DELAY_MS = 6000
+const DELAY_MS = 2000
 const DISMISS_KEY = "vg-offer-dismissed-"
 const DISMISS_TTL_MS = 24 * 60 * 60 * 1000 // 24h
 

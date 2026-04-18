@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { faqJsonLd } from "@/lib/seo/jsonld"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Cum funcționează — găsești firmă ANRE, programezi, primești certificat",
@@ -56,9 +57,11 @@ export default function Page() {
             Verificari-gaze.ro e platforma care face legătura între proprietari și firmele autorizate ANRE.
           </p>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 20 }}>
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează acum →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source="cum_functioneaza_hero"
+            />
             <Link href="/servicii-gaze" className="vg-btn vg-btn--outline vg-btn--lg">
               Caută firmă pe județ
             </Link>
@@ -88,7 +91,7 @@ export default function Page() {
                 icon: "📅",
                 title: "Programezi online gratuit",
                 bullets: [
-                  'Apeși „Programează online" pe cardul firmei',
+                  'Apeși „Cere ofertă" pe cardul firmei',
                   "Completezi adresa și data preferată",
                   "Primești referință unică VG-XXXX-XXXX",
                   "Firma te contactează în 24h pentru confirmare",
@@ -191,9 +194,11 @@ export default function Page() {
             Formular de 2 minute. O firmă autorizată ANRE te contactează în 24h pentru confirmare.
             Totul gratuit pentru tine.
           </p>
-          <Link href="/programare" className="vg-btn vg-btn--lg" style={{ background: "#fff", color: "var(--accent-700)", fontWeight: 700, fontSize: 17 }}>
-            Programează gratuit →
-          </Link>
+          <OfferRequestButton
+            className="vg-btn vg-btn--lg vg-btn--onDark"
+            label="Cere ofertă"
+            source="cum_functioneaza_cta"
+          />
         </div>
       </section>
     </>

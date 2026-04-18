@@ -8,6 +8,7 @@ import { slugifyRO } from "@/lib/utils/slugify"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/seo/jsonld"
 import { DOMAIN } from "@/lib/config/domain"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Verificări și revizii gaze România — firme autorizate ANRE 2026",
@@ -118,9 +119,11 @@ export default async function Page() {
           </form>
 
           <div className="vg-hero__ctas">
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează verificarea →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source="servicii_gaze_hero"
+            />
             <Link href="#judete" className="vg-btn vg-btn--outline vg-btn--lg">
               Vezi firme pe județ
             </Link>
@@ -144,9 +147,11 @@ export default async function Page() {
               <strong>1 din 3 proprietari</strong> au termenul expirat. Riști amendă până la 5.000 lei,
               suspendarea furnizării de gaz, pierderea asigurării. Nu amâna — programează astăzi.
             </p>
-            <Link href="/programare" className="vg-btn-lg">
-              Programează urgent →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn-lg"
+              label="Cere ofertă"
+              source="servicii_gaze_urgent"
+            />
           </div>
         </div>
       </section>
@@ -428,7 +433,11 @@ export default async function Page() {
           <div className="vg-cta-band">
             <h2>Verificarea durează 30 minute. Amenda durează 3 ani</h2>
             <p>Programează astăzi cu firme care răspund în 24h. 0 comision, 0 stres, 0 riscuri.</p>
-            <Link href="/programare" className="vg-btn-lg">Programează verificarea acum →</Link>
+            <OfferRequestButton
+              className="vg-btn-lg"
+              label="Cere ofertă"
+              source="servicii_gaze_footer_cta"
+            />
           </div>
         </div>
       </section>

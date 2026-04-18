@@ -3,6 +3,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { CATEGORY_PAGES } from "@/lib/servicii-gaze/links"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Servicii instalații gaze și centrale termice — 7 categorii cu firme ANRE",
@@ -57,9 +58,11 @@ export default function Page() {
             Prețuri transparente, programare online gratuită.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 20 }}>
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează acum →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source="servicii_hub_hero"
+            />
             <Link href="/servicii-gaze" className="vg-btn vg-btn--outline vg-btn--lg">
               Caută firmă pe județ
             </Link>
@@ -151,9 +154,11 @@ export default function Page() {
             Completează formularul de programare — firma aleasă verifică documentele tale și îți
             recomandă intervenția potrivită (verificare de rutină, revizie completă sau reparație).
           </p>
-          <Link href="/programare" className="vg-btn vg-btn--lg" style={{ background: "#fff", color: "var(--accent-700)", fontWeight: 700, fontSize: 17 }}>
-            Programează consultanță gratuită →
-          </Link>
+          <OfferRequestButton
+            className="vg-btn vg-btn--lg vg-btn--onDark"
+            label="Cere ofertă"
+            source="servicii_hub_cta"
+          />
         </div>
       </section>
     </>

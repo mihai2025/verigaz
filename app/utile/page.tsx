@@ -6,6 +6,7 @@ import { ARTICLES } from "@/lib/utile/articles"
 import { DOMAIN } from "@/lib/config/domain"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 export const metadata: Metadata = {
   title: "Ghiduri utile despre verificări gaze — verificari-gaze.ro",
@@ -76,12 +77,14 @@ export default function Page() {
       ))}
 
       <section className="utile-cta">
-        <h2>Ești pregătit să programezi verificarea?</h2>
+        <h2>Cere ofertă pentru verificarea ta</h2>
         <p>Firmele autorizate ANRE din zona ta răspund în 24h.</p>
         <div className="dash-actions-row">
-          <Link href="/programare" className="shop-btn shop-btn--primary">
-            Programează acum
-          </Link>
+          <OfferRequestButton
+            className="shop-btn shop-btn--primary"
+            label="Cere ofertă"
+            source="utile_hub_cta"
+          />
           <Link href="/servicii-gaze" className="shop-btn shop-btn--ghost">
             Vezi firmele din județul tău
           </Link>

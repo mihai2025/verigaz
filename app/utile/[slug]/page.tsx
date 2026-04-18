@@ -7,6 +7,7 @@ import { ARTICLES, getArticle, getRelated } from "@/lib/utile/articles"
 import { DOMAIN } from "@/lib/config/domain"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo/jsonld"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 type Params = { slug: string }
 
@@ -155,15 +156,17 @@ export default async function Page({ params }: { params: Promise<Params> }) {
 
       {/* Final CTA toate paginile */}
       <section className="utile-final-cta">
-        <h2>Programează direct cu o firmă autorizată ANRE</h2>
+        <h2>Cere ofertă de la o firmă autorizată ANRE</h2>
         <p>
           Toate firmele de pe verificari-gaze.ro au autorizația validată de echipa noastră.
           Răspund în 24h, cele mai multe în câteva ore.
         </p>
         <div className="dash-actions-row">
-          <Link href="/programare" className="shop-btn shop-btn--primary">
-            Programează verificarea
-          </Link>
+          <OfferRequestButton
+            className="shop-btn shop-btn--primary"
+            label="Cere ofertă"
+            source={`utile_${article.slug}_final_cta`}
+          />
           <Link href="/servicii-gaze" className="shop-btn shop-btn--ghost">
             Vezi firmele din zona ta
           </Link>

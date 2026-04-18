@@ -11,6 +11,7 @@ import { slugifyRO } from "@/lib/utils/slugify"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { breadcrumbJsonLd, serviceJsonLd, faqJsonLd } from "@/lib/seo/jsonld"
 import { DOMAIN } from "@/lib/config/domain"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 type Params = { cat: string }
 
@@ -202,9 +203,11 @@ export default async function Page({ params }: { params: Promise<Params> }) {
             {category.descriere ?? ctaInfo?.hero.replace(/\*\*(.+?)\*\*/g, "$1")}
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", marginTop: 18 }}>
-            <Link href="/programare" className="vg-btn vg-btn--primary vg-btn--lg">
-              Programează online →
-            </Link>
+            <OfferRequestButton
+              className="vg-btn vg-btn--primary vg-btn--lg"
+              label="Cere ofertă"
+              source={`servicii_cat_${category.slug}_hero`}
+            />
             <Link href="#judete" className="vg-btn vg-btn--ghost vg-btn--lg">
               Vezi firme pe județ
             </Link>
@@ -291,9 +294,11 @@ export default async function Page({ params }: { params: Promise<Params> }) {
           <p style={{ opacity: 0.9, fontSize: 16, margin: "0 0 20px" }}>
             Formular de 2 minute. O firmă autorizată te contactează în 24h.
           </p>
-          <Link href="/programare" className="vg-btn vg-btn--lg" style={{ background: "#fff", color: "var(--accent-700)", fontWeight: 700 }}>
-            Programează gratuit →
-          </Link>
+          <OfferRequestButton
+            className="vg-btn vg-btn--lg vg-btn--onDark"
+            label="Cere ofertă"
+            source={`servicii_cat_${category.slug}_cta`}
+          />
         </div>
       </section>
     </>

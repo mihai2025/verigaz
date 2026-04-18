@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { FirmLogo } from "@/components/firms/FirmLogo"
+import OfferRequestButton from "@/components/leads/OfferRequestButton"
 
 type Firm = {
   slug: string
@@ -14,6 +15,8 @@ type Firm = {
   sediu_localitate_nume: string | null
   sediu_judet_nume: string | null
   sediu_judet_slug: string | null
+  sediu_judet_id?: number | null
+  sediu_localitate_id?: number | null
   anre_authorization_no: string | null
   anre_category: string | null
   rating_avg: number | null
@@ -77,9 +80,15 @@ export function FirmaHero({ firm }: { firm: Firm }) {
         </div>
 
         <div className="firmaHero__actions">
-          <Link href={`/programare?firma=${encodeURIComponent(firm.slug)}`} className="firmaHero__cta firmaHero__cta--primary">
-            Programează online →
-          </Link>
+          <OfferRequestButton
+            className="firmaHero__cta firmaHero__cta--primary"
+            label="Cere ofertă"
+            source="firma_hero"
+            firmSlug={firm.slug}
+            firmName={firm.name}
+            defaultJudetId={firm.sediu_judet_id ?? null}
+            defaultLocalitateId={firm.sediu_localitate_id ?? null}
+          />
         </div>
       </div>
 
