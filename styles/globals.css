@@ -1774,6 +1774,62 @@
   font-size: 11px;
 }
 
+/* ===== Firma profile: ascunde vg-header pe mobil (dublare cu firmaMobileHeader) ===== */
+@media (max-width: 1023px) {
+  body:has(.firmaMobileHeader) .vg-header { display: none !important; }
+}
+
+/* ===== Firm listing: hide cover image on mobile + compact layout ===== */
+@media (max-width: 760px) {
+  .sv-firm, .sv-firm--3col { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .sv-media { display: none !important; }
+  .sv-main { padding: 14px 14px 10px !important; }
+  .sv-side {
+    padding: 0 14px 14px !important;
+    border-left: 0 !important;
+    border-top: 1px solid rgba(15,23,42,.06);
+    padding-top: 12px !important;
+    margin-top: 6px;
+  }
+  .sv-logo { display: none !important; }
+  .sv-actions--stack {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  .sv-chip { flex: 1 1 calc(50% - 3px); justify-content: center; font-size: 13px; padding: 8px 10px; }
+  .sv-chipProfile { flex-basis: 100% !important; }
+  .sv-nameRow { flex-wrap: wrap; gap: 6px; }
+}
+
+/* Plan badge în locul stelei — doar pentru plăti */
+.sv-plan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+.sv-plan-badge--premium {
+  background: linear-gradient(135deg, #fef3c7, #fcd34d);
+  color: #92400e;
+  border: 1px solid rgba(184, 138, 0, .3);
+}
+.sv-plan-badge--plus {
+  background: rgba(55, 65, 81, .08);
+  color: #374151;
+  border: 1px solid rgba(55, 65, 81, .2);
+}
+.sv-plan-badge--start {
+  background: rgba(37, 99, 235, .08);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, .2);
+}
+
 /* ===== FAQ accordion premium ===== */
 .vg-faq {
   display: flex;

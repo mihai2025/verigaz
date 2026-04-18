@@ -39,8 +39,6 @@ export function FirmListItem({ f, index = 0 }: { f: FirmListRow; index?: number 
   const cardCls = `sv-firm sv-firm--3col ${
     isPremium ? "sv-firmPremium" : isPlus ? "sv-firmPlus" : plan === "start" ? "sv-firmStart" : "sv-firmFree"
   }`
-  const starClass = isPremium ? "sv-starPremium" : plan === "start" ? "sv-starStart" : "sv-starFree"
-  const starIcon = isPaid ? "★" : "☆"
 
   const tel  = telLink(f.phone || f.whatsapp)
   const wa   = waLink(f.whatsapp || f.phone)
@@ -71,12 +69,14 @@ export function FirmListItem({ f, index = 0 }: { f: FirmListRow; index?: number 
       <div className="sv-main sv-main--flex">
         <div className="sv-top">
           <div className="sv-nameRow">
-            <span className={`sv-star ${starClass}`} title={plan.toUpperCase()} aria-label={plan}>
-              {starIcon}
-            </span>
             <Link href={profileHref} className="sv-name">
               {displayName}
             </Link>
+            {isPaid && (
+              <span className={`sv-plan-badge sv-plan-badge--${plan}`} title={plan.toUpperCase()}>
+                {isPremium ? "Premium" : isPlus ? "Plus" : "Start"}
+              </span>
+            )}
           </div>
         </div>
 
