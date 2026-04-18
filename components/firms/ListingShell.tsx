@@ -15,6 +15,7 @@ export function ListingShell({
   emptyHref = "/inregistrare",
   emptyLabel = "Înregistrează-te gratuit",
   infoSlot,
+  footerSlot,
 }: {
   breadcrumbs: Crumb[]
   title: ReactNode
@@ -23,6 +24,8 @@ export function ListingShell({
   emptyHref?: string
   emptyLabel?: string
   infoSlot?: ReactNode
+  /** Slot afișat între listă și infoSlot — ex. Paginator. */
+  footerSlot?: ReactNode
 }) {
   return (
     <div className="sv-page container">
@@ -56,6 +59,8 @@ export function ListingShell({
           ))}
         </ul>
       )}
+
+      {footerSlot}
 
       {infoSlot && <aside className="sv-info">{infoSlot}</aside>}
     </div>

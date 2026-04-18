@@ -10,44 +10,73 @@ import {
   resolveJudetLocalitate,
 } from "@/lib/firms/fetchByGeo"
 import { AnreInfoBlock, IscirCentralaInfoBlock, ListingShell } from "@/components/firms/ListingShell"
+import {
+  buildPageUrl,
+  paginate,
+  parsePageParam,
+} from "@/lib/pagination/firmList"
+import { Paginator } from "@/components/ui/Paginator"
 
 type Params = { cat: string; judet: string; localitate: string }
+type SearchParams = { page?: string | string[] }
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<Params>
+  searchParams: Promise<SearchParams>
 }): Promise<Metadata> {
   const { cat, judet, localitate } = await params
+  const { page: pageRaw } = await searchParams
+  const page = parsePageParam(pageRaw)
   const [category, geo] = await Promise.all([
     resolveCategory(cat),
     resolveJudetLocalitate(judet, localitate),
   ])
   if (!category || !geo) return { title: "Pagină negăsită", robots: { index: false } }
+
+  const basePath = `/servicii/${cat}/${judet}/${localitate}`
+  const baseTitle = `${category.nume} în ${geo.localitate.nume}, ${geo.judet.nume}`
+  const description =
+    category.descriere ??
+    `Firme autorizate pentru ${category.nume.toLowerCase()} în ${geo.localitate.nume} (${geo.judet.nume}).`
+
   return {
-    title: `${category.nume} în ${geo.localitate.nume}, ${geo.judet.nume}`,
-    description:
-      category.descriere ??
-      `Firme autorizate pentru ${category.nume.toLowerCase()} în ${geo.localitate.nume} (${geo.judet.nume}).`,
-    alternates: { canonical: `/servicii/${cat}/${judet}/${localitate}` },
+    title: page > 1 ? `${baseTitle} — pagina ${page}` : baseTitle,
+    description,
+    alternates: { canonical: buildPageUrl(basePath, page) },
   }
 }
 
-export default async function Page({ params }: { params: Promise<Params> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>
+  searchParams: Promise<SearchParams>
+}) {
   const { cat, judet, localitate } = await params
+  const { page: pageRaw } = await searchParams
   const [category, geo] = await Promise.all([
     resolveCategory(cat),
     resolveJudetLocalitate(judet, localitate),
   ])
   if (!category || !geo) notFound()
 
-  const firms = await fetchFirmsByGeo(
+  const allFirms = await fetchFirmsByGeo(
     { judetId: geo.judet.id, localitateId: geo.localitate.id },
     { categorySlug: category.slug },
   )
+  const { items: firms, totalPages, currentPage } = paginate(
+    allFirms,
+    parsePageParam(pageRaw),
+  )
+
+  const basePath = `/servicii/${cat}/${judet}/${localitate}`
   const countLabel =
-    firms.length > 0
-      ? ` ${firms.length} ${firms.length === 1 ? "firmă găsită" : "firme găsite"}.`
+    allFirms.length > 0
+      ? ` ${allFirms.length} ${allFirms.length === 1 ? "firmă găsită" : "firme găsite"}.`
       : " Nicio firmă înregistrată încă."
 
   const isIscir = category.slug === "verificare-centrala" || category.slug === "revizie-centrala"
@@ -74,6 +103,13 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         </>
       }
       firms={firms}
+      footerSlot={
+        <Paginator
+          basePath={basePath}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
+      }
       infoSlot={infoSlot}
     />
   )
