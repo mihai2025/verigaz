@@ -1,5 +1,13 @@
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import { DOMAIN } from "@/lib/config/domain"
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-sans",
+  preload: true,
+})
 import { CookieBanner } from "@/components/site/CookieBanner"
 import { SiteShell } from "@/components/site/SiteShell"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
@@ -72,7 +80,7 @@ async function getHeaderUser() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headerUser = await getHeaderUser()
   return (
-    <html lang="ro-RO">
+    <html lang="ro-RO" className={inter.variable}>
       <head>
         <link rel="preconnect" href={`https://${DOMAIN.cdnDomain}`} />
         <link rel="dns-prefetch" href={`https://${DOMAIN.cdnDomain}`} />

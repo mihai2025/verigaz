@@ -1,17 +1,37 @@
 // app/page.tsx
 // Homepage verificari-gaze.ro — hero + stats + cum funcționează + value props + categorii + județe + FAQ + B2B CTA.
+export const revalidate = 3600 // ISR 1h — counts dinamice din DB
+
 import type { Metadata } from "next"
 import Link from "next/link"
 import { DOMAIN } from "@/lib/config/domain"
 import { CATEGORY_PAGES } from "@/lib/servicii-gaze/links"
 import { JsonLdScript } from "@/components/seo/JsonLdScript"
 import { faqJsonLd } from "@/lib/seo/jsonld"
+import { getServiceRoleSupabase } from "@/lib/supabase/server"
 
-export const metadata: Metadata = {
-  title: "Verificare instalație gaze 2026 — firme autorizate ANRE pe județe",
-  description:
-    "Găsește firme autorizate ANRE pentru verificare instalație gaze (la 2 ani), revizie (la 10 ani), montaj detector și service centrală termică. Programare online gratuită, certificat digital cu QR, reminder SMS automat la scadență. 1743 firme EDIB în 42 județe.",
-  alternates: { canonical: "/" },
+async function getFirmCount(): Promise<number> {
+  try {
+    const admin = getServiceRoleSupabase()
+    const { count } = await admin
+      .from("gas_firms")
+      .select("*", { count: "exact", head: true })
+      .eq("is_active", true)
+      .eq("verification_status", "approved")
+    return count ?? 1700
+  } catch {
+    return 1700
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const n = await getFirmCount()
+  return {
+    title: "Verificare instalație gaze 2026 — firme autorizate ANRE pe județe",
+    description:
+      `Găsește firme autorizate ANRE pentru verificare instalație gaze (la 2 ani), revizie (la 10 ani), montaj detector și service centrală termică. Programare online gratuită, certificat digital cu QR, reminder SMS automat la scadență. ${n.toLocaleString("ro-RO")} firme EDIB în 42 județe.`,
+    alternates: { canonical: "/" },
+  }
 }
 
 const JUDETE_T1 = [
@@ -74,7 +94,9 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const firmCount = await getFirmCount()
+  const firmCountFmt = firmCount.toLocaleString("ro-RO")
   return (
     <>
       <JsonLdScript data={[faqJsonLd(FAQ.map((f) => ({ question: f.q, answer: f.a })))]} />
@@ -87,7 +109,7 @@ export default function HomePage() {
             Verificare instalație gaze, <em>rapid și fără drumuri</em>
           </h1>
           <p className="vg-hero__sub">
-            1.743 firme autorizate ANRE pentru verificări la 2 ani, revizii la 10 ani, montaj detectoare
+            {firmCountFmt} firme autorizate ANRE pentru verificări la 2 ani, revizii la 10 ani, montaj detectoare
             gaze metan + CO și service centrală termică. Alege județul, programează în 2 minute și primește
             certificat digital cu QR de verificare publică.
           </p>
@@ -126,7 +148,7 @@ export default function HomePage() {
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 24, textAlign: "center" }}>
             <div>
-              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>1.743</div>
+              <div style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: "var(--accent-700)", lineHeight: 1 }}>{firmCountFmt}</div>
               <div style={{ fontSize: 14, color: "var(--text-600)", marginTop: 6, fontWeight: 500 }}>Firme ANRE active</div>
             </div>
             <div>
@@ -332,7 +354,7 @@ export default function HomePage() {
             <h2>Ești firmă autorizată ANRE?</h2>
             <p>
               Listează-te gratuit și primești programări de la clienți din județul tău.
-              Fără Google Ads, fără comisioane pe intervenție. 1.743 firme sunt deja pe platformă.
+              Fără Google Ads, fără comisioane pe intervenție. {firmCountFmt} firme sunt deja pe platformă.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/inregistrare?firm=1" className="vg-btn-lg">Înscrie firma gratuit →</Link>
