@@ -1774,6 +1774,84 @@
   font-size: 11px;
 }
 
+/* ===== FAQ accordion premium ===== */
+.vg-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vg-faq__item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.vg-faq__item:hover {
+  border-color: var(--accent-400);
+  box-shadow: 0 4px 14px rgba(20, 132, 155, .08);
+}
+.vg-faq__item[open] {
+  border-color: var(--accent-400);
+  box-shadow: 0 4px 14px rgba(20, 132, 155, .08);
+}
+.vg-faq__item > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: clamp(15px, 2vw, 17px);
+  font-weight: 600;
+  color: var(--text-900);
+  line-height: 1.4;
+  transition: color .15s;
+}
+.vg-faq__item > summary::-webkit-details-marker,
+.vg-faq__item > summary::marker {
+  display: none;
+  content: "";
+}
+.vg-faq__item > summary:hover {
+  color: var(--accent-700);
+}
+.vg-faq__item > summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-100);
+  color: var(--accent-700);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2314849b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform .25s, background .2s;
+}
+.vg-faq__item[open] > summary::after {
+  transform: rotate(180deg);
+  background-color: var(--accent-600);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+.vg-faq__a {
+  padding: 0 24px 20px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-700);
+}
+.vg-faq__a a {
+  color: var(--accent-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .vg-faq__item > summary { padding: 14px 16px; font-size: 14.5px; gap: 10px; }
+  .vg-faq__a { padding: 0 16px 16px; font-size: 14px; }
+}
+
 /* Backward-compat — .dash-badge folosit în alte pagini (ex: magazin-produse) */
 .dash-badge {
   display: inline-block;
