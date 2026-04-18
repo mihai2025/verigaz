@@ -298,7 +298,11 @@
   display:grid;
   grid-template-columns:1fr;
   gap:14px;
+  list-style:none;
+  padding:0;
+  margin:0;
 }
+.sv-firms > li{ list-style:none; }
 
 .sv-firm{
   display:grid;
